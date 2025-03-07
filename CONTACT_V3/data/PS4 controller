@@ -1,0 +1,5 @@
+blob control
+LeftStickX	h value left stick	3	SLIDER	x	0	1.0	0.0
+LeftStickY	v value left stick	3	SLIDER	y	0	1.0	0.0
+RightStickX	h value right stick	3	SLIDER	z	0	1.0	0.0
+RightStickY	v value right stick	3	SLIDER	rz	0	1.0	0.0

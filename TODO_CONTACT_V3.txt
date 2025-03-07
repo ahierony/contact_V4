@@ -1,0 +1,21 @@
+
+
+FEATURE
+
+- change the frequency of new trails based on speed and rotation. 
+	The more rotation the more new trails. 
+	The higher the speed the fewer new trails.
+
+
+- experiment with saving svg files when pressing keyboard
+
+- move the trails to the pupil from the center of the eyes
+
+- if the lung depletes completely, end the movie and capture the svg
+
+- identify current unit and highlight it > then make sure the trail only draws in the current mode
+
+
+
+BUG LIST
+
