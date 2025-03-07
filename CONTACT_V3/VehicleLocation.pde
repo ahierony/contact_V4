@@ -136,7 +136,6 @@ class VehicleLocation {
         if (vInMovingState.getReadyToSetState()) {
 
           setState(vInMovingState); // changing state to moving
-
         }
       }
     } else if (getState() == vInOtherVehicleZoneState) {
@@ -220,6 +219,9 @@ class VInBreathingState implements VehicleLocationState {
 
   Vehicle vehicle;
 
+  Timer timer;
+  int randomTime;
+
   float vehicleZoneTempRadius;
 
   VInBreathingState(Vehicle v) {
@@ -227,6 +229,11 @@ class VInBreathingState implements VehicleLocationState {
     vehicle = v;
 
     readyToSetState = true;
+
+    randomTime = int(random(500, 10000)); // between .5 and 3 second pause
+    timer = new Timer(randomTime);
+
+    timer.start();
   }
 
   //--------------------------------------------------------------
@@ -236,26 +243,30 @@ class VInBreathingState implements VehicleLocationState {
 
     if (readyToSetState) {
 
-      setReadyToSetState(false);
-    }
+      if (timer.isFinished()) {
 
-    if (vehicle.isPlayerInZone(player, vehicle.zone.radius)) { // player is in breathing zone
+        setReadyToSetState(false);
+      }
+    } else {
 
-      vehicle.applyZoneForceOnPlayer(player);
-    }
+      if (vehicle.isPlayerInZone(player, vehicle.zone.radius)) { // player is in breathing zone
 
-    if (vehicle.zone.isBreathing) {
-      vehicle.breath.breathe();
-    }
-
-    if (vehicle.readyToUpdateDistanceZone) {
-
-      if (vehicle.zone.getState() == vehicle.zone.emptyState) {
-
-        updateVehicleRadius();
+        vehicle.applyZoneForceOnPlayer(player);
       }
 
-      vehicle.readyToUpdateDistanceZone = false;
+      if (vehicle.zone.isBreathing) {
+        vehicle.breath.breathe();
+      }
+
+      if (vehicle.readyToUpdateDistanceZone) {
+
+        if (vehicle.zone.getState() == vehicle.zone.emptyState) {
+
+          updateVehicleRadius();
+        }
+
+        vehicle.readyToUpdateDistanceZone = false;
+      }
     }
   }
 

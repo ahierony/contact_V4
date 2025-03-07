@@ -34,8 +34,7 @@ class Bg {
 
     unitTotal = _unitTotal;
     unitLength = (int)sqrt(unitTotal );
-    println("unitLength ", unitLength);
-
+    
     units = new Bg_Unit[unitTotal];
 
     // amount of units in a row or col
@@ -177,8 +176,6 @@ class Bg {
     wrapLimit_w = (unit_w * val_w) + (unit_w * 0.5); // 2000  1600 + 400
     wrapLimit_h = (unit_h * val_h) + (unit_h * 0.5);
     
-    println("wrapLimit_w ", wrapLimit_w);
-
     for (int i=0; i<units.length; i++) {
 
       if (units[i].pos.x > wrapLimit_w) {
