@@ -176,14 +176,21 @@ class Vehicle {
     otherVehicleInDistanceZone = false;
     otherVehicleInBreathingZone = false;
 
+    colorAngleSwitchPlayer = 20; //45;
+    colorAngleSwitchVehicle = 5; //7; //15; //7;
+
+    initialize();
+  }
+
+  //--------------------------------------------------------------
+
+  void initialize() {
+
     if (inMotion) {
       zone.setState(zone.inMotionNoZoneState);
     } else {
       zone.setState(zone.emptyState);
     }
-
-    colorAngleSwitchPlayer = 20; //45;
-    colorAngleSwitchVehicle = 5; //7; //15; //7;
   }
 
   //--------------------------------------------------------------
@@ -240,7 +247,7 @@ class Vehicle {
 
 
       //println("zone ", zone.getState());
-    
+
       checkIfPlayerInZone();
       checkIfOtherVehicleInZone();
 
@@ -389,7 +396,7 @@ class Vehicle {
   void applyZoneForceOnPlayer(Player player) { // 100000 / 300000
 
     float gravity = calculateGravity(player.colorWheelAngle, colorWheelAngle, 75000, colorAngleSwitchPlayer);
-    
+
     println("gravity ", gravity);
 
     Vec2 pos = centerBoid.body.getWorldCenter();
@@ -412,7 +419,7 @@ class Vehicle {
     int angleSwitch = _angleSwitch;
 
     int angleDiff = abs(incomingColorAngle - breathingColorAngle);
-    
+
     println("angleDiff ", angleDiff);
 
     if (angleDiff > 180) {
@@ -469,7 +476,7 @@ class Vehicle {
     println("outcomingForceDirection ", outcomingForceDirection);
     println("force ", force.length());
     println("strength ", strength);
-    
+
     return force;
   }
 

@@ -279,6 +279,7 @@ class EmptyZoneState implements VehicleZoneState {
         }
       }
     }
+    
 
     vehicle.zone.distanceRadius = tempDistanceRadius;
 

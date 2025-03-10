@@ -148,5 +148,7 @@ class Bg_Unit {
     Vec2 unitPosVecPixels = new Vec2(unitPos.x, unitPos.y);
 
     vehicle.makeBlob(unitPosVecPixels);
+    
+    vehicle.initialize();
   }
 }
