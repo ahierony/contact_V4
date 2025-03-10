@@ -39,7 +39,7 @@ class VehicleZone {
     emptyState = new EmptyZoneState(v);
     fullState = new FullZoneState(vehicle);
     exhaleState = new ExhaleZoneState();
-    inhaleState = new InhaleZoneState();  
+    inhaleState = new InhaleZoneState();
     inMotionNoZoneState = new InMotionNoZoneState();
     collisionState = new CollisionState(vehicle);
 
@@ -169,7 +169,6 @@ class VehicleZone {
       if (vehicle.playerInBreathingZone || vehicle.otherVehicleInBreathingZone) {
 
         isBreathing = false;
-
       } else { // no vehicle in area
 
         isBreathing = true;
@@ -178,7 +177,6 @@ class VehicleZone {
     default:
       break;
     }
-
   }
 
   //--------------------------------------------------------------
@@ -231,11 +229,15 @@ class EmptyZoneState implements VehicleZoneState {
 
   boolean isChangingCoorAngle;
 
+  boolean zoneResize;
+
   EmptyZoneState(Vehicle v) {
 
     vehicle = v;
 
     readyToSetState = true;
+
+    zoneResize = true;
   }
 
   //--------------------------------------------------------------
@@ -247,11 +249,13 @@ class EmptyZoneState implements VehicleZoneState {
       setReadyToSetState(false);
 
       vehicle.updateColorNum();
-      
-      checkDistanceZoneAgainstVehiclesDistanceZone();
+
+      if (zoneResize) {
+        checkDistanceZoneAgainstVehiclesDistanceZone();
+      }
     }
   }
-  
+
   void checkDistanceZoneAgainstVehiclesDistanceZone() {
 
     int offset = 10;
@@ -277,8 +281,10 @@ class EmptyZoneState implements VehicleZoneState {
     }
 
     vehicle.zone.distanceRadius = tempDistanceRadius;
+
+    zoneResize = false;
   }
-  
+
 
   public boolean getReadyToSetState() {
     return readyToSetState;
@@ -415,7 +421,7 @@ class CollisionState implements VehicleZoneState {
   void update() {
 
     if (readyToSetState) {
-      
+
       vehicle.breath.setEmpty();
 
       readyToSetState = false;
@@ -424,7 +430,6 @@ class CollisionState implements VehicleZoneState {
 
       vehicle.updateColorNum();
     }
-    
   }
 
 

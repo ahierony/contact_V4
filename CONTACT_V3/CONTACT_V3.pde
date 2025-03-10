@@ -194,7 +194,7 @@ boolean recordSVG = false;
 void setup() {
 
   size(1024, 768, JAVA2D); // 800, 800 // 1440, 900
-  //fullScreen(1);
+  //fullScreen(2);
 
   //*********************************************************************
   //gamePadIsOn = false;
@@ -226,11 +226,11 @@ void setup() {
   int rowLength;
 
   if (debugMode) {
-    rowLength = 5;
-    setUnitSize(rowLength * 800, rowLength * 600, rowLength, 0.4); // float _unitSize, int _unitRow, float _worldScale
+    rowLength = 3;
+    setUnitSize(rowLength * 1200, rowLength * 900, rowLength, 0.4); // float _unitSize, int _unitRow, float _worldScale
   } else {
     rowLength = 5;
-    setUnitSize(rowLength * 400, rowLength * 300, rowLength, 0.6);
+    setUnitSize(rowLength * 1200, rowLength * 900, rowLength, 0.6); // float _unitSize, int _unitRow, float _worldScale
   }
 
   collision = new Collision();

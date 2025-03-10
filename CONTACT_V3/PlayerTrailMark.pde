@@ -17,7 +17,7 @@ class PlayerTrailMark {
 
     speed = markSpeed;
 
-    radius = 15;
+    radius = 30;
 
   }
 

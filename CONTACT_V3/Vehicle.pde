@@ -182,7 +182,7 @@ class Vehicle {
       zone.setState(zone.emptyState);
     }
 
-    colorAngleSwitchPlayer = 45; //45;
+    colorAngleSwitchPlayer = 20; //45;
     colorAngleSwitchVehicle = 5; //7; //15; //7;
   }
 

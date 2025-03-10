@@ -33,7 +33,7 @@ class PlayerLungBreathe {
 
   void setExhale() {
     
-    aVelocity = 0.0025;
+    aVelocity = 0.001;
     
     currentM = "exhale";
     

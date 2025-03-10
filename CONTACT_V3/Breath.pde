@@ -101,7 +101,7 @@ class Breath {
     isBreathing = true;
     theta = radians(190);
 
-    int randomTime = int(random(500, 1000)); // between .5 and 1 second pause
+    int randomTime = int(random(0, 2000)); // between .5 and 1 second pause
     timer = new Timer(randomTime);
 
     aVelocity *= -1;

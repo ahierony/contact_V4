@@ -230,7 +230,7 @@ class VInBreathingState implements VehicleLocationState {
 
     readyToSetState = true;
 
-    randomTime = int(random(500, 10000)); // between .5 and 3 second pause
+    randomTime = int(random(500, 5000)); // between .5 and 3 second pause
     timer = new Timer(randomTime);
 
     timer.start();
