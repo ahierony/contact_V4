@@ -301,7 +301,7 @@ class Eye {
   void setPupilState_k() {
 
     if (pupil_keyboard == Pupil_keyboard.INBETWEEN) {
-      println("inbetween");
+      
     } else if (pupil_keyboard == Pupil_keyboard.INNER) {
 
       if (pupilState == "locked") {
@@ -311,10 +311,8 @@ class Eye {
 
       setCurrentForce(0);
 
-      println("inner");
     } else if (pupil_keyboard == Pupil_keyboard.OUTER) {
-      println("outer");
-
+      
       if (pupilState == "unlocked") {
 
         pupilState = "locked";

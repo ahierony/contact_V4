@@ -176,7 +176,7 @@ class Vehicle {
     otherVehicleInDistanceZone = false;
     otherVehicleInBreathingZone = false;
 
-    colorAngleSwitchPlayer = 20; //45;
+    colorAngleSwitchPlayer = 45; //45;
     colorAngleSwitchVehicle = 5; //7; //15; //7;
 
     initialize();
@@ -397,8 +397,6 @@ class Vehicle {
 
     float gravity = calculateGravity(player.colorWheelAngle, colorWheelAngle, 75000, colorAngleSwitchPlayer);
 
-    println("gravity ", gravity);
-
     Vec2 pos = centerBoid.body.getWorldCenter();
     Vec2 playerPos = player.centerSphere.body.getWorldCenter();
 
@@ -420,39 +418,28 @@ class Vehicle {
 
     int angleDiff = abs(incomingColorAngle - breathingColorAngle);
 
-    println("angleDiff ", angleDiff);
-
     if (angleDiff > 180) {
       angleDiff = 360 - angleDiff;
     }
 
-    /*
-    int angleDiff;
-     
-     int angleDiff1 = incomingColorAngle - breathingColorAngle;
-     int angleDiff2 = breathingColorAngle - incomingColorAngle;
-     
-     if (angleDiff1 <= angleDiff2) {
-     angleDiff = angleDiff1;
-     } else {
-     angleDiff = angleDiff2;
-     }
-     
-     angleDiff = abs(angleDiff);
-     
-     if (angleDiff > 180) {
-     angleDiff = 360 - angleDiff;
-     }
-     */
+    println("angleDiff ", angleDiff);
+    println("angleSwitch ", angleSwitch);
+    println("gravityVal ", gravityVal);
 
+    gravity = map(angleDiff, 0, angleSwitch, 0, gravityVal);
+    //gravity = 1000000;
+   
     if (angleDiff > angleSwitch) {
       println("go away");
-      outcomingForceDirection = 1;
-      gravity = map(angleDiff, 0, angleSwitch, gravityVal, 0); // 300000
+      outcomingForceDirection = -1;
+      //gravity = map(angleDiff, 0, angleSwitch, gravityVal, 0); // 300000
+      println("gravity go away ", gravity);
     } else {
       println("come closer");
-      outcomingForceDirection = -1;
-      gravity = map(angleDiff, angleSwitch, 180, 0, gravityVal); // 300000//600000);
+      outcomingForceDirection = 1;
+      //gravity = map(angleDiff, 0, angleSwitch, 0, gravityVal); // 300000
+      //gravity = map(angleDiff, angleSwitch, 180, 0, gravityVal); // 300000//600000);
+      println("gravity come closer ", gravity);
     }
 
     return gravity;

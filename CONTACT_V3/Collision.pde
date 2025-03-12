@@ -213,7 +213,7 @@ class Collision {
             vehicleWasTouched = true;
 
             
-            //killVehicle(vNum);
+            killVehicle(vNum);
             
             break;
           }

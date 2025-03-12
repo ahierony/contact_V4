@@ -18,6 +18,8 @@ class PlayerLocation {
 
   Vehicle currentVehicle;
 
+  boolean isHit;
+
 
   //--------------------------------------------------------------
 
@@ -30,6 +32,8 @@ class PlayerLocation {
     pLocVehicleZoneState = new PLocVehicleZoneState(player);
 
     setState(pLocMovingState);
+
+    isHit = false;
   }
 
   //--------------------------------------------------------------
@@ -93,7 +97,7 @@ class PlayerLocation {
     // IN SPACE MOVING
     // ******************
 
-    //println("inVehicleBreathingZone ", inVehicleBreathingZone);
+    println("isHit ", isHit);
 
     if (getState() == pLocMovingState) {
 
@@ -115,16 +119,16 @@ class PlayerLocation {
           }
         }
       } else {
-        
+
         // THIS CODE COMMENTED OUT FOR CONTACT V3 NO BREATHING STATE FOR PLAYER
         /*
         if (player.getLinearVelocity() <= player.minVel ) {
-
-          if (pLocBreathingState.getReadyToSetState()) {
-            player.jointSphere.body.setType(BodyType.STATIC);
-            setState(pLocBreathingState);
-          }
-        }*/
+         
+         if (pLocBreathingState.getReadyToSetState()) {
+         player.jointSphere.body.setType(BodyType.STATIC);
+         setState(pLocBreathingState);
+         }
+         }*/
       }
 
 
@@ -160,9 +164,10 @@ class PlayerLocation {
     } else if (getState() == pLocVehicleZoneState) {
 
       // check to see if player is out of vehicle zone and moving
-      if (!inVehicleBreathingZone) {
 
-        if (pLocMovingState.getReadyToSetState()) {
+      if (isHit) {
+
+        if (player.lung.getState() == player.lung.fullState) {
 
           setState(pLocMovingState);
 
@@ -172,8 +177,25 @@ class PlayerLocation {
 
           println("movingOutofZone");
         }
+      } else {
+
+        if (!inVehicleBreathingZone) {
+
+          if (pLocMovingState.getReadyToSetState()) {
+
+            setState(pLocMovingState);
+
+            if (isTrackingData) {
+              data.trackPlayerInZone(false);
+            }
+
+            println("movingOutofZone");
+          }
+        }
       }
     }
+
+    println("location state ", getState());
   }
 
 
@@ -450,36 +472,53 @@ class PLocVehicleZoneState implements PlayerLocationState {
 
   void update() {
 
+    //println("isHit ", isHit);
+
     if (readyToSetState) {
 
       setReadyToSetState(false);
     }
 
-    setLungState();
+    player.lung.setState(player.lung.holdState);
 
     if (collision.checkPlayerAgainstVehicleInZone()) {
-      updateCollision();
+      //updateCollision();
+      player.location.isHit = true;
+    }
+
+    if (player.location.isHit) {
+      setLungState();
     }
   }
 
+  /*
   void updateCollision() {
-
-    player.lung.setState(player.lung.emptyState);
-    player.area.setState(player.area.emptyState);
-  }
+   
+   
+   
+   //setLungState();
+   
+   //player.lung.setState(player.lung.emptyState);
+   //player.area.setState(player.area.emptyState);
+   }
+   */
 
 
   void setLungState() {
 
     if (player.lung.breath.movement == "full") {
       player.lung.setState(player.lung.fullState);
+      player.location.isHit = false;
     }
 
     if (player.lung.getState() != player.lung.fullState) {
 
-      //player.lung.setState(player.lung.inhaleState);
-      player.lung.setState(player.lung.holdState);
+      player.lung.setState(player.lung.inhaleState);
+      //player.lung.setState(player.lung.holdState);
     }
+
+    println("has been hit***************************");
+    //println("state ", player.location.getState());
   }
 
   public boolean getReadyToSetState() {
