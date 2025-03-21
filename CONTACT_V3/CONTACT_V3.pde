@@ -173,7 +173,7 @@ int backgroundBrightness;
 Timer screenGrabTimer;
 boolean screengrab;
 
-boolean isTrackingData;
+boolean playSound;
 
 
 // TRAIL
@@ -200,10 +200,10 @@ void setup() {
   //gamePadIsOn = false;
   inputControls = InputControls.JOYSTICKS; //KEYBOARD; //JOYSTICKS;
   //protoSticks = false;
-  debugMode = true;
+  debugMode = false;
   screengrab = false;
   showDistance = true;
-  isTrackingData = false;
+  playSound = false; // enables sound
   //*********************************************************************
 
   if (screengrab) {
@@ -227,10 +227,10 @@ void setup() {
 
   if (debugMode) {
     rowLength = 3;
-    setUnitSize(rowLength * 1200, rowLength * 900, rowLength, 0.4); // float _unitSize, int _unitRow, float _worldScale
+    setUnitSize(rowLength * 1000, rowLength * 1000, rowLength, 0.5); // float _unitSize, int _unitRow, float _worldScale
   } else {
     rowLength = 5;
-    setUnitSize(rowLength * 1200, rowLength * 900, rowLength, 0.6); // float _unitSize, int _unitRow, float _worldScale
+    setUnitSize(rowLength * 1000, rowLength * 1000, rowLength, 0.5); // float _unitSize, int _unitRow, float _worldScale
   }
 
   collision = new Collision();
@@ -514,7 +514,7 @@ void draw() {
         drawFrame();
         noCursor();
       }
-    //} else {
+   // } else 
     if (recordSVG) {
 
       // TRAILS START
@@ -530,7 +530,7 @@ void draw() {
       // TRAILS END
     }
 
-    if (isTrackingData) {
+    if (playSound) {
       trackData();
     }
   }
@@ -554,10 +554,10 @@ void draw() {
       if (player.rightEye.readyToRotate_k)player.rightEye.rotateLine("right");
     }
     if (rightEyeUp) {
-      player.rightEye.movePupil("up");
+      player.rightEye.movePupil_k("up");
     }
     if (rightEyeDown) {
-      player.rightEye.movePupil("down");
+      player.rightEye.movePupil_k("down");
     }
 
     // LEFT
@@ -568,10 +568,10 @@ void draw() {
       if (player.leftEye.readyToRotate_k)player.leftEye.rotateLine("right");
     }
     if (leftEyeUp) {
-      player.leftEye.movePupil("up");
+      player.leftEye.movePupil_k("up");
     }
     if (leftEyeDown) {
-      player.leftEye.movePupil("down");
+      player.leftEye.movePupil_k("down");
     }
   }
 

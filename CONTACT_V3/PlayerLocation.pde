@@ -97,8 +97,6 @@ class PlayerLocation {
     // IN SPACE MOVING
     // ******************
 
-    println("isHit ", isHit);
-
     if (getState() == pLocMovingState) {
 
       // check to see if player is still to transition into breathing
@@ -113,7 +111,7 @@ class PlayerLocation {
 
             setState(pLocVehicleZoneState);
 
-            if (isTrackingData) {
+            if (playSound) {
               data.trackPlayerInZone(true);
             }
           }
@@ -171,11 +169,10 @@ class PlayerLocation {
 
           setState(pLocMovingState);
 
-          if (isTrackingData) {
+          if (playSound) {
             data.trackPlayerInZone(false);
           }
 
-          println("movingOutofZone");
         }
       } else {
 
@@ -185,17 +182,16 @@ class PlayerLocation {
 
             setState(pLocMovingState);
 
-            if (isTrackingData) {
+            if (playSound) {
               data.trackPlayerInZone(false);
             }
 
-            println("movingOutofZone");
           }
         }
       }
     }
 
-    println("location state ", getState());
+
   }
 
 
@@ -517,8 +513,6 @@ class PLocVehicleZoneState implements PlayerLocationState {
       //player.lung.setState(player.lung.holdState);
     }
 
-    println("has been hit***************************");
-    //println("state ", player.location.getState());
   }
 
   public boolean getReadyToSetState() {

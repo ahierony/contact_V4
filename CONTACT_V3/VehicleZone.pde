@@ -36,10 +36,10 @@ class VehicleZone {
     vehicle = v;
 
     holdState = new HoldZoneState();
-    emptyState = new EmptyZoneState(v);
+    emptyState = new EmptyZoneState(vehicle);
     fullState = new FullZoneState(vehicle);
     exhaleState = new ExhaleZoneState();
-    inhaleState = new InhaleZoneState();
+    inhaleState = new InhaleZoneState(vehicle);
     inMotionNoZoneState = new InMotionNoZoneState();
     collisionState = new CollisionState(vehicle);
 
@@ -229,7 +229,7 @@ class EmptyZoneState implements VehicleZoneState {
 
   boolean isChangingCoorAngle;
 
-  boolean zoneResize;
+  //boolean zoneResize;
 
   EmptyZoneState(Vehicle v) {
 
@@ -237,7 +237,7 @@ class EmptyZoneState implements VehicleZoneState {
 
     readyToSetState = true;
 
-    zoneResize = true;
+    //zoneResize = true;
   }
 
   //--------------------------------------------------------------
@@ -249,42 +249,48 @@ class EmptyZoneState implements VehicleZoneState {
       setReadyToSetState(false);
 
       vehicle.updateColorNum();
-
+      
+      /*
       if (zoneResize) {
         checkDistanceZoneAgainstVehiclesDistanceZone();
       }
+      */
     }
   }
 
+  /*
   void checkDistanceZoneAgainstVehiclesDistanceZone() {
-
-    int offset = 10;
-    float tempDistanceRadius = vehicle.zone.originalDistanceRadius;
-
-    for (int i = 0; i < vehicles.size()-1; i++) {
-
-      Vehicle v = vehicles.get(i);
-
-      if (v != vehicle) {
-
-        Vec2 thisPosPix = box2d.getBodyPixelCoord(vehicle.centerBoid.body);
-        Vec2 otherPosPix = box2d.getBodyPixelCoord(v.centerBoid.body);
-
-        float d_pix = dist(thisPosPix.x, thisPosPix.y, otherPosPix.x, otherPosPix.y);
-
-        if (d_pix < v.zone.distanceRadius + tempDistanceRadius + offset) {
-
-          tempDistanceRadius = (d_pix - offset) / 2;
-          v.zone.distanceRadius = (d_pix - offset) / 2;
-        }
-      }
-    }
-    
-
-    vehicle.zone.distanceRadius = tempDistanceRadius;
-
-    zoneResize = false;
-  }
+   
+   int offset = 10;
+   float tempDistanceRadius = vehicle.zone.originalDistanceRadius;
+   
+   for (int i = 0; i < vehicles.size()-1; i++) {
+   
+   Vehicle v = vehicles.get(i);
+   
+   if (v != vehicle) {
+   
+   Vec2 thisPosPix = box2d.getBodyPixelCoord(vehicle.centerBoid.body);
+   Vec2 otherPosPix = box2d.getBodyPixelCoord(v.centerBoid.body);
+   
+   float d_pix = dist(thisPosPix.x, thisPosPix.y, otherPosPix.x, otherPosPix.y);
+   
+   if (d_pix < v.zone.distanceRadius + tempDistanceRadius + offset) {
+   
+   tempDistanceRadius = (d_pix - offset) / 2;
+   v.zone.distanceRadius = (d_pix - offset) / 2;
+   }
+   }
+   }
+   
+   
+   vehicle.zone.distanceRadius = tempDistanceRadius;
+   
+   zoneResize = false;
+   
+   }
+   
+   */
 
 
   public boolean getReadyToSetState() {
@@ -357,16 +363,68 @@ class ExhaleZoneState implements VehicleZoneState {
 class InhaleZoneState implements VehicleZoneState {
 
   boolean readyToSetState;
+  
+  boolean zoneResize;
+  
+  Vehicle vehicle;
 
-  InhaleZoneState() {
+  InhaleZoneState(Vehicle v) {
 
     readyToSetState = true;
+    
+    zoneResize = true;
+    
+    vehicle = v;
   }
 
   //--------------------------------------------------------------
 
   void update() {
+    
+    
+    if(readyToSetState){
+      
+      setReadyToSetState(false);
+      
+     if (zoneResize) {
+        checkDistanceZoneAgainstVehiclesDistanceZone();
+      } 
+      
+    }
+    
+    
   }
+
+  void checkDistanceZoneAgainstVehiclesDistanceZone() {
+
+    int offset = 10;
+    float tempDistanceRadius = vehicle.zone.originalDistanceRadius;
+
+    for (int i = 0; i < vehicles.size()-1; i++) {
+
+      Vehicle v = vehicles.get(i);
+
+      if (v != vehicle) {
+
+        Vec2 thisPosPix = box2d.getBodyPixelCoord(vehicle.centerBoid.body);
+        Vec2 otherPosPix = box2d.getBodyPixelCoord(v.centerBoid.body);
+
+        float d_pix = dist(thisPosPix.x, thisPosPix.y, otherPosPix.x, otherPosPix.y);
+
+        if (d_pix < v.zone.distanceRadius + tempDistanceRadius + offset) {
+
+          tempDistanceRadius = (d_pix - offset) / 2;
+          v.zone.distanceRadius = (d_pix - offset) / 2;
+        }
+      }
+    }
+
+
+    vehicle.zone.distanceRadius = tempDistanceRadius;
+
+    zoneResize = false;
+  }
+
 
   public boolean getReadyToSetState() {
     return readyToSetState;

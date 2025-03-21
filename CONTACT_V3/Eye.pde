@@ -264,7 +264,7 @@ class Eye {
       }
 
 
-      if (d >= eyeOuter.radius) { // is head is outside eyeOuter radius
+      if (d >= eyeOuter.radius/2) { // is head is outside eyeOuter radius
 
         s.sub(e);
         s.normalize();
@@ -343,11 +343,11 @@ class Eye {
 
         pupilState = "locked";
 
+        applyImpulse();
+        
         // lock pupil position
         pupil.pos.x = (eyeOuterRadius - eyeInnerRadius) * cos(theta);
         pupil.pos.y = (eyeOuterRadius - eyeInnerRadius) * sin(theta);
-
-        applyImpulse();
 
         pushTimer.start();
       }
@@ -482,8 +482,8 @@ class Eye {
   }
 
   //--------------------------------------------------------------
-
-  void movePupil(String direction) {
+  
+  void movePupil_k(String direction) {
 
     speedX_k = -speed_k * cos(theta_k - radians(-90));
     speedY_k = -speed_k * sin(theta_k - radians(-90));
@@ -529,6 +529,7 @@ class Eye {
 
     //println("pupil keyboard ", pupil_keyboard);
   }
+  
 
   //--------------------------------------------------------------
 

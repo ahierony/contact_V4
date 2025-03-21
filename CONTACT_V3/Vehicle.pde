@@ -176,7 +176,7 @@ class Vehicle {
     otherVehicleInDistanceZone = false;
     otherVehicleInBreathingZone = false;
 
-    colorAngleSwitchPlayer = 45; //45;
+    colorAngleSwitchPlayer = 50; //45;
     colorAngleSwitchVehicle = 5; //7; //15; //7;
 
     initialize();
@@ -395,7 +395,7 @@ class Vehicle {
 
   void applyZoneForceOnPlayer(Player player) { // 100000 / 300000
 
-    float gravity = calculateGravity(player.colorWheelAngle, colorWheelAngle, 75000, colorAngleSwitchPlayer);
+    float gravity = calculateGravity(player.colorWheelAngle, colorWheelAngle, 100000, colorAngleSwitchPlayer); // 75000
 
     Vec2 pos = centerBoid.body.getWorldCenter();
     Vec2 playerPos = player.centerSphere.body.getWorldCenter();

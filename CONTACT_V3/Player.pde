@@ -344,7 +344,7 @@ class Player {
 
   void setMotionState() {
 
-    if (lung.getState() == lung.exhaleState) {
+    if (lung.getState() == lung.exhaleState) { // probably needs to be inverted: if accel than exhale and not the opposite
 
       motion.setState(motion.pMotionAccelState);
     } else {
@@ -392,7 +392,7 @@ class Player {
           if (v.inPlayerBreathingArea) {
             vehicleInBreathingArea = true;
 
-            if (isTrackingData) {
+            if (playSound) {
               if (checkForVehiclesMovingInOutofPlayerArea) {
                 data.trackVehicleInArea(true);
                 checkForVehiclesMovingInOutofPlayerArea = false;
@@ -406,7 +406,7 @@ class Player {
     if (!vehicleInDistanceArea) {
       vehicleInBreathingArea = false;
 
-      if (isTrackingData) {
+      if (playSound) {
         if (!checkForVehiclesMovingInOutofPlayerArea) {
           data.trackVehicleInArea(false);
           checkForVehiclesMovingInOutofPlayerArea = true;

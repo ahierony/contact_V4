@@ -203,12 +203,12 @@ class Collision {
 
             //data.playerTouchedVehicle = true;
 
-            if (isTrackingData) {
+            if (playSound) {
               data.trackPlayerTouchedVehicle(true);
             }
 
-            println("player touched vehicle ");
-            println(player.location.getState());
+            //println("player touched vehicle ");
+            //println(player.location.getState());
 
             vehicleWasTouched = true;
 
@@ -247,7 +247,7 @@ class Collision {
 
             //data.vehicleTouchedPlayer = true;
             
-            if (isTrackingData) {
+            if (playSound) {
               data.trackVehicleTouchedPlayer(true);
             }
 

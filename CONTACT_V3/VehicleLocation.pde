@@ -14,6 +14,7 @@ class VehicleLocation {
   VehicleLocationState vInBreathingState;
   VehicleLocationState vInPlayerAreaState;
   VehicleLocationState vInOtherVehicleZoneState;
+  VehicleLocationState vInDeadState;
 
   Vehicle vehicle;
   Player player;
@@ -29,6 +30,7 @@ class VehicleLocation {
     vInBreathingState = new VInBreathingState(vehicle);
     vInPlayerAreaState = new VInPlayerAreaState(vehicle);
     vInOtherVehicleZoneState = new VInOtherVehicleZoneState(vehicle);
+    vInDeadState = new VInDeadState(vehicle);
 
     if (_inMotion) {
       setState(vInMovingState);
@@ -364,6 +366,40 @@ class VInOtherVehicleZoneState implements VehicleLocationState {
   Vehicle vehicle;
 
   VInOtherVehicleZoneState(Vehicle v) {
+
+    vehicle = v;
+
+    readyToSetState = true;
+  }
+
+  //--------------------------------------------------------------
+
+  void update() {
+
+
+    if (readyToSetState) {
+
+      setReadyToSetState(false);
+    }
+  }
+
+  public boolean getReadyToSetState() {
+    return readyToSetState;
+  }
+
+  public void setReadyToSetState(boolean rtss) {
+    readyToSetState = rtss;
+  }
+}
+// ********************************************************
+
+class VInDeadState implements VehicleLocationState {
+
+  boolean readyToSetState;
+
+  Vehicle vehicle;
+
+  VInDeadState(Vehicle v) {
 
     vehicle = v;
 

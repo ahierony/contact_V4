@@ -7,6 +7,7 @@ FEATURE
 
 
 
+
 - change the frequency of new trails based on speed and rotation. 
 	The more rotation the more new trails. 
 	The higher the speed the fewer new trails.
@@ -24,6 +25,16 @@ FEATURE
 
 BUG LIST
 
+- fix max
+
+
+
+
+DONE
+
+
 - fix gravity . right now repell is much stronger than attract
 
-- fix constant resizing of vehicile breathing zones
+- fix constant resizing of vehicle breathing zones
+
+- fix eyes coming out of player body
