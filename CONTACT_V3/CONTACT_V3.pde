@@ -200,7 +200,7 @@ void setup() {
   //gamePadIsOn = false;
   inputControls = InputControls.JOYSTICKS; //KEYBOARD; //JOYSTICKS;
   //protoSticks = false;
-  debugMode = false;
+  debugMode = true;
   screengrab = false;
   showDistance = true;
   playSound = false; // enables sound
@@ -229,7 +229,7 @@ void setup() {
     rowLength = 3;
     setUnitSize(rowLength * 1000, rowLength * 1000, rowLength, 0.5); // float _unitSize, int _unitRow, float _worldScale
   } else {
-    rowLength = 5;
+    rowLength = 3;
     setUnitSize(rowLength * 1000, rowLength * 1000, rowLength, 0.5); // float _unitSize, int _unitRow, float _worldScale
   }
 

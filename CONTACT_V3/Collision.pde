@@ -212,8 +212,10 @@ class Collision {
 
             vehicleWasTouched = true;
 
-            
             killVehicle(vNum);
+            
+            v.playerInDistanceZone = false;
+            //player.location.setState(player.location.pLocMovingState);
             
             break;
           }
@@ -254,6 +256,7 @@ class Collision {
             playerWasTouched = true;
 
             killVehicle(vNum);
+            
             break;
           }
         }
@@ -288,6 +291,7 @@ class Collision {
     Vehicle v = vehicles.get(vNum);
 
     v.killBlob();
-    vehicles.remove(vNum);
+    v.location.setState(v.location.vInDeadState);
+    //vehicles.remove(vNum);
   }
 }

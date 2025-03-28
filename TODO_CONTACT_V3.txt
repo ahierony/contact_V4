@@ -1,3 +1,9 @@
+BUG
+
+***************************
+- fix two eye movement in zone 
+***************************
+
 
 
 FEATURE
@@ -30,6 +36,7 @@ BUG LIST
 
 
 
+
 DONE
 
 
@@ -37,4 +44,4 @@ DONE
 
 - fix constant resizing of vehicle breathing zones
 
-- fix eyes coming out of player body
+- fix eyes coming out of player body 

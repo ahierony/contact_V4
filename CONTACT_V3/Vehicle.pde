@@ -200,10 +200,17 @@ class Vehicle {
 
     vehicles = vs;
 
-    update();
+    if (location.getState() != location.vInDeadState) {
 
-    display();
+      update();
+
+      display();
+    } else {
+
+      displayDeadVehicle();
+    }
   }
+
 
   // ********************************************************
   // UPDATE CODE
@@ -428,7 +435,7 @@ class Vehicle {
 
     gravity = map(angleDiff, 0, angleSwitch, 0, gravityVal);
     //gravity = 1000000;
-   
+
     if (angleDiff > angleSwitch) {
       println("go away");
       outcomingForceDirection = -1;
@@ -801,6 +808,41 @@ class Vehicle {
       Vec2 posb = box2d.getBodyPixelCoord(b);
       line(posa.x, posa.y, posb.x, posb.y);
     }
+  }
+
+  //--------------------------------------------------------------
+
+  void displayDeadVehicle() {
+
+    ellipseMode(RADIUS);
+
+    pushMatrix();
+
+    translate(posVecPixels.x, posVecPixels.y);
+
+    //if (showDistance) {
+    // outer circle for checking distance
+
+    strokeWeight(3);
+    stroke(darkGrey);
+    //fill(vehicle.darkGrey);
+    noFill();
+    circle(0, 0, zone.distanceRadius);
+    //}
+
+    noFill();
+    circle(0, 0, zone.radius);
+    // repel / attract zone (breathing)
+
+    strokeWeight(1);
+    //stroke(colorBreathing);
+    stroke(darkGrey);
+
+    //fill(vehicle.colorBreathing); // TEST
+    noFill();
+    circle(0, 0, radius);
+
+    popMatrix();
   }
 
   // ********************************************************

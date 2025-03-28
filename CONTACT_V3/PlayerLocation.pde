@@ -505,6 +505,7 @@ class PLocVehicleZoneState implements PlayerLocationState {
     if (player.lung.breath.movement == "full") {
       player.lung.setState(player.lung.fullState);
       player.location.isHit = false;
+      player.location.setState(player.location.pLocMovingState);
     }
 
     if (player.lung.getState() != player.lung.fullState) {
