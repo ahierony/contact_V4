@@ -273,6 +273,12 @@ class VInBreathingState implements VehicleLocationState {
   }
 
   void updateVehicleRadius() {
+    
+    println("vehicle zone distance radius ", vehicle.zone.distanceRadius);
+    
+    //vehicle.zone.distanceRadius = 100;
+    
+    /*
 
     vehicleZoneTempRadius = vehicle.zone.originalDistanceRadius;
 
@@ -291,13 +297,24 @@ class VInBreathingState implements VehicleLocationState {
 
         Vec2 otherVehiclePosPix = box2d.getBodyPixelCoord(v.centerBoid.body);
 
-        checkVehicleZoneAgainstDistance(vehiclePosPix, otherVehiclePosPix, v.zone.distanceRadius);
+        vehicleZoneTempRadius = checkVehicleZoneAgainstDistance(vehiclePosPix, otherVehiclePosPix, v.zone.distanceRadius);
       }
     }
-
-    vehicle.zone.distanceRadius = vehicleZoneTempRadius;
+    
+    
+    //vehicle.zone.distanceRadius = vehicleZoneTempRadius;
+    
+    
+    if (vehicleZoneTempRadius > vehicle.zone.radiusMin) {
+      vehicle.zone.distanceRadius = vehicleZoneTempRadius;
+    } else {
+      vehicle.zone.distanceRadius = vehicle.zone.radiusMin;
+    }
+    */
+    
   }
-
+  
+  /*
   float checkVehicleZoneAgainstDistance(Vec2 vehiclePosPix, Vec2 otherPosPix, float otherRadius) {
 
     float offset = 10.0f;
@@ -311,6 +328,7 @@ class VInBreathingState implements VehicleLocationState {
 
     return vehicleZoneTempRadius;
   }
+  */
 
   public boolean getReadyToSetState() {
     return readyToSetState;

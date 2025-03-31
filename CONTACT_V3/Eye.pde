@@ -131,7 +131,7 @@ class Eye {
     eyeOuterb2d = new PlayerSphere(center.x, center.y, eyeOuterRadius, "DYNAMIC", CATEGORY_PLAYER, MASK_PLAYER);
     eyeInnerb2d = new PlayerSphere(center.x, center.y, eyeInnerRadius, "DYNAMIC", CATEGORY_PLAYER, MASK_PLAYER);
 
-    pushTimer = new Timer(2000);
+    pushTimer = new Timer(1000);
     calibrateTimer = new Timer(3000);
 
     movementApplied = false;

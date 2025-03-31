@@ -217,6 +217,8 @@ class Vehicle {
   // ********************************************************
 
   void update() {
+    
+    //println("vehicle location ", location.getState());
 
     ellipseMode(RADIUS);
 
@@ -429,24 +431,20 @@ class Vehicle {
       angleDiff = 360 - angleDiff;
     }
 
-    println("angleDiff ", angleDiff);
-    println("angleSwitch ", angleSwitch);
-    println("gravityVal ", gravityVal);
-
     gravity = map(angleDiff, 0, angleSwitch, 0, gravityVal);
     //gravity = 1000000;
 
     if (angleDiff > angleSwitch) {
-      println("go away");
+      //println("go away");
       outcomingForceDirection = -1;
       //gravity = map(angleDiff, 0, angleSwitch, gravityVal, 0); // 300000
-      println("gravity go away ", gravity);
+      //println("gravity go away ", gravity);
     } else {
-      println("come closer");
+      //println("come closer");
       outcomingForceDirection = 1;
       //gravity = map(angleDiff, 0, angleSwitch, 0, gravityVal); // 300000
       //gravity = map(angleDiff, angleSwitch, 180, 0, gravityVal); // 300000//600000);
-      println("gravity come closer ", gravity);
+      //println("gravity come closer ", gravity);
     }
 
     return gravity;
@@ -467,9 +465,7 @@ class Vehicle {
     float strength =  outcomingForceDirection * (gravity * 1 * mass) / (d * d); // Calculate gravitional force magnitude
     //float strength =  -1 * (localGravity * 1 * sphere.body.m_mass) / (d * d); // Calculate gravitional force magnitude
     force.mulLocal(strength);         // Get force vector --> magnitude * direction
-    println("outcomingForceDirection ", outcomingForceDirection);
-    println("force ", force.length());
-    println("strength ", strength);
+   
 
     return force;
   }
@@ -827,14 +823,14 @@ class Vehicle {
     stroke(darkGrey);
     //fill(vehicle.darkGrey);
     noFill();
-    circle(0, 0, zone.distanceRadius);
+    //circle(0, 0, zone.distanceRadius);
     //}
 
     noFill();
     circle(0, 0, zone.radius);
     // repel / attract zone (breathing)
 
-    strokeWeight(1);
+    //strokeWeight(1);
     //stroke(colorBreathing);
     stroke(darkGrey);
 
@@ -843,6 +839,7 @@ class Vehicle {
     circle(0, 0, radius);
 
     popMatrix();
+    strokeWeight(1);
   }
 
   // ********************************************************

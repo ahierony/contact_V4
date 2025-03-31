@@ -182,7 +182,7 @@ class Collision {
   // PLAYER AGAINST VEHICLES
 
   boolean checkPlayerAgainstVehicleInZone() { // called from player location
-
+  
     int vNum = 0;
 
     boolean vehicleWasTouched = false;

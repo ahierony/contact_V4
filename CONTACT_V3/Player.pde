@@ -192,7 +192,7 @@ class Player {
 
   void update(float _theta) {
     
-    println("player location state ", player.location.getState());
+    //println("player location ", location.getState());
 
     playerTheta = _theta;
 

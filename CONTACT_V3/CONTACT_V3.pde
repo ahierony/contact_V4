@@ -193,14 +193,14 @@ boolean recordSVG = false;
 
 void setup() {
 
-  size(1024, 768, JAVA2D); // 800, 800 // 1440, 900
-  //fullScreen(2);
+  //size(1024, 768, JAVA2D); // 800, 800 // 1440, 900
+  fullScreen(2);
 
   //*********************************************************************
   //gamePadIsOn = false;
   inputControls = InputControls.JOYSTICKS; //KEYBOARD; //JOYSTICKS;
   //protoSticks = false;
-  debugMode = true;
+  debugMode = false;
   screengrab = false;
   showDistance = true;
   playSound = false; // enables sound
@@ -224,13 +224,14 @@ void setup() {
   colorMode(HSB, 360, 100, 100);
 
   int rowLength;
+  int unitSize = 1000;
 
   if (debugMode) {
     rowLength = 3;
-    setUnitSize(rowLength * 1000, rowLength * 1000, rowLength, 0.5); // float _unitSize, int _unitRow, float _worldScale
+    setUnitSize(rowLength * unitSize, rowLength * unitSize, rowLength, 0.5); // float _unitSize, int _unitRow, float _worldScale
   } else {
     rowLength = 3;
-    setUnitSize(rowLength * 1000, rowLength * 1000, rowLength, 0.5); // float _unitSize, int _unitRow, float _worldScale
+    setUnitSize(rowLength * unitSize, rowLength * unitSize, rowLength, 0.5); // float _unitSize, int _unitRow, float _worldScale
   }
 
   collision = new Collision();
