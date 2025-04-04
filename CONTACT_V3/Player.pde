@@ -103,6 +103,8 @@ class Player {
 
   PlayerTrail trailLeft;
   PlayerTrail trailRight;
+  
+  boolean engagedInImpulse;
 
 
   // ********************************************************
@@ -183,6 +185,8 @@ class Player {
     Vec2 pPos = box2d.getBodyPixelCoord(centerSphere.body);
     trailLeft = new PlayerTrail(pPos.x, pPos.y);
     trailRight = new PlayerTrail(pPos.x, pPos.y);
+    
+    engagedInImpulse = false;
     //
   } // constructor
 
@@ -192,7 +196,9 @@ class Player {
 
   void update(float _theta) {
     
-    //println("player location ", location.getState());
+    println("player engaged in impulse ", engagedInImpulse);
+    println("player left eye inImpulse ", leftEye.inImpulse);
+    println("player right eye inImpulse ", rightEye.inImpulse);
 
     playerTheta = _theta;
 
@@ -207,7 +213,7 @@ class Player {
 
     updateColorOnRotation(playerTheta);
 
-    setLockEyeState();
+    //setLockEyeState();
 
     setMotionState();
 
@@ -216,6 +222,8 @@ class Player {
 
     leftEye.update(this);
     rightEye.update(this);
+    
+    setLockEyeState();
 
     centerSphere.update();
 

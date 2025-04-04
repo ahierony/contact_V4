@@ -104,7 +104,8 @@ class PlayerLocation {
 
       // check if player is in the zone to prevent body to go in static mode
 
-      if (inVehicleBreathingZone) {
+      //if (inVehicleBreathingZone) {
+      if (inVehicleDistanceZone) {
 
         if (pLocVehicleZoneState.getReadyToSetState()) {
           {
@@ -172,7 +173,6 @@ class PlayerLocation {
           if (playSound) {
             data.trackPlayerInZone(false);
           }
-
         }
       } else {
 
@@ -185,13 +185,10 @@ class PlayerLocation {
             if (playSound) {
               data.trackPlayerInZone(false);
             }
-
           }
         }
       }
     }
-
-
   }
 
 
@@ -468,8 +465,6 @@ class PLocVehicleZoneState implements PlayerLocationState {
 
   void update() {
 
-    //println("isHit ", isHit);
-
     if (readyToSetState) {
 
       setReadyToSetState(false);
@@ -485,20 +480,23 @@ class PLocVehicleZoneState implements PlayerLocationState {
     if (player.location.isHit) {
       setLungState();
     }
+
+    checkImpulseState();
   }
 
-  /*
-  void updateCollision() {
-   
-   
-   
-   //setLungState();
-   
-   //player.lung.setState(player.lung.emptyState);
-   //player.area.setState(player.area.emptyState);
-   }
-   */
+  void checkImpulseState() {
 
+    if (player.rightEye.inImpulse || player.leftEye.inImpulse) {
+      player.engagedInImpulse = true;
+    } 
+    
+    if(player.leftEye.pupilState == "unlocked" && player.rightEye.pupilState == "unlocked"){
+      player.leftEye.inImpulse = false;
+      player.rightEye.inImpulse = false;
+      player.engagedInImpulse = false;
+    }
+    
+  }
 
   void setLungState() {
 
@@ -511,9 +509,7 @@ class PLocVehicleZoneState implements PlayerLocationState {
     if (player.lung.getState() != player.lung.fullState) {
 
       player.lung.setState(player.lung.inhaleState);
-      //player.lung.setState(player.lung.holdState);
     }
-
   }
 
   public boolean getReadyToSetState() {

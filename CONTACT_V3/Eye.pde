@@ -99,6 +99,8 @@ class Eye {
 
   Pupil_keyboard pupil_keyboard;
 
+  boolean inImpulse;
+
   //
 
   Eye(float _x, float _y, String _coltxt) {
@@ -301,7 +303,6 @@ class Eye {
   void setPupilState_k() {
 
     if (pupil_keyboard == Pupil_keyboard.INBETWEEN) {
-      
     } else if (pupil_keyboard == Pupil_keyboard.INNER) {
 
       if (pupilState == "locked") {
@@ -310,9 +311,8 @@ class Eye {
       }
 
       setCurrentForce(0);
-
     } else if (pupil_keyboard == Pupil_keyboard.OUTER) {
-      
+
       if (pupilState == "unlocked") {
 
         pupilState = "locked";
@@ -343,8 +343,13 @@ class Eye {
 
         pupilState = "locked";
 
-        applyImpulse();
-        
+
+        if(!player.engagedInImpulse){
+          inImpulse = true;
+          applyImpulse();
+        }
+
+
         // lock pupil position
         pupil.pos.x = (eyeOuterRadius - eyeInnerRadius) * cos(theta);
         pupil.pos.y = (eyeOuterRadius - eyeInnerRadius) * sin(theta);
@@ -355,6 +360,7 @@ class Eye {
 
       if (pushTimer.isFinished()) {
         pupilState = "unlocked";
+        //inImpulse = false;
       }
     }
   }
@@ -369,7 +375,12 @@ class Eye {
 
         pupilState = "locked";
 
-        applyImpulse();
+        
+        if(!player.engagedInImpulse){
+          inImpulse = true;
+          applyImpulse();
+        }
+
 
         pushTimer.start();
       }
@@ -377,8 +388,11 @@ class Eye {
 
       if (pushTimer.isFinished()) {
         pupilState = "unlocked";
+        //inImpulse = false;
       }
     }
+    
+    
   }
 
 
@@ -482,7 +496,7 @@ class Eye {
   }
 
   //--------------------------------------------------------------
-  
+
   void movePupil_k(String direction) {
 
     speedX_k = -speed_k * cos(theta_k - radians(-90));
@@ -519,6 +533,8 @@ class Eye {
         pupil.pos.y = 0;
 
         readyToRotate_k = true;
+        
+        inImpulse = false;
       } else {
         readyToRotate_k = false;
       }
@@ -529,7 +545,7 @@ class Eye {
 
     //println("pupil keyboard ", pupil_keyboard);
   }
-  
+
 
   //--------------------------------------------------------------
 

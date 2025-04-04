@@ -193,8 +193,8 @@ boolean recordSVG = false;
 
 void setup() {
 
-  //size(1024, 768, JAVA2D); // 800, 800 // 1440, 900
-  fullScreen(2);
+  size(1024, 768, JAVA2D); // 800, 800 // 1440, 900
+  //fullScreen(2);
 
   //*********************************************************************
   //gamePadIsOn = false;

@@ -23,7 +23,7 @@ class VehicleZone {
   float radius;
   float radiusMax, radiusMin;
   float distanceRadius;
-  float originalDistanceRadius;
+  float originalRadiusMax;
   float tempDistanceRadius;
 
   boolean isBreathing;
@@ -47,9 +47,9 @@ class VehicleZone {
     radiusMax = unit_w;
     //radiusMax = bgTrailBox.rectSize * 0.5;
     //println("radiusMax ", radiusMax);
-    radiusMin = 100; //radiusMin = vehicle.radius*10;
+    radiusMin = vehicle.radius*5;
     distanceRadius = radiusMax;
-    originalDistanceRadius = radiusMax;
+    originalRadiusMax = radiusMax;
 
     switchFromExhaleToInhale = false;
   }
@@ -184,8 +184,8 @@ class VehicleZone {
   void resetRadius() { // called in Bg_Unit when vehicles wrap
 
     vehicle.zoneAgainstZones = true;
-    distanceRadius = originalDistanceRadius;
-    radiusMax = originalDistanceRadius;
+    distanceRadius = originalRadiusMax;
+    radiusMax = originalRadiusMax;
   }
 
 
@@ -398,7 +398,7 @@ class InhaleZoneState implements VehicleZoneState {
   void checkDistanceZoneAgainstVehiclesDistanceZone() {
 
     int offset = 10;
-    float tempDistanceRadius = vehicle.zone.originalDistanceRadius;
+    float tempDistanceRadius = vehicle.zone.originalRadiusMax;
 
     for (int i = 0; i < vehicles.size()-1; i++) {
 
@@ -449,6 +449,7 @@ class InMotionNoZoneState implements VehicleZoneState {
   //--------------------------------------------------------------
 
   void update() {
+    
   }
 
   public boolean getReadyToSetState() {
@@ -489,6 +490,7 @@ class CollisionState implements VehicleZoneState {
 
       vehicle.updateColorNum();
     }
+    
   }
 
 
