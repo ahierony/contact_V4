@@ -346,6 +346,7 @@ class Eye {
 
         if(!player.engagedInImpulse){
           inImpulse = true;
+          player.engagedInImpulse = true;
           applyImpulse();
         }
 

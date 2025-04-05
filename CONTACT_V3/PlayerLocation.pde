@@ -104,8 +104,8 @@ class PlayerLocation {
 
       // check if player is in the zone to prevent body to go in static mode
 
-      //if (inVehicleBreathingZone) {
-      if (inVehicleDistanceZone) {
+      if (inVehicleBreathingZone) {
+      //if (inVehicleDistanceZone) {
 
         if (pLocVehicleZoneState.getReadyToSetState()) {
           {

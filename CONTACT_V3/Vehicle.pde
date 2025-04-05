@@ -120,8 +120,6 @@ class Vehicle {
 
     unitHalfSize = unit_w * 0.5;
 
-    zone = new VehicleZone(this);
-
     // Create the empty ArrayLists
     //spheres = new ArrayList<Sphere>();
     //spheres = new VehicleSphere[0];
@@ -137,6 +135,12 @@ class Vehicle {
     makeBlob(posVecPixels);
 
     blobRadius = radius + sphereRadius;
+    
+    zone = new VehicleZone(this);
+    
+    println("radius ", radius);
+    println("sphereRadius ", sphereRadius);
+    println("blobRadius ", blobRadius);
 
     inMotion = _inMotion;
 

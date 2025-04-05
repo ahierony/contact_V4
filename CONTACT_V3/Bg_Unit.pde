@@ -87,23 +87,23 @@ class Bg_Unit {
   //--------------------------------------------------------------
   /*
   void updateTrail() {
-    /*
-    Vec2 centerPos;
-     centerPos = box2d.getBodyPixelCoord(centerSphere.body);
-     trail.update(centerPos.x, centerPos.y, colorWheelAngle, 155);
-     */
-     /*
+  /*
+   Vec2 centerPos;
+   centerPos = box2d.getBodyPixelCoord(centerSphere.body);
+   trail.update(centerPos.x, centerPos.y, colorWheelAngle, 155);
+   */
+  /*
     Vec2 leftPos;
-    leftPos = box2d.getBodyPixelCoord(player.leftEye.eyeOuterb2d.body);
-    trailLeft.update(leftPos.x, leftPos.y);
+   leftPos = box2d.getBodyPixelCoord(player.leftEye.eyeOuterb2d.body);
+   trailLeft.update(leftPos.x, leftPos.y);
+   
+   Vec2 rightPos;
+   rightPos = box2d.getBodyPixelCoord(player.rightEye.eyeOuterb2d.body);
+   trailRight.update(rightPos.x, rightPos.y);
+   }
+   */
 
-    Vec2 rightPos;
-    rightPos = box2d.getBodyPixelCoord(player.rightEye.eyeOuterb2d.body);
-    trailRight.update(rightPos.x, rightPos.y);
-  }
-  */
 
-  
   // CODE FOR VEHICLE ********************************************
 
   void createVehicle(boolean inMotion, String type) {
@@ -138,8 +138,6 @@ class Bg_Unit {
 
   void wrapVehicle() {
 
-    vehicle.killBlob();
-
     PVector unitPos = new PVector(pos.x, pos.y);
     PVector offset = new PVector(playerCenterSpherePosVecPixels.x, playerCenterSpherePosVecPixels.y);
     unitPos.add(offset);
@@ -147,8 +145,16 @@ class Bg_Unit {
 
     Vec2 unitPosVecPixels = new Vec2(unitPos.x, unitPos.y);
 
-    vehicle.makeBlob(unitPosVecPixels);
-    
-    vehicle.initialize();
+    if (vehicle.location.getState() != vehicle.location.vInDeadState) {
+
+      vehicle.killBlob();
+
+      vehicle.makeBlob(unitPosVecPixels);
+
+      vehicle.initialize();
+    } else {
+      
+      vehicle.posVecPixels.set(unitPos.x, unitPos.y);
+    }
   }
 }

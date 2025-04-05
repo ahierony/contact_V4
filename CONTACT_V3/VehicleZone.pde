@@ -35,6 +35,14 @@ class VehicleZone {
 
     vehicle = v;
 
+    //radiusMax = vehicle.unitHalfSize;
+    radiusMax = unit_w;
+    //radiusMax = bgTrailBox.rectSize * 0.5;
+    //println("radiusMax ", radiusMax);
+    radiusMin = vehicle.blobRadius+5;
+    distanceRadius = radiusMax;
+    originalRadiusMax = radiusMax;
+
     holdState = new HoldZoneState();
     emptyState = new EmptyZoneState(vehicle);
     fullState = new FullZoneState(vehicle);
@@ -43,13 +51,7 @@ class VehicleZone {
     inMotionNoZoneState = new InMotionNoZoneState();
     collisionState = new CollisionState(vehicle);
 
-    //radiusMax = vehicle.unitHalfSize;
-    radiusMax = unit_w;
-    //radiusMax = bgTrailBox.rectSize * 0.5;
-    //println("radiusMax ", radiusMax);
-    radiusMin = vehicle.radius*5;
-    distanceRadius = radiusMax;
-    originalRadiusMax = radiusMax;
+
 
     switchFromExhaleToInhale = false;
   }
@@ -249,12 +251,12 @@ class EmptyZoneState implements VehicleZoneState {
       setReadyToSetState(false);
 
       vehicle.updateColorNum();
-      
+
       /*
       if (zoneResize) {
-        checkDistanceZoneAgainstVehiclesDistanceZone();
-      }
-      */
+       checkDistanceZoneAgainstVehiclesDistanceZone();
+       }
+       */
     }
   }
 
@@ -363,36 +365,33 @@ class ExhaleZoneState implements VehicleZoneState {
 class InhaleZoneState implements VehicleZoneState {
 
   boolean readyToSetState;
-  
+
   boolean zoneResize;
-  
+
   Vehicle vehicle;
 
   InhaleZoneState(Vehicle v) {
 
     readyToSetState = true;
-    
+
     zoneResize = true;
-    
+
     vehicle = v;
   }
 
   //--------------------------------------------------------------
 
   void update() {
-    
-    
-    if(readyToSetState){
-      
+
+
+    if (readyToSetState) {
+
       setReadyToSetState(false);
-      
-     if (zoneResize) {
+
+      if (zoneResize) {
         checkDistanceZoneAgainstVehiclesDistanceZone();
-      } 
-      
+      }
     }
-    
-    
   }
 
   void checkDistanceZoneAgainstVehiclesDistanceZone() {
@@ -449,7 +448,6 @@ class InMotionNoZoneState implements VehicleZoneState {
   //--------------------------------------------------------------
 
   void update() {
-    
   }
 
   public boolean getReadyToSetState() {
@@ -490,7 +488,6 @@ class CollisionState implements VehicleZoneState {
 
       vehicle.updateColorNum();
     }
-    
   }
 
 
