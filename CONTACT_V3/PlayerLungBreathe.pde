@@ -33,7 +33,7 @@ class PlayerLungBreathe {
 
   void setExhale() {
     
-    aVelocity = 0.005; //0.001;
+    aVelocity = 0.005; // to test with keyboard 0.003// best for contact v3: 0.005;
     
     currentM = "exhale";
     

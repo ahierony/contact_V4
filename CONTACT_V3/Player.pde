@@ -194,12 +194,9 @@ class Player {
   // UPDATE
   // ********************************************************
 
-  void update(float _theta) {
-      
-    println("player engaged in impulse ", engagedInImpulse);
-    println("player left eye inImpulse ", leftEye.inImpulse);
-    println("player right eye inImpulse ", rightEye.inImpulse);
+  void update(float _theta) { 
     
+    //println("player lung state ", player.lung.getState());
 
     playerTheta = _theta;
 

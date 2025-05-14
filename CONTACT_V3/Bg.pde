@@ -119,15 +119,36 @@ class Bg {
            }
            */
         } else { // debug mode false
-
-          // three by three grid with only middle empty
-
+        
+        // three by three grid with only middle empty
+          /*
           if (i == 1 && j == 1) {
             units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, index);
             //println(index);
           } else {
             units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), true, index);
           }
+*/
+
+          // for CONTACT V3: three by three grid with only middle empty
+          
+          if (i == 1 && j == 1) {
+           units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, index);
+           //println(index);
+           } else {
+           units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), true, index);
+           }
+           
+
+          // 1 NODE
+          /*
+          // conditional logic to set amount of elements in the grid (1 element at position 0:0)
+          if (i == 0 && j == 0) {
+            units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), true, index);
+          } else {
+            units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, index);
+          }
+          */
 
           /*
           // four corners only
@@ -174,15 +195,8 @@ class Bg {
          */
 
 
-        // 1 NODE
-        /*
-        // conditional logic to set amount of elements in the grid (1 element at position 0:0)
-         if (i == 0 && j == 0) {
-         units[index] = new Bg_Unit((unitOrigin.x - unitNum)+(i*unit_size), (unitOrigin.y - unitNum)+(j*unit_size), true, index);
-         } else {
-         units[index] = new Bg_Unit((unitOrigin.x - unitNum)+(i*unit_size), (unitOrigin.y - unitNum)+(j*unit_size), false, index);
-         }
-         */
+
+
 
         index++;
       }

@@ -135,9 +135,9 @@ class Vehicle {
     makeBlob(posVecPixels);
 
     blobRadius = radius + sphereRadius;
-    
+
     zone = new VehicleZone(this);
-    
+
     println("radius ", radius);
     println("sphereRadius ", sphereRadius);
     println("blobRadius ", blobRadius);
@@ -221,7 +221,7 @@ class Vehicle {
   // ********************************************************
 
   void update() {
-    
+
     //println("vehicle location ", location.getState());
 
     ellipseMode(RADIUS);
@@ -469,7 +469,7 @@ class Vehicle {
     float strength =  outcomingForceDirection * (gravity * 1 * mass) / (d * d); // Calculate gravitional force magnitude
     //float strength =  -1 * (localGravity * 1 * sphere.body.m_mass) / (d * d); // Calculate gravitional force magnitude
     force.mulLocal(strength);         // Get force vector --> magnitude * direction
-   
+
 
     return force;
   }
@@ -701,15 +701,17 @@ class Vehicle {
 
   void killBlob() {
 
-    for (int i=0; i < spheres.size(); i++) {
-      VehicleSphere sphere = spheres.get(i);
-      sphere.killBody();
-    }
-
     centerBoid.killBody();
 
-    spheres.clear();
     joints.clear();
+    spheres.clear();
+
+    /*
+    for (int i=0; i < spheres.size(); i++) {
+     VehicleSphere sphere = spheres.get(i);
+     sphere.killBody();
+     }
+     */
   }
 
   // ********************************************************
@@ -725,6 +727,8 @@ class Vehicle {
     }
 
     displayBlob();
+
+    //displaySpheres();
   }
 
 

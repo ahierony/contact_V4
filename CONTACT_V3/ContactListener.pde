@@ -64,6 +64,7 @@ class CustomListener implements ContactListener {
 
   void endContact(Contact cp) {
     
+    
   }
 
   void preSolve(Contact contact, Manifold oldManifold) {

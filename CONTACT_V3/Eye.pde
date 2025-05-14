@@ -279,7 +279,7 @@ class Eye {
       if (h3 > 0) {
 
         currentForce = map(h3, eyeCenter.radius, eyeOuterRadius*2 - eyeInnerRadius, 0, 1000000);
-
+        
         float t = atan2(pupil.pos.y, pupil.pos.x);
         outerTheta = t;
       }
@@ -379,6 +379,7 @@ class Eye {
         
         if(!player.engagedInImpulse){
           inImpulse = true;
+          player.engagedInImpulse = true;
           applyImpulse();
         }
 

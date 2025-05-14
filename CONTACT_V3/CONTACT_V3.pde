@@ -198,11 +198,11 @@ void setup() {
 
   //*********************************************************************
   //gamePadIsOn = false;
-  inputControls = InputControls.KEYBOARD; //KEYBOARD; //JOYSTICKS;
+  inputControls = InputControls.JOYSTICKS; //KEYBOARD; //JOYSTICKS;
   //protoSticks = false;
   debugMode = false;
   screengrab = false;
-  showDistance = false;
+  showDistance = true;
   playSound = false; // enables sound
   //*********************************************************************
 
@@ -460,62 +460,62 @@ void draw() {
 
     //if (!recordSVG) {
 
-      bg.display(worldScale);
+    bg.display(worldScale);
 
-      box2d.step();
+    box2d.step();
 
-      pushMatrix();
+    pushMatrix();
 
-      translate(width/2, height/2);
+    translate(width/2, height/2);
 
-      scale(worldScale);
+    scale(worldScale);
 
-      pushMatrix();
+    pushMatrix();
 
-      translate(-playerCenterSpherePosVecPixels.x, -playerCenterSpherePosVecPixels.y);
+    translate(-playerCenterSpherePosVecPixels.x, -playerCenterSpherePosVecPixels.y);
 
-      collision.checkVehiclesAgainstVehicleRipples();
-      collision.checkPlayerAgainstVehicleRipples();
-      collision.checkVehicleAgainstVehicle();
+    //collision.checkVehiclesAgainstVehicleRipples();
+    //collision.checkPlayerAgainstVehicleRipples();
+    //collision.checkVehicleAgainstVehicle();
 
-      if (player.area.isVisible) {
+    if (player.area.isVisible) {
 
-        player.display();
+      player.display();
 
-        for (Vehicle v : vehicles) {
+      for (Vehicle v : vehicles) {
 
-          if (!v.inMotion) {
-            v.run(vehicles);
-          } else {
-            v.run(vehicles);
-          }
+        if (!v.inMotion) {
+          v.run(vehicles);
+        } else {
+          v.run(vehicles);
         }
-      } else { // recordSVG
+      }
+    } else { // recordSVG
 
-        for (Vehicle v : vehicles) {
-          if (!v.inMotion) {
-            v.run(vehicles);
-          } else {
-            v.run(vehicles);
-          }
+      for (Vehicle v : vehicles) {
+        if (!v.inMotion) {
+          v.run(vehicles);
+        } else {
+          v.run(vehicles);
         }
-
-        player.display();
       }
 
-      removeVehicles();
+      player.display();
+    }
 
-      popMatrix();
+    removeVehicles();
 
-      popMatrix();
+    popMatrix();
 
-      if (debugMode && !recordSVG) {
-        drawFrameRate();
-      } else {
-        drawFrame();
-        noCursor();
-      }
-   // } else 
+    popMatrix();
+
+    if (debugMode && !recordSVG) {
+      drawFrameRate();
+    } else {
+      drawFrame();
+      noCursor();
+    }
+    // } else
     if (recordSVG) {
 
       // TRAILS START
@@ -534,6 +534,18 @@ void draw() {
     if (playSound) {
       trackData();
     }
+
+    // TRAILS START
+    /*
+    pushMatrix();
+
+    translate(width/2, height/2);
+
+    bgTrailBox.display(worldScale);
+
+    popMatrix();
+    */
+    // TRAILS END
   }
 
   // TRAIL RECORDING STARTS

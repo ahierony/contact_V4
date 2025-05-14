@@ -1,12 +1,19 @@
 BUG
 
-***************************
-- fix two eye movement in zone 
-***************************
 
 
 
 FEATURE
+
+- radial gradient for breathing vehicles?
+- fade out at end of game instead of sharp restart
+
+
+
+
+- fix unresponsive vehicles
+
+
 
 - cannot resize the zone if player is inside the zone
 
@@ -31,7 +38,7 @@ FEATURE
 
 BUG LIST
 
-- fix max
+
 
 
 
@@ -45,3 +52,9 @@ DONE
 - fix constant resizing of vehicle breathing zones
 
 - fix eyes coming out of player body 
+
+- fix max
+
+- fix assertion error when colliding with the last vehicle // done kind of
+
+- fix two eye movement in zone // done
