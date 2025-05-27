@@ -3,30 +3,19 @@ class PlayerTrailMark {
   float radius;
 
   float x, y;
-  float speed;
   color colorTrail;
 
 
  // float theta;
 
-  PlayerTrailMark(PVector pos, float markSpeed) {
+  PlayerTrailMark(PVector pos) {
 
    
     x = pos.x;
     y = pos.y;
 
-    speed = markSpeed;
+    radius = 5;
 
-    radius = 30;
-
-  }
-
-  //--------------------------------------------------------------
-
-
-  void update(int markNum) {
-
-    //updateOpacity(markNum);
   }
 
   //--------------------------------------------------------------

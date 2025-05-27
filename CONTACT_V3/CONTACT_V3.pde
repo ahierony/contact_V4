@@ -193,8 +193,8 @@ boolean recordSVG = false;
 
 void setup() {
 
-  size(1024, 768, JAVA2D); // 800, 800 // 1440, 900
-  //fullScreen(2);
+  //size(1024, 768, JAVA2D); // 800, 800 // 1440, 900
+  fullScreen(2);
 
   //*********************************************************************
   //gamePadIsOn = false;
@@ -418,7 +418,7 @@ void draw() {
     }
 
     bg.update(vel);
-    bgTrailBox.update(vel);
+
 
     previousM.set(playerCenterSpherePosVecPixels.x, playerCenterSpherePosVecPixels.y);
 
@@ -442,6 +442,8 @@ void draw() {
 
     mainTheta = left_theta;
 
+    bgTrailBox.update(vel, mainTheta);
+
     if (player.lung.isBreathing) {
 
       if (player.leftEye.pupilState == "unlocked" && player.rightEye.pupilState == "unlocked") {
@@ -457,66 +459,69 @@ void draw() {
     background(backgroundColor);
     //background(0, 0, 19);
 
+    if (!recordSVG) {
 
-    //if (!recordSVG) {
+      bg.display(worldScale);
 
-    bg.display(worldScale);
+      box2d.step();
 
-    box2d.step();
+      pushMatrix();
 
-    pushMatrix();
+      translate(width/2, height/2);
 
-    translate(width/2, height/2);
+      scale(worldScale);
 
-    scale(worldScale);
+      pushMatrix();
 
-    pushMatrix();
+      translate(-playerCenterSpherePosVecPixels.x, -playerCenterSpherePosVecPixels.y);
 
-    translate(-playerCenterSpherePosVecPixels.x, -playerCenterSpherePosVecPixels.y);
+      //collision.checkVehiclesAgainstVehicleRipples();
+      //collision.checkPlayerAgainstVehicleRipples();
+      //collision.checkVehicleAgainstVehicle();
 
-    //collision.checkVehiclesAgainstVehicleRipples();
-    //collision.checkPlayerAgainstVehicleRipples();
-    //collision.checkVehicleAgainstVehicle();
+      if (player.area.isVisible) {
 
-    if (player.area.isVisible) {
+        player.display();
 
-      player.display();
+        for (Vehicle v : vehicles) {
 
-      for (Vehicle v : vehicles) {
+          if (!v.inMotion) {
+            v.run(vehicles);
+          } else {
+            v.run(vehicles);
+          }
+        }
+      } else { // recordSVG
 
-        if (!v.inMotion) {
-          v.run(vehicles);
+        for (Vehicle v : vehicles) {
+          if (!v.inMotion) {
+            v.run(vehicles);
+          } else {
+            v.run(vehicles);
+          }
+        }
+
+        player.display();
+      }
+
+      removeVehicles();
+
+      popMatrix();
+
+      popMatrix();
+
+      if (!recordSVG) {
+        if (debugMode) {
+          drawFrameRate();
         } else {
-          v.run(vehicles);
+          drawFrame();
+          drawFrameRate();
+          noCursor();
         }
       }
-    } else { // recordSVG
-
-      for (Vehicle v : vehicles) {
-        if (!v.inMotion) {
-          v.run(vehicles);
-        } else {
-          v.run(vehicles);
-        }
-      }
-
-      player.display();
-    }
-
-    removeVehicles();
-
-    popMatrix();
-
-    popMatrix();
-
-    if (debugMode && !recordSVG) {
-      drawFrameRate();
     } else {
-      drawFrame();
-      noCursor();
-    }
-    // } else
-    if (recordSVG) {
+
+      //if (recordSVG) {
 
       // TRAILS START
 
@@ -527,26 +532,29 @@ void draw() {
       bgTrailBox.display(worldScale);
 
       popMatrix();
-
-      // TRAILS END
-    }
-
-    if (playSound) {
-      trackData();
-    }
-
-    // TRAILS START
-    /*
-    pushMatrix();
-
-    translate(width/2, height/2);
-
-    bgTrailBox.display(worldScale);
-
-    popMatrix();
-    */
-    // TRAILS END
+    } // TRAILS END
   }
+  
+
+
+
+  if (playSound) {
+    trackData();
+  }
+
+  // TRAILS START
+  /*
+    pushMatrix();
+   
+   translate(width/2, height/2);
+   
+   bgTrailBox.display(worldScale);
+   
+   popMatrix();
+   */
+
+  // TRAILS END
+
 
   // TRAIL RECORDING STARTS
 

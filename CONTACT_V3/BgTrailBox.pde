@@ -69,7 +69,7 @@ class BgTrailBox {
 
 
 
-  void update(PVector vel) {
+  void update(PVector vel, float mainTheta) {
 
     pos.add(vel);
 
@@ -100,12 +100,12 @@ class BgTrailBox {
     leftEyesPosPVec.add(offset);
     rightEyePosPVec.add(offset);
 
-    updateTrail(leftEyesPosPVec, rightEyePosPVec);
+    updateTrail(leftEyesPosPVec, rightEyePosPVec, mainTheta);
   }
 
-  void updateTrail(PVector _leftEyePos, PVector _rightEyePos) {
+  void updateTrail(PVector _leftEyePos, PVector _rightEyePos, float mainTheta) {
 
-    trailLeft.update(_leftEyePos.x, _leftEyePos.y);
-    trailRight.update(_rightEyePos.x, _rightEyePos.y);
+    trailLeft.update(_leftEyePos.x, _leftEyePos.y, player.getLinearVelocity(), mainTheta);
+    trailRight.update(_rightEyePos.x, _rightEyePos.y, player.getLinearVelocity(), mainTheta);
   }
 }

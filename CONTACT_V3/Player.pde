@@ -251,7 +251,7 @@ class Player {
       checkForVehicleInArea();
     }
 
-    updateTrail();
+    //updateTrail();
   } // update()
 
   // ********************************************************
@@ -276,22 +276,22 @@ class Player {
   // ********************************************************
   // METHODS CALLED FROM UPDATE
   // ********************************************************
-
+  /*
   void updateTrail() {
     /*
     Vec2 centerPos;
      centerPos = box2d.getBodyPixelCoord(centerSphere.body);
      trail.update(centerPos.x, centerPos.y, colorWheelAngle, 155);
-     */
+     *//*
     Vec2 leftPos;
     leftPos = box2d.getBodyPixelCoord(leftEye.eyeOuterb2d.body);
-    trailLeft.update(leftPos.x, leftPos.y);
+    trailLeft.update(leftPos.x, leftPos.y, getLinearVelocity());
 
     Vec2 rightPos;
     rightPos = box2d.getBodyPixelCoord(rightEye.eyeOuterb2d.body);
-    trailRight.update(rightPos.x, rightPos.y);
+    trailRight.update(rightPos.x, rightPos.y, getLinearVelocity());
   }
-
+*/
 
   //--------------------------------------------------------------
   /*
