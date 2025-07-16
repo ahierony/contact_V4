@@ -154,7 +154,18 @@ boolean readyToSwitchSides = true;
 boolean isSwitchingSides = false;
 
 Collision collision;
+
+// AUDIO
+
+// deprecated
 Data data;
+boolean playSound;
+
+Audio audio;
+boolean audioIsPlaying;
+
+//
+
 
 boolean debugMode;
 boolean protoSticks;
@@ -173,7 +184,7 @@ int backgroundBrightness;
 Timer screenGrabTimer;
 boolean screengrab;
 
-boolean playSound;
+
 
 
 // TRAIL
@@ -193,8 +204,8 @@ boolean recordSVG = false;
 
 void setup() {
 
-  //size(1024, 768, JAVA2D); // 800, 800 // 1440, 900
-  fullScreen(2);
+  size(1024, 768, JAVA2D); // 800, 800 // 1440, 900
+  //fullScreen(2);
 
   //*********************************************************************
   //gamePadIsOn = false;
@@ -203,7 +214,8 @@ void setup() {
   debugMode = false;
   screengrab = false;
   showDistance = true;
-  playSound = false; // enables sound
+  playSound = false; // enables sound // deprecated
+  audioIsPlaying = true;
   //*********************************************************************
 
   if (screengrab) {
@@ -226,6 +238,8 @@ void setup() {
   int rowLength;
   int unitSize = 1000;
 
+
+
   if (debugMode) {
     rowLength = 3;
     setUnitSize(rowLength * unitSize, rowLength * unitSize, rowLength, 0.5); // float _unitSize, int _unitRow, float _worldScale
@@ -235,7 +249,6 @@ void setup() {
   }
 
   collision = new Collision();
-  data = new Data();
 
   setupDeviceMode();
   setupb2d();
@@ -246,17 +259,18 @@ void setup() {
   playerCenterSpherePosVecPixels = new Vec2(0, 0);
   player = new Player();
 
-
-  bgTrailBox = new BgTrailBox(unitTotal, unit_w, unit_h);
-
   vehicles = new ArrayList<Vehicle>();
   bg = new Bg(unitTotal);
 
 
+  bgTrailBox = new BgTrailBox(unitTotal, unit_w, unit_h);
+
+  data = new Data(); // deprecated
+  audio = new Audio();
 
   setBackgroundTimer();
 
-  println("vehicles.size() ", vehicles.size());
+  //println("vehicles.size() ", vehicles.size());
 
   rightEyeLeft = false;
   rightEyeRight = false;
@@ -359,7 +373,9 @@ void resetContact() {
   vehicles = new ArrayList<Vehicle>();
   bg = new Bg(unitTotal);
   collision = new Collision();
-  data = new Data();
+  data = new Data(); // deprecated
+
+  audio = new Audio();
 
 
   setBackgroundTimer();
@@ -534,12 +550,18 @@ void draw() {
       popMatrix();
     } // TRAILS END
   }
-  
 
 
 
+  // deprecated
+  /*
   if (playSound) {
-    trackData();
+   trackData();
+   }
+   */
+
+  if (audioIsPlaying) {
+    playAudio();
   }
 
   // TRAILS START
@@ -601,6 +623,33 @@ void draw() {
   //println("vehicle size ", vehicles.size());
 } // draw
 
+//*************** AUDIO ***************************************
+void playAudio() {
+
+  boolean printAudio = true;
+  boolean printOSC = false;
+
+  OscMessage[] osc_vehicle_sounds = new OscMessage[vehicles.size()];
+
+  for (int i = 0; i < vehicles.size(); i++) {
+    osc_vehicle_sounds[i] = new OscMessage("/vehicle" + i + "_audio");
+  }
+
+  //
+
+  audio.playVehicleAudio();
+
+  for (int i = 0; i < vehicles.size(); i++) {
+    if (printAudio) println("vehicle" + i + "_audio : ", audio.vehicleBreathingAudioIsPlaying[i]);
+    if (printOSC) oscP5.send(osc_vehicle_sounds[i], myRemoteLocation);
+  }
+  println("");
+
+
+  //
+}
+
+// deprecated
 //*************** DATA TRACKING ***************************************
 
 void trackData() {

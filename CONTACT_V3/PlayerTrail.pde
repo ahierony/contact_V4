@@ -49,14 +49,11 @@ class PlayerTrail {
     float angle = degrees(a);
     angle = abs(angle);
 
-    //println("dist ", dist);
-    println("angle ", angle);
-
+ 
     int count;
     markFrameCount++;
     count = markFrameCount % 15;
 
-    println("count", count);
 
     //if(dist > 1 || angle > 1){
 

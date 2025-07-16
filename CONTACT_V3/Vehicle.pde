@@ -90,6 +90,9 @@ class Vehicle {
   // other vehicle test
   boolean distanceFinal;
   boolean breathingFinal;
+  
+  //AUDIO
+  //boolean vehicleBreathingAudioIsPlaying;
 
   //--------------------------------------------------------------
 
@@ -137,11 +140,7 @@ class Vehicle {
     blobRadius = radius + sphereRadius;
 
     zone = new VehicleZone(this);
-
-    println("radius ", radius);
-    println("sphereRadius ", sphereRadius);
-    println("blobRadius ", blobRadius);
-
+    
     inMotion = _inMotion;
 
     if (!inMotion) {

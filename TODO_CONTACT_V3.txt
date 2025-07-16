@@ -5,14 +5,14 @@ BUG
 
 FEATURE
 
-- radial gradient for breathing vehicles?
+
 - fade out at end of game instead of sharp restart
+- prepare sound files for Woohun
+
+- radial gradient for breathing vehicles?
 
 
-
-
-- fix unresponsive vehicles
-
+- fix unresponsive vehicles // CHECK IF DONE
 
 
 - cannot resize the zone if player is inside the zone
