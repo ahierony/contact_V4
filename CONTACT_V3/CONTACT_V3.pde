@@ -630,21 +630,37 @@ void playAudio() {
   boolean printOSC = false;
 
   OscMessage[] osc_vehicle_sounds = new OscMessage[vehicles.size()];
+  OscMessage[] osc_vehicle_sounds_volume = new OscMessage[vehicles.size()];
 
   for (int i = 0; i < vehicles.size(); i++) {
     osc_vehicle_sounds[i] = new OscMessage("/vehicle" + i + "_audio");
+    osc_vehicle_sounds_volume[i] = new OscMessage("/vehicle" + i + "_audioVolume");
   }
 
   //
 
   audio.playVehicleAudio();
-
+  
+  
   for (int i = 0; i < vehicles.size(); i++) {
-    if (printAudio) println("vehicle" + i + "_audio : ", audio.vehicleBreathingAudioIsPlaying[i]);
+    
+    //if (printAudio) println("vehicle" + i + "_audio : ", audio.vehicleBreathingAudioIsPlaying[i]);
+    
+    osc_vehicle_sounds[i].add(audio.vehicleBreathingAudioIsPlaying[i]);
     if (printOSC) oscP5.send(osc_vehicle_sounds[i], myRemoteLocation);
   }
-  println("");
+  //println("");
+  
 
+  audio.getVehicleAudioVol();
+  
+  for (int i = 0; i < vehicles.size(); i++) {
+    
+    if (printAudio) println("vehicle" + i + "_audioVolume : ", audio.vehicleBreathingAudioVolume[i]);
+    
+    osc_vehicle_sounds_volume[i].add(audio.vehicleBreathingAudioVolume[i]);
+    if (printOSC) oscP5.send(osc_vehicle_sounds_volume[i], myRemoteLocation);
+  }
 
   //
 }
