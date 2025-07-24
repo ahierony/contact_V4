@@ -83,6 +83,12 @@ class Eye {
   Player player;
 
   float currentForce;
+  // to be implemented
+  /*
+  float forceVal_movement;
+  float forceVal_rotation;
+  */
+  float forceVal;
 
   PVector s;
   PVector e;
@@ -100,6 +106,8 @@ class Eye {
   Pupil_keyboard pupil_keyboard;
 
   boolean inImpulse;
+  
+
 
   //
 
@@ -170,6 +178,7 @@ class Eye {
      */
 
     currentForce = 0; //0;
+    forceVal = 1000000;
 
     s = new PVector(0, 0);
     e = new PVector(0, 0);
@@ -204,10 +213,14 @@ class Eye {
   void updateJoystickInput(int _x, int _y) {
 
 
-    //float sensorRange = 20;
+    float minRange = 400; // 0
+    float maxRange = 600; // 1023
+    
+    sensorX = map(_x, minRange, maxRange, -eyeOuterRadius + eyeInnerRadius, eyeOuterRadius - eyeInnerRadius);
+    sensorY = map(_y, minRange, maxRange, -eyeOuterRadius + eyeInnerRadius, eyeOuterRadius - eyeInnerRadius);
 
-    sensorX = map(_x, 0, 1023, -eyeOuterRadius, eyeOuterRadius);
-    sensorY = map(_y, 0, 1023, -eyeOuterRadius, eyeOuterRadius);
+    sensorX = constrain(sensorX, -eyeOuterRadius + eyeInnerRadius, eyeOuterRadius - eyeInnerRadius);
+    sensorY = constrain(sensorY, -eyeOuterRadius + eyeInnerRadius, eyeOuterRadius - eyeInnerRadius);
   }
 
   //--------------------------------------------------------------
@@ -278,8 +291,8 @@ class Eye {
 
       if (h3 > 0) {
 
-        currentForce = map(h3, eyeCenter.radius, eyeOuterRadius*2 - eyeInnerRadius, 0, 1000000);
-        
+        currentForce = map(h3, eyeCenter.radius, eyeOuterRadius*2 - eyeInnerRadius, 0, forceVal);
+
         float t = atan2(pupil.pos.y, pupil.pos.x);
         outerTheta = t;
       }
@@ -322,7 +335,7 @@ class Eye {
 
       if (h3 > 0) {
 
-        currentForce = map(h3, eyeCenter.radius, eyeOuterRadius*2 - eyeInnerRadius, 0, 1000000);
+        currentForce = map(h3, eyeCenter.radius, eyeOuterRadius*2 - eyeInnerRadius, 0, forceVal);
 
         float t = atan2(pupil.pos.y, pupil.pos.x);
         outerTheta = t;
@@ -344,7 +357,7 @@ class Eye {
         pupilState = "locked";
 
 
-        if(!player.engagedInImpulse){
+        if (!player.engagedInImpulse) {
           inImpulse = true;
           player.engagedInImpulse = true;
           applyImpulse();
@@ -376,8 +389,8 @@ class Eye {
 
         pupilState = "locked";
 
-        
-        if(!player.engagedInImpulse){
+
+        if (!player.engagedInImpulse) {
           inImpulse = true;
           player.engagedInImpulse = true;
           applyImpulse();
@@ -393,8 +406,6 @@ class Eye {
         //inImpulse = false;
       }
     }
-    
-    
   }
 
 
@@ -535,7 +546,7 @@ class Eye {
         pupil.pos.y = 0;
 
         readyToRotate_k = true;
-        
+
         inImpulse = false;
       } else {
         readyToRotate_k = false;

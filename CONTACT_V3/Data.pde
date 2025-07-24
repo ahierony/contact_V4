@@ -236,7 +236,7 @@ class Data {
     OscMessage osc_player_touch_vehicle = new OscMessage("/player_touch_vehicle");
 
     osc_player_touch_vehicle.add(isTouching);
-    println("player in zone: ", isTouching);
+    //println("player in zone: ", isTouching);
     oscP5.send(osc_player_touch_vehicle, myRemoteLocation);
   }
 
@@ -245,7 +245,7 @@ class Data {
     OscMessage osc_player_in_zone = new OscMessage("/player_in_zone");
 
     osc_player_in_zone.add(isEntering);
-    println("player in zone: ", isEntering);
+    //println("player in zone: ", isEntering);
     oscP5.send(osc_player_in_zone, myRemoteLocation);
   }
 

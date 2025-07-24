@@ -185,8 +185,6 @@ Timer screenGrabTimer;
 boolean screengrab;
 
 
-
-
 // TRAIL
 BgTrailBox bgTrailBox;
 
@@ -204,8 +202,8 @@ boolean recordSVG = false;
 
 void setup() {
 
-  size(1024, 768, JAVA2D); // 800, 800 // 1440, 900
-  //fullScreen(2);
+  //size(1024, 768, JAVA2D); // 800, 800 // 1440, 900
+  fullScreen(2);
 
   //*********************************************************************
   //gamePadIsOn = false;
@@ -213,9 +211,9 @@ void setup() {
   //protoSticks = false;
   debugMode = false;
   screengrab = false;
-  showDistance = true;
-  playSound = false; // enables sound // deprecated
-  audioIsPlaying = true;
+  showDistance = false;
+  playSound = true; // enables sound // deprecated
+  audioIsPlaying = false;
   //*********************************************************************
 
   if (screengrab) {
@@ -554,11 +552,11 @@ void draw() {
 
 
   // deprecated
-  /*
+  
   if (playSound) {
    trackData();
    }
-   */
+   
 
   if (audioIsPlaying) {
     playAudio();
@@ -629,37 +627,40 @@ void playAudio() {
   boolean printAudio = true;
   boolean printOSC = false;
 
-  OscMessage[] osc_vehicle_sounds = new OscMessage[vehicles.size()];
-  OscMessage[] osc_vehicle_sounds_volume = new OscMessage[vehicles.size()];
+  OscMessage[] osc_breathingVehicles_audioIsPlaying = new OscMessage[vehicles.size()];
+  OscMessage[] osc_breathingVehicles_audioVolume = new OscMessage[vehicles.size()];
+  OscMessage osc_player_isInsideVehicleZone = new OscMessage("/osc_player_isInsideVehicleZone");
 
   for (int i = 0; i < vehicles.size(); i++) {
-    osc_vehicle_sounds[i] = new OscMessage("/vehicle" + i + "_audio");
-    osc_vehicle_sounds_volume[i] = new OscMessage("/vehicle" + i + "_audioVolume");
+    osc_breathingVehicles_audioIsPlaying[i] = new OscMessage("/breathingVehicles" + i + "_audioIsPlaying");
+    osc_breathingVehicles_audioVolume[i] = new OscMessage("/breathingVehicles" + i + "_audioVolume");
   }
 
   //
-
-  audio.playVehicleAudio();
   
+  audio.update();
+  
+  //--------------------------------------------------------------
+  // is audio playing
   
   for (int i = 0; i < vehicles.size(); i++) {
     
     //if (printAudio) println("vehicle" + i + "_audio : ", audio.vehicleBreathingAudioIsPlaying[i]);
     
-    osc_vehicle_sounds[i].add(audio.vehicleBreathingAudioIsPlaying[i]);
-    if (printOSC) oscP5.send(osc_vehicle_sounds[i], myRemoteLocation);
+    osc_breathingVehicles_audioIsPlaying[i].add(audio.vehicleBreathingAudioIsPlaying[i]);
+    if (printOSC) oscP5.send(osc_breathingVehicles_audioIsPlaying[i], myRemoteLocation);
   }
   //println("");
   
-
-  audio.getVehicleAudioVol();
-  
+  //--------------------------------------------------------------
+  // set audio volume
+ 
   for (int i = 0; i < vehicles.size(); i++) {
     
     if (printAudio) println("vehicle" + i + "_audioVolume : ", audio.vehicleBreathingAudioVolume[i]);
     
-    osc_vehicle_sounds_volume[i].add(audio.vehicleBreathingAudioVolume[i]);
-    if (printOSC) oscP5.send(osc_vehicle_sounds_volume[i], myRemoteLocation);
+    osc_breathingVehicles_audioVolume[i].add(audio.vehicleBreathingAudioVolume[i]);
+    if (printOSC) oscP5.send(osc_breathingVehicles_audioVolume[i], myRemoteLocation);
   }
 
   //
@@ -1085,10 +1086,10 @@ void serialEvent(Serial port)
       int[] vals = int(splitTokens(incoming, ","));
 
       // we assign to variables
-      incoming_leftJoystick_xAxis = vals[0];
-      incoming_leftJoystick_yAxis = vals[1];
-      incoming_rightJoystick_xAxis = vals[2];
-      incoming_rightJoystick_yAxis = vals[3];
+      incoming_leftJoystick_xAxis = vals[2];
+      incoming_leftJoystick_yAxis = vals[3];
+      incoming_rightJoystick_xAxis = vals[0];
+      incoming_rightJoystick_yAxis = vals[1];
 
       newData = true;
     }
