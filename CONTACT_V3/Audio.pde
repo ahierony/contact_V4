@@ -4,8 +4,7 @@ class Audio {
   float[] vehicleBreathingAudioVolume = new float[vehicles.size()];
 
   boolean playerIsInZone;
-
-
+  float playerInZoneVolume;
 
   Audio() {
 
@@ -20,8 +19,15 @@ class Audio {
   void update() {
 
     isPlayerInsideVehicleZone();
+    
     playVehicleAudio();
     setVehicleAudioVol();
+    
+    if(playerIsInZone){
+      playerInZoneVolume = trackPlayerDistanceFromVehicle(player.location.currentVehicle);
+    } else {
+      playerInZoneVolume = 0;
+    }
   }
 
   // methods
@@ -30,6 +36,7 @@ class Audio {
   void isPlayerInsideVehicleZone() {
 
     if (player.location.getState() == player.location.pLocVehicleZoneState) {
+        
       playerIsInZone = true;
     } else {
       playerIsInZone = false;
@@ -82,5 +89,21 @@ class Audio {
       }
       //println("vehicle ", i, " radius ", vehicleBreathingAudioVolume[i]);
     }
+  }
+  
+  float trackPlayerDistanceFromVehicle(Vehicle v){
+    
+    Vec2 playerPos = box2d.getBodyPixelCoord(player.centerSphere.body);
+    Vec2 vehiclePos = box2d.getBodyPixelCoord(v.centerBoid.body);
+    
+    float r_max = v.zone.distanceRadius;
+    float r_min = v.zone.radiusMin;
+    
+    float dist = dist(playerPos.x, playerPos.y , vehiclePos.x, vehiclePos.y);
+    
+    float vol = map(dist, r_min, r_max, 0, 10);
+       
+    return vol;
+    
   }
 }

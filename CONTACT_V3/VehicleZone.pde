@@ -132,7 +132,7 @@ class VehicleZone {
 
   //--------------------------------------------------------------
   void setZoneState() {
-
+     
     radius = map(vehicle.breath.radius, vehicle.breath.radiusMin, vehicle.breath.radiusMax, radiusMin, distanceRadius);
 
     // breathing radius
