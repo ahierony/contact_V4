@@ -559,7 +559,7 @@ void draw() {
 
 
   if (audioIsPlaying) {
-    playAudio();
+    audio.update();
   }
 
   // TRAILS START
@@ -583,6 +583,8 @@ void draw() {
     recordSVG = false;
 
     resetContact();
+   
+    audio.gameOver_playAudio();
   }
 
   if (inputControls == InputControls.KEYBOARD) {
@@ -621,67 +623,6 @@ void draw() {
   //println("vehicle size ", vehicles.size());
 } // draw
 
-//*************** AUDIO ***************************************
-void playAudio() {
-
-  boolean printAudio = false;
-  boolean printOSC = false;
-
-  OscMessage[] osc_breathingVehicles_audioIsPlaying = new OscMessage[vehicles.size()];
-  OscMessage[] osc_breathingVehicles_audioVolume = new OscMessage[vehicles.size()];
-  
-   for (int i = 0; i < vehicles.size(); i++) {
-    osc_breathingVehicles_audioIsPlaying[i] = new OscMessage("/breathingVehicles" + i + "_audioIsPlaying");
-    osc_breathingVehicles_audioVolume[i] = new OscMessage("/breathingVehicles" + i + "_audioVolume");
-  }
-  
-  //
-
-  OscMessage osc_player_isInsideVehicleZone = new OscMessage("/osc_player_isInsideVehicleZone");
-  OscMessage osc_playerInVehicleZone_audioVolume = new OscMessage("/osc_playerInVehicleZone_audioVolume");
-
- 
-
-  //
-
-  audio.update();
-
-  //--------------------------------------------------------------
-  // is audio playing
-
-  for (int i = 0; i < vehicles.size(); i++) {
-
-    //if (printAudio) println("vehicle" + i + "_audio : ", audio.vehicleBreathingAudioIsPlaying[i]);
-
-    osc_breathingVehicles_audioIsPlaying[i].add(audio.vehicleBreathingAudioIsPlaying[i]);
-    if (printOSC) oscP5.send(osc_breathingVehicles_audioIsPlaying[i], myRemoteLocation);
-  }
-  //println("");
-
-  //--------------------------------------------------------------
-  // set audio volume
-
-  for (int i = 0; i < vehicles.size(); i++) {
-
-    if (printAudio) println("vehicle" + i + "_audioVolume : ", audio.vehicleBreathingAudioVolume[i]);
-
-    osc_breathingVehicles_audioVolume[i].add(audio.vehicleBreathingAudioVolume[i]);
-    if (printOSC) oscP5.send(osc_breathingVehicles_audioVolume[i], myRemoteLocation);
-  }
-
-  // player is in vehicle zone
-  //--------------------------------------------------------------
-
-  osc_player_isInsideVehicleZone.add(audio.playerIsInZone);
-  if (printOSC) oscP5.send(osc_player_isInsideVehicleZone, myRemoteLocation);
-
-
-  // if player is in vehicle zone adjust volume
-  //--------------------------------------------------------------
-
-  osc_playerInVehicleZone_audioVolume.add(audio.playerInZoneVolume);
-  if (printOSC) oscP5.send(osc_playerInVehicleZone_audioVolume, myRemoteLocation);
-}
 
 // deprecated
 //*************** DATA TRACKING ***************************************

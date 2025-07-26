@@ -182,7 +182,7 @@ class Collision {
   // PLAYER AGAINST VEHICLES
 
   boolean checkPlayerAgainstVehicleInZone() { // called from player location
-  
+
     int vNum = 0;
 
     boolean vehicleWasTouched = false;
@@ -212,11 +212,16 @@ class Collision {
 
             vehicleWasTouched = true;
 
+
+            if (audioIsPlaying) {
+              audio.playerIsTouchingVehicle_playAudio();
+            }
+
             killVehicle(vNum);
-            
+
             v.playerInDistanceZone = false;
             //player.location.setState(player.location.pLocMovingState);
-            
+
             break;
           }
         }
@@ -248,15 +253,16 @@ class Collision {
           if (player.location.getState() == player.location.pLocBreathingState) { // in player area
 
             //data.vehicleTouchedPlayer = true;
-            
+
             if (playSound) {
               data.trackVehicleTouchedPlayer(true);
             }
 
+
             playerWasTouched = true;
 
             killVehicle(vNum);
-            
+
             break;
           }
         }
