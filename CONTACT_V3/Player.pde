@@ -5,7 +5,7 @@ class Player {
   //PlayerSphere[] spheres;
   ArrayList<PlayerSphere> spheres;
   ArrayList<Joint> joints;
- // ArrayList<Joint> sideJoints;
+  // ArrayList<Joint> sideJoints;
   RevoluteJoint revoluteJoint;
 
   float centerSphereRadius;
@@ -103,9 +103,14 @@ class Player {
 
   PlayerTrail trailLeft;
   PlayerTrail trailRight;
-  
+
   boolean engagedInImpulse;
 
+  color strokeColor;
+  color fillColor;
+
+  color leftEyeColor;
+  color rightEyeColor;
 
   // ********************************************************
   // CONSTRUCTOR
@@ -185,7 +190,7 @@ class Player {
     Vec2 pPos = box2d.getBodyPixelCoord(centerSphere.body);
     trailLeft = new PlayerTrail(pPos.x, pPos.y);
     trailRight = new PlayerTrail(pPos.x, pPos.y);
-    
+
     engagedInImpulse = false;
     //
   } // constructor
@@ -194,8 +199,9 @@ class Player {
   // UPDATE
   // ********************************************************
 
-  void update(float _theta) { 
-    
+  void update(float _theta) {
+
+
     //println("player lung state ", player.lung.getState());
 
     playerTheta = _theta;
@@ -220,7 +226,7 @@ class Player {
 
     leftEye.update(this);
     rightEye.update(this);
-    
+
     setLockEyeState();
 
     centerSphere.update();
@@ -251,6 +257,9 @@ class Player {
       checkForVehicleInArea();
     }
 
+
+    updateColor();
+
     //updateTrail();
   } // update()
 
@@ -278,20 +287,20 @@ class Player {
   // ********************************************************
   /*
   void updateTrail() {
-    /*
-    Vec2 centerPos;
-     centerPos = box2d.getBodyPixelCoord(centerSphere.body);
-     trail.update(centerPos.x, centerPos.y, colorWheelAngle, 155);
-     *//*
+  /*
+   Vec2 centerPos;
+   centerPos = box2d.getBodyPixelCoord(centerSphere.body);
+   trail.update(centerPos.x, centerPos.y, colorWheelAngle, 155);
+   */  /*
     Vec2 leftPos;
-    leftPos = box2d.getBodyPixelCoord(leftEye.eyeOuterb2d.body);
-    trailLeft.update(leftPos.x, leftPos.y, getLinearVelocity());
-
-    Vec2 rightPos;
-    rightPos = box2d.getBodyPixelCoord(rightEye.eyeOuterb2d.body);
-    trailRight.update(rightPos.x, rightPos.y, getLinearVelocity());
-  }
-*/
+   leftPos = box2d.getBodyPixelCoord(leftEye.eyeOuterb2d.body);
+   trailLeft.update(leftPos.x, leftPos.y, getLinearVelocity());
+   
+   Vec2 rightPos;
+   rightPos = box2d.getBodyPixelCoord(rightEye.eyeOuterb2d.body);
+   trailRight.update(rightPos.x, rightPos.y, getLinearVelocity());
+   }
+   */
 
   //--------------------------------------------------------------
   /*
@@ -519,6 +528,8 @@ class Player {
 
   void display() {
 
+    //updateColor();
+
     // trailLeft.display();
     // trailRight.display();
 
@@ -585,7 +596,7 @@ class Player {
     strokeWeight(sphereRadius*2);
     stroke(colorAngle, saturation, blobBrightness);
     fill(colorAngle, saturation, blobBrightness);
-    
+
     pos = box2d.getBodyPixelCoord(spheres.get(many-1).body);
     //pos = box2d.getBodyPixelCoord(spheres[many - 1].body);
     pos.x = int(pos.x);
@@ -594,7 +605,7 @@ class Player {
     curveVertex(pos.x, pos.y); // begin control point
 
     for (int i = 0; i <= many; i++) {
-      
+
       Body b = spheres.get(i).body;
       //Body b = spheres[i].body;
       // We look at each body and get its screen position
@@ -604,7 +615,7 @@ class Player {
 
       curveVertex(pos.x, pos.y);
     }
-    
+
     pos = box2d.getBodyPixelCoord(spheres.get(1).body);
     //pos = box2d.getBodyPixelCoord(spheres[1].body);
     pos.x = int(pos.x);
@@ -619,16 +630,41 @@ class Player {
 
   //--------------------------------------------------------------
 
+  void updateColor() {
+
+    strokeColor = color(colorWheelAngle, saturation, 25);
+    fillColor = color(colorWheelAngle, saturation, blobBrightness);
+
+    if (lockedEye == "left") {
+
+      leftEyeColor = color(-colorWheelAngle, saturation, blobBrightness);
+      rightEyeColor = color(colorWheelAngle, saturation, blobBrightness);
+    } else if (lockedEye == "right") {
+
+      leftEyeColor = color(colorWheelAngle, saturation, blobBrightness);
+      rightEyeColor = color(-colorWheelAngle, saturation, blobBrightness);
+    } else if (lockedEye == "both") {
+
+      leftEyeColor = color(-colorWheelAngle, saturation, blobBrightness);
+      rightEyeColor = color(-colorWheelAngle, saturation, blobBrightness);
+    } else {
+
+      leftEyeColor = color(colorWheelAngle, saturation, blobBrightness);
+      rightEyeColor = color(colorWheelAngle, saturation, blobBrightness);
+    }
+  }
+
+  //--------------------------------------------------------------
+
   void displayEyes() {
 
-    //println("colorWheelAngle ", colorWheelAngle);
 
-    color strokeColor = color(colorWheelAngle, saturation, 50);
-    color fillColor = color(colorWheelAngle, saturation, blobBrightness);
 
-    leftEye.display(-theta, strokeColor, fillColor);
-    rightEye.display(-theta, strokeColor, fillColor);
+    leftEye.display(-colorWheelAngle, strokeColor, leftEyeColor);
+    rightEye.display(-colorWheelAngle, strokeColor, rightEyeColor);
   }
+
+  //--------------------------------------------------------------
 
   // Draw the skeleton as circles for bodies and lines for joints
   void displaySpheres() {
@@ -642,32 +678,32 @@ class Player {
   }
 
   //--------------------------------------------------------------
-/*
+  /*
   void displayJoints() {
-
-    // Draw the outline
-    stroke(126);
-    strokeWeight(1);
-    for (Joint j : joints) {
-      Body a = j.getBodyA();
-      Body b = j.getBodyB();
-      Vec2 posa = box2d.getBodyPixelCoord(a);
-      Vec2 posb = box2d.getBodyPixelCoord(b);
-      line(posa.x, posa.y, posb.x, posb.y);
-    }
-
-    // Draw the outline
-    stroke(126);
-    strokeWeight(1);
-    for (Joint j : sideJoints) {
-      Body a = j.getBodyA();
-      Body b = j.getBodyB();
-      Vec2 posa = box2d.getBodyPixelCoord(a);
-      Vec2 posb = box2d.getBodyPixelCoord(b);
-      line(posa.x, posa.y, posb.x, posb.y);
-    }
-  }
-*/
+   
+   // Draw the outline
+   stroke(126);
+   strokeWeight(1);
+   for (Joint j : joints) {
+   Body a = j.getBodyA();
+   Body b = j.getBodyB();
+   Vec2 posa = box2d.getBodyPixelCoord(a);
+   Vec2 posb = box2d.getBodyPixelCoord(b);
+   line(posa.x, posa.y, posb.x, posb.y);
+   }
+   
+   // Draw the outline
+   stroke(126);
+   strokeWeight(1);
+   for (Joint j : sideJoints) {
+   Body a = j.getBodyA();
+   Body b = j.getBodyB();
+   Vec2 posa = box2d.getBodyPixelCoord(a);
+   Vec2 posb = box2d.getBodyPixelCoord(b);
+   line(posa.x, posa.y, posb.x, posb.y);
+   }
+   }
+   */
   // ********************************************************
   // CREATION
   // ********************************************************
@@ -719,7 +755,7 @@ class Player {
 
         cvjd.addBody(spheres.get(i).body);
       } else {
-        
+
         spheres.add(new PlayerSphere(x, y, sphereRadius, "DYNAMIC", CATEGORY_PLAYER, MASK_PLAYER));
         //spheres = (PlayerSphere[]) append(spheres, new PlayerSphere(x, y, sphereRadius, "DYNAMIC", CATEGORY_PLAYER, MASK_PLAYER));
 

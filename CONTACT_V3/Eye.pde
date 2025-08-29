@@ -216,6 +216,7 @@ class Eye {
     float minRange = 400; // 0
     float maxRange = 600; // 1023
     
+      
     sensorX = map(_x, minRange, maxRange, -eyeOuterRadius + eyeInnerRadius, eyeOuterRadius - eyeInnerRadius);
     sensorY = map(_y, minRange, maxRange, -eyeOuterRadius + eyeInnerRadius, eyeOuterRadius - eyeInnerRadius);
 
@@ -257,6 +258,8 @@ class Eye {
     }
 
     //
+    
+    println("fillColor ", fillColor);
 
     pupil.updateColor(strokeColor);
     eyeLid.updateColor(fillColor, strokeColor);
@@ -494,6 +497,7 @@ class Eye {
 
     popMatrix();
   }
+  
 
   //--------------------------------------------------------------
 

@@ -212,8 +212,8 @@ void setup() {
   debugMode = false;
   screengrab = false;
   showDistance = true;
-  playSound = false; // enables sound // deprecated
-  audioIsPlaying = true;
+  playSound = false; // enables sound // current sound until Woohun updates
+  audioIsPlaying = false; // new sound by woohun not ready yet
   //*********************************************************************
 
   if (screengrab) {
