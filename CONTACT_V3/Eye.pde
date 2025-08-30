@@ -259,12 +259,16 @@ class Eye {
 
     //
     
-    println("fillColor ", fillColor);
+    //println("fillColor ", fillColor);
 
-    pupil.updateColor(strokeColor);
-    eyeLid.updateColor(fillColor, strokeColor);
+    
   } // update
 
+  //--------------------------------------------------------------
+  
+  
+  
+  
   //--------------------------------------------------------------
 
   void setPupilState() {
@@ -450,15 +454,31 @@ class Eye {
 
     calibrateSensor = true;
   }
-
+  
   //--------------------------------------------------------------
-
-  void display(float t, color _strokeColor, color _fillColor) {
-
+  
+  void updateColor(float t, color _strokeColor, color _fillColor) {
+    
     strokeColor = _strokeColor;
     fillColor = _fillColor;
 
     blobTheta = t;
+    
+    pupil.updateColor(strokeColor);
+    eyeLid.updateColor(fillColor, strokeColor);
+    
+  }
+
+  //--------------------------------------------------------------
+
+  void display() {
+    
+    /*
+    strokeColor = _strokeColor;
+    fillColor = _fillColor;
+
+    blobTheta = t;
+    */
 
     pushMatrix();
 

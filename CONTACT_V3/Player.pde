@@ -205,6 +205,9 @@ class Player {
     //println("player lung state ", player.lung.getState());
 
     playerTheta = _theta;
+    
+    
+     updateColor();
 
     // -------------------------------------
 
@@ -242,6 +245,8 @@ class Player {
     area.update();
 
     //areaRadius = area.radius;
+    
+   
 
     motion.update();
 
@@ -258,7 +263,7 @@ class Player {
     }
 
 
-    updateColor();
+    
 
     //updateTrail();
   } // update()
@@ -632,36 +637,53 @@ class Player {
 
   void updateColor() {
 
+    int oppositeColorAngle;
+
     strokeColor = color(colorWheelAngle, saturation, 25);
     fillColor = color(colorWheelAngle, saturation, blobBrightness);
 
+    oppositeColorAngle = colorWheelAngle;
+
+    oppositeColorAngle -= 180;
+    
+    println("colorWheelAngle ", colorWheelAngle);
+    println("oppositeColorAngle ", oppositeColorAngle);
+
+    if (oppositeColorAngle < 0) {
+      oppositeColorAngle += 360;
+    }
+
     if (lockedEye == "left") {
 
-      leftEyeColor = color(-colorWheelAngle, saturation, blobBrightness);
+      leftEyeColor = color(oppositeColorAngle, saturation, blobBrightness);
       rightEyeColor = color(colorWheelAngle, saturation, blobBrightness);
+      
     } else if (lockedEye == "right") {
 
       leftEyeColor = color(colorWheelAngle, saturation, blobBrightness);
-      rightEyeColor = color(-colorWheelAngle, saturation, blobBrightness);
+      rightEyeColor = color(oppositeColorAngle, saturation, blobBrightness);
+      
     } else if (lockedEye == "both") {
 
-      leftEyeColor = color(-colorWheelAngle, saturation, blobBrightness);
-      rightEyeColor = color(-colorWheelAngle, saturation, blobBrightness);
+      leftEyeColor = color(oppositeColorAngle, saturation, blobBrightness);
+      rightEyeColor = color(oppositeColorAngle, saturation, blobBrightness);
+      
     } else {
-
+      
       leftEyeColor = color(colorWheelAngle, saturation, blobBrightness);
       rightEyeColor = color(colorWheelAngle, saturation, blobBrightness);
     }
+
+    leftEye.updateColor(colorWheelAngle, strokeColor, leftEyeColor);
+    rightEye.updateColor(colorWheelAngle, strokeColor, rightEyeColor);
   }
 
   //--------------------------------------------------------------
 
   void displayEyes() {
 
-
-
-    leftEye.display(-colorWheelAngle, strokeColor, leftEyeColor);
-    rightEye.display(-colorWheelAngle, strokeColor, rightEyeColor);
+    leftEye.display();
+    rightEye.display();
   }
 
   //--------------------------------------------------------------

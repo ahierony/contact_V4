@@ -17,9 +17,12 @@ class EyeOuter extends EyeShape {
   }
 
   void updateColor(color _fill, color _stroke) {
+    
     fillColor = _fill;
     strokeColor = _stroke;
+    
   }
+  
 
   void setTheta(float _theta) {
     theta = _theta;
