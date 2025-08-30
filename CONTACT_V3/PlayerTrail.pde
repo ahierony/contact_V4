@@ -12,7 +12,6 @@ class PlayerTrail {
   int previouseMainAngle;
   int currentMainAngle;
 
-
   PlayerTrail(float x, float y) {
 
     marks = new ArrayList<PlayerTrailMark>();
@@ -108,9 +107,10 @@ class PlayerTrail {
   void display() {
 
     colorMode(RGB);
-    strokeWeight(2);
+    //strokeWeight(2);
     stroke(255);
-
+    strokeWeight(bgTrailBox.trailStrokeWeight);
+    
 
     for (int i= 0; i < marks.size(); i++) {
       PlayerTrailMark m = marks.get(i);
@@ -127,9 +127,14 @@ class PlayerTrail {
             // so that no lines get drawn when the bgTrailBox wraps
             float d = dist(pm.x, pm.y, m.x, m.y);
 
-            if (d < bg.wrapLimit_w)
-
+            if (d < bg.wrapLimit_w){
+    
               line(pm.x, pm.y, m.x, m.y);
+              
+            } else{
+              
+              
+            }
           }
         }
 

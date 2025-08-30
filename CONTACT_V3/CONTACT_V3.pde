@@ -547,6 +547,14 @@ void draw() {
 
       popMatrix();
     } // TRAILS END
+
+    pushMatrix();
+
+    translate(width/2, height/2);
+
+    bgTrailBox.display(worldScale);
+
+    popMatrix();
   }
 
 
@@ -583,7 +591,7 @@ void draw() {
     recordSVG = false;
 
     resetContact();
-   
+
     audio.gameOver_playAudio();
   }
 

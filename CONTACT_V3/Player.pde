@@ -646,9 +646,6 @@ class Player {
 
     oppositeColorAngle -= 180;
     
-    println("colorWheelAngle ", colorWheelAngle);
-    println("oppositeColorAngle ", oppositeColorAngle);
-
     if (oppositeColorAngle < 0) {
       oppositeColorAngle += 360;
     }

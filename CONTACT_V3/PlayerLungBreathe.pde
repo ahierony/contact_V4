@@ -17,8 +17,6 @@ class PlayerLungBreathe {
  
   PlayerLungBreathe() {
 
-    aVelocity = 0.01;     //0.025;
-
     radiusMin = 100;
     radiusMax = 300;
 
@@ -33,7 +31,7 @@ class PlayerLungBreathe {
 
   void setExhale() {
     
-    aVelocity = 0.001; // 0.003 this for lisbon show IHCI// to test with keyboard 0.003// best for contact v3: 0.005;
+    aVelocity = 0.005; // 0.003 this for lisbon show IHCI// to test with keyboard 0.003// best for contact v3: 0.005;
     
     currentM = "exhale";
     

@@ -107,8 +107,6 @@ class Eye {
 
   boolean inImpulse;
   
-
-
   //
 
   Eye(float _x, float _y, String _coltxt) {
@@ -192,6 +190,7 @@ class Eye {
     sensorY = 0;
 
     recordOriginalSensorAngle = true;
+    
   }
 
   //--------------------------------------------------------------
@@ -235,8 +234,9 @@ class Eye {
     if (inputControls == InputControls.KEYBOARD) {
 
       if (player.location.getState() == player.location.pLocVehicleZoneState) {
-
+        
         applyPush_k();
+        
       } else {
 
         setPupilState_k(); // if player is not in vehicle zone or has a vehicle in area
@@ -249,8 +249,9 @@ class Eye {
       head.pos.y = sensorY;
 
       if (player.location.getState() == player.location.pLocVehicleZoneState) {
-
+        
         applyPush();
+        
       } else {
 
         setPupilState(); // if player is not in vehicle zone or has a vehicle in area
@@ -379,9 +380,11 @@ class Eye {
       }
     } else {
 
-      if (pushTimer.isFinished()) {
+      if (pushTimer.isFinished() && !inImpulse) {
         pupilState = "unlocked";
         //inImpulse = false;
+        
+        
       }
     }
   }
@@ -396,7 +399,6 @@ class Eye {
 
         pupilState = "locked";
 
-
         if (!player.engagedInImpulse) {
           inImpulse = true;
           player.engagedInImpulse = true;
@@ -408,9 +410,11 @@ class Eye {
       }
     } else {
 
-      if (pushTimer.isFinished()) {
+      if (pushTimer.isFinished() && !inImpulse) {
         pupilState = "unlocked";
         //inImpulse = false;
+        
+        
       }
     }
   }
