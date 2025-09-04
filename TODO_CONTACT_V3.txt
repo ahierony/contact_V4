@@ -10,6 +10,18 @@ TODO BEFORE SHOW:
 
 BUG
 
+- COLOR IN EYES NOT UPDATING
+
+
+in player location: buggy
+
+
+    if(player.leftEye.pupilState == "unlocked" && player.rightEye.pupilState == "unlocked"){
+      player.leftEye.inImpulse = false;
+      player.rightEye.inImpulse = false;
+      player.engagedInImpulse = false;
+    }
+
 
 
 

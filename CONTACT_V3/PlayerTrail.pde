@@ -8,11 +8,15 @@ class PlayerTrail {
 
   int markCount;
   int maxMarks;
-  
+
   int previouseMainAngle;
   int currentMainAngle;
+  
+  int trailStrokeWeight;
 
   PlayerTrail(float x, float y) {
+    
+    trailStrokeWeight = 1;
 
     marks = new ArrayList<PlayerTrailMark>();
 
@@ -32,9 +36,9 @@ class PlayerTrail {
   //--------------------------------------------------------------
 
   void update(float x, float y, float pVel, float mainTheta) {
-    
+
     currentMainAngle = int(degrees(mainTheta));
-    
+
     int mainAngleDiff = abs(currentMainAngle - previouseMainAngle);
 
     markPos.set(x, y);
@@ -48,7 +52,7 @@ class PlayerTrail {
     float angle = degrees(a);
     angle = abs(angle);
 
- 
+
     int count;
     markFrameCount++;
     count = markFrameCount % 15;
@@ -58,11 +62,9 @@ class PlayerTrail {
 
     if (angle > 1) {
       addMarks();
-      
     } else if (mainAngleDiff > 1) {
-      
+
       addMarks();
-      
     } else if (count == 0) {
 
       addMarks();
@@ -75,8 +77,8 @@ class PlayerTrail {
      addMarks(x, y);
      }
      */
-     
-     previouseMainAngle = currentMainAngle;
+
+    previouseMainAngle = currentMainAngle;
   }
 
   //--------------------------------------------------------------
@@ -107,14 +109,23 @@ class PlayerTrail {
   void display() {
 
     colorMode(RGB);
-    //strokeWeight(2);
-    stroke(255);
-    strokeWeight(bgTrailBox.trailStrokeWeight);
     
-
     for (int i= 0; i < marks.size(); i++) {
       PlayerTrailMark m = marks.get(i);
+        
+        
+      if (bgTrailBox.offsets.size() > 0) {
 
+        int offsetVal = bgTrailBox.offsets.get(bgTrailBox.offsetNum-1);
+        int offsetWeight = bgTrailBox.strokeWeights.get(bgTrailBox.offsetNum-1);
+       
+        if (i == offsetVal) {
+   
+          trailStrokeWeight = bgTrailBox.strokeWeights.get(bgTrailBox.offsetNum-1);
+        }
+        
+      }
+      
       if (m != null) {
 
         if (i > 0) {
@@ -127,13 +138,13 @@ class PlayerTrail {
             // so that no lines get drawn when the bgTrailBox wraps
             float d = dist(pm.x, pm.y, m.x, m.y);
 
-            if (d < bg.wrapLimit_w){
-    
+            if (d < bg.wrapLimit_w) {
+              
+              strokeWeight(trailStrokeWeight);
+              stroke(255);
+
               line(pm.x, pm.y, m.x, m.y);
-              
-            } else{
-              
-              
+            } else {
             }
           }
         }
@@ -141,8 +152,10 @@ class PlayerTrail {
         m.display();
       }
     }
+    
+    trailStrokeWeight = 1;
 
-    strokeWeight(1);
+    strokeWeight(trailStrokeWeight);
     colorMode(HSB, 360, 100, 100);
   }
 }

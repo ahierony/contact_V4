@@ -6,16 +6,23 @@ class BgTrailBox {
   PlayerTrail trailLeft;
   PlayerTrail trailRight;
   
-  int trailStrokeWeight;
-  int strokeWeightIncrease;
-
-
   PVector offset;
+  
+  int strokeWeightIncrease;
+  ArrayList<Integer> offsets;
+  ArrayList<Integer> strokeWeights;
+  int offsetStrokeWeight;
+  int offsetNum;
+  
 
   BgTrailBox(int _unitTotal, float unit_w, float unit_h) {
     
-    trailStrokeWeight = 2;
-    strokeWeightIncrease = 0;
+    offsets = new ArrayList<Integer>();
+    strokeWeights = new ArrayList<Integer>();
+    offsetNum = 0;
+    
+    offsetStrokeWeight = 1;
+    strokeWeightIncrease = 5;
 
     pos = new PVector(0, 0);
 
@@ -90,36 +97,30 @@ class BgTrailBox {
     if (pos.x > bg.wrapLimit_w) {
       pos.x = - bg.wrapLimit_w;
       offset.x += bg.wrapLimit_w*2;
-      
-      //trailStrokeWeight += strokeWeightIncrease;
-      
-      println("position ", trailLeft.marks.size());
+       
+      increaseStrokeWeight();
       
     } else if (pos.x < -bg.wrapLimit_w) {
       pos.x = bg.wrapLimit_w;
       offset.x -= bg.wrapLimit_w*2;
       
-      //trailStrokeWeight += strokeWeightIncrease;
-      
-      println("position ", trailLeft.marks.size());
+     increaseStrokeWeight();
     }
 
     if (pos.y > bg.wrapLimit_h) {
       pos.y = -bg.wrapLimit_h;
       offset.y += bg.wrapLimit_h*2;
       
-      //trailStrokeWeight += strokeWeightIncrease;
-      
-      println("position ", trailLeft.marks.size());
+     increaseStrokeWeight();
       
     } else if (pos.y < -bg.wrapLimit_h) {
       pos.y = bg.wrapLimit_h;
       offset.y -= bg.wrapLimit_h*2;
       
-      //trailStrokeWeight += strokeWeightIncrease;
-      
-      println("position ", trailLeft.marks.size());
+      increaseStrokeWeight();
     }
+    
+    //println(offsets);
 
 
     leftEyesPosPVec.add(offset);
@@ -132,6 +133,16 @@ class BgTrailBox {
 
     trailLeft.update(_leftEyePos.x, _leftEyePos.y, player.getLinearVelocity(), mainTheta);
     trailRight.update(_rightEyePos.x, _rightEyePos.y, player.getLinearVelocity(), mainTheta);
+    
+  }
+  
+  void increaseStrokeWeight(){
+      
+    offsets.add(Integer.valueOf(trailLeft.marks.size()));
+    offsetNum++;
+    offsetStrokeWeight += strokeWeightIncrease;
+    strokeWeights.add(Integer.valueOf(offsetStrokeWeight));
+    
     
   }
 }
