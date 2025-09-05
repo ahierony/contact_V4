@@ -121,7 +121,7 @@ class PlayerTrail {
        
         if (i == offsetVal) {
    
-          trailStrokeWeight = bgTrailBox.strokeWeights.get(bgTrailBox.offsetNum-1);
+          trailStrokeWeight = offsetWeight;
         }
         
       }

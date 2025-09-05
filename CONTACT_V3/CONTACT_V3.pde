@@ -198,7 +198,8 @@ InputControls inputControls;
 // SVG
 import processing.svg.*;
 boolean recordSVG = false;
-;
+
+int fadeAnimationCounter;
 
 void setup() {
 
@@ -211,7 +212,7 @@ void setup() {
   //protoSticks = false;
   debugMode = false;
   screengrab = false;
-  showDistance = true;
+  showDistance = false;
   playSound = false; // enables sound // current sound until Woohun updates
   audioIsPlaying = false; // new sound by woohun not ready yet
   //*********************************************************************
@@ -278,6 +279,8 @@ void setup() {
   rightEyeDown = false;
   leftEyeUp = false;
   leftEyeDown = false;
+
+  fadeAnimationCounter = 0;
 } // setup
 
 //--------------------------------------------------------------
@@ -321,19 +324,8 @@ void setBackgroundTimer() {
 //--------------------------------------------------------------
 void resetContact() {
 
-  //player.killBlob();
+
   player = null;
-
-  //vehicles.get(0).killBlob();
-  //vehicles.get(1).killBlob();
-
-  /*
-  for (int i=0; i < vehicles.size(); i++) {
-   Vehicle v = vehicles.get(i);
-   //v.killBlob();
-   }
-   vehicles.clear();
-   */
 
   box2d = null;
   vehicles.clear();
@@ -345,13 +337,9 @@ void resetContact() {
   }
 
   bg = null;
-
-
-  //recordSVG = true;
-
-
   bgTrailBox = null;
-
+  
+  fadeAnimationCounter = 0;
 
   //**********************
 
@@ -383,10 +371,15 @@ void resetContact() {
 void draw() {
 
   // TRAIL RECORDING STARTS
-
+  /*
   if (player.lung.getState() == player.lung.emptyState) {
-    recordSVG = true;
-  }
+   
+   if (fadeAnimationIsOver()) {
+   
+   recordSVG = true;
+   }
+   }
+   */
 
   if (recordSVG) {
     // Note that #### will be replaced with the frame number. Fancy!
@@ -592,6 +585,8 @@ void draw() {
 
     resetContact();
 
+
+
     audio.gameOver_playAudio();
   }
 
@@ -627,6 +622,16 @@ void draw() {
   }
 
   // TRAIL RECORDING ENDS
+
+  if (player.lung.getState() == player.lung.emptyState) {
+
+    if (fadeAnimationIsOver()) {
+
+      recordSVG = true;
+    }
+  }
+
+
 
   //println("vehicle size ", vehicles.size());
 } // draw
@@ -804,6 +809,29 @@ void oscEvent(OscMessage theOscMessage) {
   print("### received an osc message.");
   print(" addrpattern: "+theOscMessage.addrPattern());
   println(" typetag: "+theOscMessage.typetag());
+}
+
+//--------------------------------------------------------------
+
+boolean fadeAnimationIsOver() {
+
+  //colorMode(RGB);
+
+  fadeAnimationCounter += 5;
+
+  fill(0, 99, 0, fadeAnimationCounter);
+  rectMode(CORNER);
+  rect(0, 0, width, height);
+
+  println("fadeAnimationCounter ", fadeAnimationCounter);
+
+  if (fadeAnimationCounter == 255) {
+
+    return true;
+  } else {
+
+    return false;
+  }
 }
 
 //--------------------------------------------------------------
