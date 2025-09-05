@@ -11,11 +11,11 @@ class PlayerTrail {
 
   int previouseMainAngle;
   int currentMainAngle;
-  
+
   int trailStrokeWeight;
 
   PlayerTrail(float x, float y) {
-    
+
     trailStrokeWeight = 1;
 
     marks = new ArrayList<PlayerTrailMark>();
@@ -109,23 +109,30 @@ class PlayerTrail {
   void display() {
 
     colorMode(RGB);
-    
+
     for (int i= 0; i < marks.size(); i++) {
       PlayerTrailMark m = marks.get(i);
-        
-        
+
+
       if (bgTrailBox.offsets.size() > 0) {
 
-        int offsetVal = bgTrailBox.offsets.get(bgTrailBox.offsetNum-1);
-        int offsetWeight = bgTrailBox.strokeWeights.get(bgTrailBox.offsetNum-1);
-       
-        if (i == offsetVal) {
-   
-          trailStrokeWeight = offsetWeight;
+
+        for (int j = 0; j < bgTrailBox.offsets.size(); j++) {
+
+          int offsetVal = bgTrailBox.offsets.get(j);
+          int offsetWeight = bgTrailBox.strokeWeights.get(j);
+
+
+          if (i == offsetVal) {
+
+            //println("offsetWeight ", offsetWeight);
+
+            trailStrokeWeight = offsetWeight;
+          }
         }
-        
+
       }
-      
+
       if (m != null) {
 
         if (i > 0) {
@@ -139,7 +146,7 @@ class PlayerTrail {
             float d = dist(pm.x, pm.y, m.x, m.y);
 
             if (d < bg.wrapLimit_w) {
-              
+
               strokeWeight(trailStrokeWeight);
               stroke(255);
 
@@ -152,7 +159,7 @@ class PlayerTrail {
         m.display();
       }
     }
-    
+
     trailStrokeWeight = 1;
 
     strokeWeight(trailStrokeWeight);
