@@ -207,7 +207,7 @@ class Player {
     playerTheta = _theta;
     
     
-     updateColor();
+     updateEyeColor();
 
     // -------------------------------------
 
@@ -635,7 +635,7 @@ class Player {
 
   //--------------------------------------------------------------
 
-  void updateColor() {
+  void updateEyeColor() {
 
     int oppositeColorAngle;
 
@@ -660,7 +660,7 @@ class Player {
       leftEyeColor = color(colorWheelAngle, saturation, blobBrightness);
       rightEyeColor = color(oppositeColorAngle, saturation, blobBrightness);
       
-    } else if (lockedEye == "both") {
+    } else if (lockedEye == "both" && player.location.getState() != player.location.pLocVehicleZoneState) {
 
       leftEyeColor = color(oppositeColorAngle, saturation, blobBrightness);
       rightEyeColor = color(oppositeColorAngle, saturation, blobBrightness);

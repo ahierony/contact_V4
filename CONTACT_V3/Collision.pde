@@ -217,6 +217,10 @@ class Collision {
               audio.playerIsTouchingVehicle_playAudio();
             }
 
+            if (playSoundContactV1) {
+              p_touch_v_audio.play();
+            }
+
             killVehicle(vNum);
 
             v.playerInDistanceZone = false;

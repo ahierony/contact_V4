@@ -155,11 +155,28 @@ boolean isSwitchingSides = false;
 
 Collision collision;
 
+//*********************************************************************
 // AUDIO
+//*********************************************************************
 
 // deprecated
 Data data;
 boolean playSound;
+
+// contact v1 sound
+
+import processing.sound.*;
+
+boolean playSoundContactV1;
+
+SoundFile eye_push;
+
+SoundFile[] backgroundSounds;
+boolean switchBackgroundSound;
+SoundFile currentBackgroundSound;
+
+SoundFile p_enter_v_zone_audio;
+SoundFile p_touch_v_audio;
 
 Audio audio;
 boolean audioIsPlaying;
@@ -215,6 +232,7 @@ void setup() {
   showDistance = false;
   playSound = false; // enables sound // current sound until Woohun updates
   audioIsPlaying = false; // new sound by woohun not ready yet
+  playSoundContactV1 = false;
   //*********************************************************************
 
   if (screengrab) {
@@ -229,6 +247,12 @@ void setup() {
   oscP5 = new OscP5(this, 12000);
   //myRemoteLocation = new NetAddress("104.39.248.119", 12000);
   myRemoteLocation = new NetAddress("127.0.0.1", 12000);
+
+  //*******************************************************************
+  // contact v1 sounds
+
+  if (playSoundContactV1)
+    setupSounds();
 
   //*******************************************************************
 
@@ -285,6 +309,51 @@ void setup() {
 
 //--------------------------------------------------------------
 
+// contact v1 sounds
+
+void setupSounds() {
+
+  backgroundSounds = new SoundFile[9];
+
+  for (int i=0; i < backgroundSounds.length; i++) {
+    backgroundSounds[i] = new SoundFile(this, "sounds/background" + i + ".mp3");
+  }
+
+  int randomBackgroundSound = int(random(0, backgroundSounds.length));
+  //println("randomBackgroundSound ", randomBackgroundSound);
+  currentBackgroundSound = backgroundSounds[randomBackgroundSound];
+  currentBackgroundSound.amp(0.5);
+  currentBackgroundSound.play();
+  switchBackgroundSound = true;
+  
+  p_touch_v_audio.amp(1.0);
+  p_touch_v_audio = new SoundFile(this, "sounds/p_touch_v.mp3");
+  
+  p_enter_v_zone_audio.amp(1.0);
+  p_enter_v_zone_audio = new SoundFile(this, "sounds/p_enter_v_zone.mp3");
+  
+}
+
+//--------------------------------------------------------------
+
+void updateSounds() {
+
+  if (!currentBackgroundSound.isPlaying()) {
+
+    if (switchBackgroundSound) {
+
+      int randomBackgroundSound = int(random(0, backgroundSounds.length));
+      currentBackgroundSound = backgroundSounds[randomBackgroundSound];
+      switchBackgroundSound = false;
+      currentBackgroundSound.play();
+    }
+  } else {
+    switchBackgroundSound = true;
+  }
+}
+
+//--------------------------------------------------------------
+
 void setUnitSize(float _unit_w, float _unit_h, int _rowLength, float _worldScale) {
 
   unit_w = _unit_w; //2000;
@@ -338,7 +407,7 @@ void resetContact() {
 
   bg = null;
   bgTrailBox = null;
-  
+
   fadeAnimationCounter = 0;
 
   //**********************
@@ -380,6 +449,9 @@ void draw() {
    }
    }
    */
+
+  if (playSoundContactV1)
+    updateSounds();
 
   if (recordSVG) {
     // Note that #### will be replaced with the frame number. Fancy!
