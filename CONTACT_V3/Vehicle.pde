@@ -90,7 +90,7 @@ class Vehicle {
   // other vehicle test
   boolean distanceFinal;
   boolean breathingFinal;
-  
+
   //AUDIO
   //boolean vehicleBreathingAudioIsPlaying;
 
@@ -140,7 +140,7 @@ class Vehicle {
     blobRadius = radius + sphereRadius;
 
     zone = new VehicleZone(this);
-    
+
     inMotion = _inMotion;
 
     if (!inMotion) {
@@ -179,7 +179,7 @@ class Vehicle {
     otherVehicleInDistanceZone = false;
     otherVehicleInBreathingZone = false;
 
-    colorAngleSwitchPlayer = 50; //45;
+    colorAngleSwitchPlayer = 30; // 50; //45;
     colorAngleSwitchVehicle = 5; //7; //15; //7;
 
     initialize();
@@ -235,16 +235,18 @@ class Vehicle {
       inOtherVehicleDistanceZone = false;
       inOtherVehicleBreathingZone = false;
 
+      /*
       for (Vehicle v : vehicles) {
-
-        if (v != this) {
-
-          if (v.location.getState() == v.location.vInBreathingState) {
-
-            checkIfInOtherVehicleZone(v);
-          }
-        }
-      }
+       
+       if (v != this) {
+       
+       if (v.location.getState() == v.location.vInBreathingState) {
+       
+       checkIfInOtherVehicleZone(v);
+       }
+       }
+       }
+       */
 
       location.update();
 
@@ -261,7 +263,7 @@ class Vehicle {
       //println("zone ", zone.getState());
 
       checkIfPlayerInZone();
-      checkIfOtherVehicleInZone();
+      //checkIfOtherVehicleInZone();
 
       location.update();
       zone.update();
@@ -373,41 +375,41 @@ class Vehicle {
   // ********************************************************
 
   //--------------------------------------------------------------
-
+  /*
   void applyAreaForceOnVehicle(Player player) {
-
-    float gravity = calculateGravity(colorWheelAngle, player.colorWheelAngle, 100000, colorAngleSwitchPlayer);
-
-    Vec2 pos = centerBoid.body.getWorldCenter();
-    Vec2 playerPos = player.centerSphere.body.getWorldCenter();
-
-    float mass = centerBoid.body.m_mass;
-
-    Vec2 force = calculateForce(pos, playerPos, gravity, mass);
-    centerBoid.applyForce(force);
-  }
-
+   
+   float gravity = calculateGravity(colorWheelAngle, player.colorWheelAngle, 100000, colorAngleSwitchPlayer);
+   
+   Vec2 pos = centerBoid.body.getWorldCenter();
+   Vec2 playerPos = player.centerSphere.body.getWorldCenter();
+   
+   float mass = centerBoid.body.m_mass;
+   
+   Vec2 force = calculateForce(pos, playerPos, gravity, mass);
+   centerBoid.applyForce(force);
+   }
+   */
   //--------------------------------------------------------------
-
+  /*
   void applyZoneForceOnVehicle(Vehicle otherV) {
-
-    float gravity = calculateGravity(colorWheelAngle, otherV.colorWheelAngle, 100000, colorAngleSwitchVehicle);
-
-    Vec2 pos = centerBoid.body.getWorldCenter();
-    Vec2 otherPos = otherV.centerBoid.body.getWorldCenter();
-
-    float mass = centerBoid.body.m_mass;
-
-    Vec2 force = calculateForce(pos, otherPos, gravity, mass);
-
-    centerBoid.applyForce(force);
-  }
-
+   
+   float gravity = calculateGravity(colorWheelAngle, otherV.colorWheelAngle, 100000, colorAngleSwitchVehicle);
+   
+   Vec2 pos = centerBoid.body.getWorldCenter();
+   Vec2 otherPos = otherV.centerBoid.body.getWorldCenter();
+   
+   float mass = centerBoid.body.m_mass;
+   
+   Vec2 force = calculateForce(pos, otherPos, gravity, mass);
+   
+   centerBoid.applyForce(force);
+   }
+   */
   //--------------------------------------------------------------
 
   void applyZoneForceOnPlayer(Player player) { // 100000 / 300000
 
-    float gravity = calculateGravity(player.colorWheelAngle, colorWheelAngle, 100000, colorAngleSwitchPlayer); // 75000
+    float gravity = calculateGravity(player.colorWheelAngle, colorWheelAngle, 100000, colorAngleSwitchPlayer); // 100000 // 75000
 
     Vec2 pos = centerBoid.body.getWorldCenter();
     Vec2 playerPos = player.centerSphere.body.getWorldCenter();
@@ -428,23 +430,37 @@ class Vehicle {
     // angle determining when to switch from repel to attract
     int angleSwitch = _angleSwitch;
 
+
     int angleDiff = abs(incomingColorAngle - breathingColorAngle);
 
     if (angleDiff > 180) {
       angleDiff = 360 - angleDiff;
+      println("-180");
     }
 
-    gravity = map(angleDiff, 0, angleSwitch, 0, gravityVal);
+    println("incomingColorAngle ", incomingColorAngle);
+    println("breathingColorAngle ", breathingColorAngle);
+
+    println("angleDiff ", angleDiff);
+    println("angleSwitch ", angleSwitch);
+
+    println("");
+
+    //gravity = map(angleDiff, 0, angleSwitch, 0, gravityVal);
     //gravity = 1000000;
 
     if (angleDiff > angleSwitch) {
       //println("go away");
       outcomingForceDirection = -1;
+      
+      gravity = map(angleDiff, angleSwitch, 180, 0, gravityVal);
       //gravity = map(angleDiff, 0, angleSwitch, gravityVal, 0); // 300000
       //println("gravity go away ", gravity);
     } else {
       //println("come closer");
       outcomingForceDirection = 1;
+      
+      gravity = map(angleDiff, 0, angleSwitch, gravityVal, 0);
       //gravity = map(angleDiff, 0, angleSwitch, 0, gravityVal); // 300000
       //gravity = map(angleDiff, angleSwitch, 180, 0, gravityVal); // 300000//600000);
       //println("gravity come closer ", gravity);
@@ -592,107 +608,107 @@ class Vehicle {
   // ********************************************************
   // VEHICLE IS IN OTHER VEHICLE ZONE
   // ********************************************************
-
+  /*
   void checkIfInOtherVehicleZone(Vehicle otherV) {
-
-    if (isInOtherVehicleZone(otherV, otherV.zone.distanceRadius)) {
-
-      inOtherVehicleDistanceZone = true;
-
-      if (isInOtherVehicleZone(otherV, otherV.zone.radius)) {
-
-        inOtherVehicleBreathingZone = true;
-        applyZoneForceOnVehicle(otherV); // apply succion/repel gravity between vehicle breathing and vehicle moving
-      }
-    }
-  }
-
-  //--------------------------------------------------------------
-
-  boolean isInOtherVehicleZone(Vehicle otherV, float otherZoneRadius) {
-
-    Vec2 vehiclePosPix = box2d.getBodyPixelCoord(centerBoid.body);
-
-    Vec2 otherVehiclePosPix = box2d.getBodyPixelCoord(otherV.centerBoid.body);
-
-    float d_pix = dist(vehiclePosPix.x, vehiclePosPix.y, otherVehiclePosPix.x, otherVehiclePosPix.y);
-
-    if (d_pix < otherZoneRadius + blobRadius) {
-
-      return true;
-    } else {
-
-      return false;
-    }
-  }
-
+   
+   if (isInOtherVehicleZone(otherV, otherV.zone.distanceRadius)) {
+   
+   inOtherVehicleDistanceZone = true;
+   
+   if (isInOtherVehicleZone(otherV, otherV.zone.radius)) {
+   
+   inOtherVehicleBreathingZone = true;
+   applyZoneForceOnVehicle(otherV); // apply succion/repel gravity between vehicle breathing and vehicle moving
+   }
+   }
+   }
+   
+   //--------------------------------------------------------------
+   
+   boolean isInOtherVehicleZone(Vehicle otherV, float otherZoneRadius) {
+   
+   Vec2 vehiclePosPix = box2d.getBodyPixelCoord(centerBoid.body);
+   
+   Vec2 otherVehiclePosPix = box2d.getBodyPixelCoord(otherV.centerBoid.body);
+   
+   float d_pix = dist(vehiclePosPix.x, vehiclePosPix.y, otherVehiclePosPix.x, otherVehiclePosPix.y);
+   
+   if (d_pix < otherZoneRadius + blobRadius) {
+   
+   return true;
+   } else {
+   
+   return false;
+   }
+   }
+   */
   // ********************************************************
   // OTHER VEHICLE IS ZONE
   // ********************************************************
-
+  /*
   void checkIfOtherVehicleInZone() {
-
-    distanceFinal = false;
-    breathingFinal = false;
-    otherVehicleInDistanceZone = false;
-    otherVehicleInBreathingZone = false;
-
-    checkIfOtherVehicleIsInZoneRadius();
-
-    if (distanceFinal) {
-
-      otherVehicleInDistanceZone = true;
-
-      if (breathingFinal) {
-
-        otherVehicleInBreathingZone = true;
-      }
-    }
-  }
-
-  //--------------------------------------------------------------
-
-  void checkIfOtherVehicleIsInZoneRadius() {
-
-    for (Vehicle otherV : vehicles) {
-
-      if (otherV != this) {
-
-        if (otherV.inMotion) {
-
-          if (isOtherVehicleInZone(otherV, zone.distanceRadius)) {
-
-            distanceFinal = true;
-
-            if (isOtherVehicleInZone(otherV, zone.radius)) {
-
-              breathingFinal = true;
-            }
-          }
-        }
-      }
-    }
-  }
-
-  //--------------------------------------------------------------
-
-  boolean isOtherVehicleInZone(Vehicle otherV, float zoneRadius) {
-
-    Vec2 vehiclePosPix = box2d.getBodyPixelCoord(centerBoid.body);
-
-    Vec2 otherVehiclePosPix = box2d.getBodyPixelCoord(otherV.centerBoid.body);
-
-    float d_pix = dist(vehiclePosPix.x, vehiclePosPix.y, otherVehiclePosPix.x, otherVehiclePosPix.y);
-
-    if (d_pix < zoneRadius + otherV.blobRadius) {
-
-      return true;
-    } else {
-
-      return false;
-    }
-  }
-
+   
+   distanceFinal = false;
+   breathingFinal = false;
+   otherVehicleInDistanceZone = false;
+   otherVehicleInBreathingZone = false;
+   
+   checkIfOtherVehicleIsInZoneRadius();
+   
+   if (distanceFinal) {
+   
+   otherVehicleInDistanceZone = true;
+   
+   if (breathingFinal) {
+   
+   otherVehicleInBreathingZone = true;
+   }
+   }
+   }
+   
+   //--------------------------------------------------------------
+   
+   void checkIfOtherVehicleIsInZoneRadius() {
+   
+   for (Vehicle otherV : vehicles) {
+   
+   if (otherV != this) {
+   
+   if (otherV.inMotion) {
+   
+   if (isOtherVehicleInZone(otherV, zone.distanceRadius)) {
+   
+   distanceFinal = true;
+   
+   if (isOtherVehicleInZone(otherV, zone.radius)) {
+   
+   breathingFinal = true;
+   }
+   }
+   }
+   }
+   }
+   }
+   
+   //--------------------------------------------------------------
+   
+   boolean isOtherVehicleInZone(Vehicle otherV, float zoneRadius) {
+   
+   Vec2 vehiclePosPix = box2d.getBodyPixelCoord(centerBoid.body);
+   
+   Vec2 otherVehiclePosPix = box2d.getBodyPixelCoord(otherV.centerBoid.body);
+   
+   float d_pix = dist(vehiclePosPix.x, vehiclePosPix.y, otherVehiclePosPix.x, otherVehiclePosPix.y);
+   
+   if (d_pix < zoneRadius + otherV.blobRadius) {
+   
+   return true;
+   } else {
+   
+   return false;
+   }
+   }
+   */
 
   // ********************************************************
   // DELETE VEHICLE

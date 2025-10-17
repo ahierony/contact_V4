@@ -1,100 +1,105 @@
 class Collision {
 
+  int vehicleRemaining;
+
+
   Collision() {
+
+    vehicleRemaining = vehicles.size();
   }
 
   //--------------------------------------------------------------
 
 
   // RIPPLES AGAINST VEHICLE
-
+  /*
   void checkVehiclesAgainstVehicleRipples() {
-
-    for (int i = 0; i < vehicles.size(); i++) {
-
-      Vehicle v = vehicles.get(i);
-
-      for (int j = 0; j < vehicles.size(); j++) {
-
-        Vehicle o = vehicles.get(j);
-
-        if (v != o) {
-
-          if (o.inMotion) {
-
-            if (o.trail.ripples != null) {
-
-              for (int k = 0; k < o.trail.ripples.size(); k++) {
-
-                VehicleRipple r = o.trail.ripples.get(k);
-
-                Vec2 thisPosPix = box2d.getBodyPixelCoord(v.centerBoid.body);
-
-                float d_pix = dist(thisPosPix.x, thisPosPix.y, r.x, r.y);
-
-                if (d_pix < v.blobRadius + (r.radius)) {
-
-                  r.opacity = 0;
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
-  //--------------------------------------------------------------
-  boolean readyToGiveBirth = false;
-
-  // VEHICLE AGAINST VEHICLE
-
-  void checkVehicleAgainstVehicle() {
-
-    for (int i = 0; i < vehicles.size(); i++) {
-
-      Vehicle v = vehicles.get(i);
-
-      for (int j = 0; j < vehicles.size(); j++) {
-
-        Vehicle o = vehicles.get(j);
-
-        if (v != o) {
-
-          if (o.inMotion && !v.inMotion) {
-
-            if (vehiclesAreTouching(o, v)) {
-
-              if ( v.zone.getState() != v.zone.collisionState) {
-
-                if (v.zone.collisionState.getReadyToSetState()) {
-
-                  manageBirth(o, v);
-                  switchVehicleFromBreathingToMoving(v);
-                  //v.zone.setState(v.zone.collisionState);
-                }
-              }
-            }
-          } else if (!o.inMotion && v.inMotion) {
-
-            if (vehiclesAreTouching(v, o)) {
-
-              if ( o.zone.getState() != o.zone.collisionState) {
-
-                if (o.zone.collisionState.getReadyToSetState()) {
-
-                  manageBirth(v, o);
-                  switchVehicleFromBreathingToMoving(v);
-                  //o.zone.setState(o.zone.collisionState);
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
+   
+   for (int i = 0; i < vehicles.size(); i++) {
+   
+   Vehicle v = vehicles.get(i);
+   
+   for (int j = 0; j < vehicles.size(); j++) {
+   
+   Vehicle o = vehicles.get(j);
+   
+   if (v != o) {
+   
+   if (o.inMotion) {
+   
+   if (o.trail.ripples != null) {
+   
+   for (int k = 0; k < o.trail.ripples.size(); k++) {
+   
+   VehicleRipple r = o.trail.ripples.get(k);
+   
+   Vec2 thisPosPix = box2d.getBodyPixelCoord(v.centerBoid.body);
+   
+   float d_pix = dist(thisPosPix.x, thisPosPix.y, r.x, r.y);
+   
+   if (d_pix < v.blobRadius + (r.radius)) {
+   
+   r.opacity = 0;
+   }
+   }
+   }
+   }
+   }
+   }
+   }
+   }
+   
+   //--------------------------------------------------------------
+   boolean readyToGiveBirth = false;
+   
+   // VEHICLE AGAINST VEHICLE
+   
+   void checkVehicleAgainstVehicle() {
+   
+   for (int i = 0; i < vehicles.size(); i++) {
+   
+   Vehicle v = vehicles.get(i);
+   
+   for (int j = 0; j < vehicles.size(); j++) {
+   
+   Vehicle o = vehicles.get(j);
+   
+   if (v != o) {
+   
+   if (o.inMotion && !v.inMotion) {
+   
+   if (vehiclesAreTouching(o, v)) {
+   
+   if ( v.zone.getState() != v.zone.collisionState) {
+   
+   if (v.zone.collisionState.getReadyToSetState()) {
+   
+   manageBirth(o, v);
+   switchVehicleFromBreathingToMoving(v);
+   //v.zone.setState(v.zone.collisionState);
+   }
+   }
+   }
+   } else if (!o.inMotion && v.inMotion) {
+   
+   if (vehiclesAreTouching(v, o)) {
+   
+   if ( o.zone.getState() != o.zone.collisionState) {
+   
+   if (o.zone.collisionState.getReadyToSetState()) {
+   
+   manageBirth(v, o);
+   switchVehicleFromBreathingToMoving(v);
+   //o.zone.setState(o.zone.collisionState);
+   }
+   }
+   }
+   }
+   }
+   }
+   }
+   }
+   */
   void manageBirth(Vehicle vInMotion, Vehicle vBreathing) {
 
     giveVehicleBirth(vInMotion, vBreathing);
@@ -223,6 +228,10 @@ class Collision {
 
             killVehicle(vNum);
 
+            vehicleRemaining--;
+
+            println("vehicles remaining ", vehicleRemaining);
+
             v.playerInDistanceZone = false;
             //player.location.setState(player.location.pLocMovingState);
 
@@ -235,64 +244,66 @@ class Collision {
     return vehicleWasTouched;
   }
 
+  /*
   boolean checkPlayerAgainstVehicleInArea() { // called from player location
-
-    boolean playerWasTouched = false;
-
-    int vNum = 0;
-
-    for (int i = 0; i < vehicles.size(); i++) {
-
-      Vehicle v = vehicles.get(i);
-
-      for (VehicleSphere vs : v.spheres) {
-
-        if (vs.wasTouched) {
-
-          playerWasTouched = true;
-          vNum = i;
-
-          vs.wasTouched = false;
-
-          if (player.location.getState() == player.location.pLocBreathingState) { // in player area
-
-            //data.vehicleTouchedPlayer = true;
-
-            if (playSound) {
-              data.trackVehicleTouchedPlayer(true);
-            }
-
-
-            playerWasTouched = true;
-
-            killVehicle(vNum);
-
-            break;
-          }
-        }
-      }
-    }
-
-    return playerWasTouched;
-  }
+   
+   boolean playerWasTouched = false;
+   
+   int vNum = 0;
+   
+   for (int i = 0; i < vehicles.size(); i++) {
+   
+   Vehicle v = vehicles.get(i);
+   
+   for (VehicleSphere vs : v.spheres) {
+   
+   if (vs.wasTouched) {
+   
+   playerWasTouched = true;
+   vNum = i;
+   
+   vs.wasTouched = false;
+   
+   if (player.location.getState() == player.location.pLocBreathingState) { // in player area
+   
+   //data.vehicleTouchedPlayer = true;
+   
+   if (playSound) {
+   data.trackVehicleTouchedPlayer(true);
+   }
+   
+   
+   playerWasTouched = true;
+   
+   killVehicle(vNum);
+   
+   break;
+   }
+   }
+   }
+   }
+   
+   return playerWasTouched;
+   }
+   */
 
   //--------------------------------------------------------------
-
+  /*
   void switchVehicleFromBreathingToMoving(Vehicle v) {
-
-    v.location.setState(v.location.vInMovingState);
-    v.zone.setState(v.zone.inMotionNoZoneState);
-
-    // // vehicle is breathing zone / no motion
-    v.inMotion = true;
-    v.zone.isBreathing = true;
-    bg.units[v.unitNum].containsVehicle = false;
-    v.playerInDistanceZone = false;
-    v.playerInBreathingZone = false;
-
-    v.centerBoid.status = "flee";
-  }
-
+   
+   v.location.setState(v.location.vInMovingState);
+   v.zone.setState(v.zone.inMotionNoZoneState);
+   
+   // // vehicle is breathing zone / no motion
+   v.inMotion = true;
+   v.zone.isBreathing = true;
+   bg.units[v.unitNum].containsVehicle = false;
+   v.playerInDistanceZone = false;
+   v.playerInBreathingZone = false;
+   
+   v.centerBoid.status = "flee";
+   }
+   */
   //--------------------------------------------------------------
 
 

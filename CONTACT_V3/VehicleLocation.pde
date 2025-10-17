@@ -12,8 +12,8 @@ class VehicleLocation {
 
   VehicleLocationState vInMovingState;
   VehicleLocationState vInBreathingState;
-  VehicleLocationState vInPlayerAreaState;
-  VehicleLocationState vInOtherVehicleZoneState;
+  //VehicleLocationState vInPlayerAreaState;
+  //VehicleLocationState vInOtherVehicleZoneState;
   VehicleLocationState vInDeadState;
 
   Vehicle vehicle;
@@ -28,8 +28,8 @@ class VehicleLocation {
 
     vInMovingState = new VInMovingState(vehicle, player);
     vInBreathingState = new VInBreathingState(vehicle);
-    vInPlayerAreaState = new VInPlayerAreaState(vehicle);
-    vInOtherVehicleZoneState = new VInOtherVehicleZoneState(vehicle);
+    //vInPlayerAreaState = new VInPlayerAreaState(vehicle);
+    //vInOtherVehicleZoneState = new VInOtherVehicleZoneState(vehicle);
     vInDeadState = new VInDeadState(vehicle);
 
     if (_inMotion) {
@@ -67,15 +67,16 @@ class VehicleLocation {
     if (getState() == vInMovingState) {
       //
       vInBreathingState.setReadyToSetState(true);
-      vInPlayerAreaState.setReadyToSetState(true);
-      vInOtherVehicleZoneState.setReadyToSetState(true);
+      //vInPlayerAreaState.setReadyToSetState(true);
+      //vInOtherVehicleZoneState.setReadyToSetState(true);
       //
     } else if (getState() == vInBreathingState) {
       //
       vInMovingState.setReadyToSetState(true);
-      vInPlayerAreaState.setReadyToSetState(true);
-      vInOtherVehicleZoneState.setReadyToSetState(true);
+      //vInPlayerAreaState.setReadyToSetState(true);
+      //vInOtherVehicleZoneState.setReadyToSetState(true);
       //
+      /*
     } else if (getState() == vInPlayerAreaState) {
       //
       vInMovingState.setReadyToSetState(true);
@@ -87,6 +88,7 @@ class VehicleLocation {
       vInMovingState.setReadyToSetState(true);
       vInPlayerAreaState.setReadyToSetState(true);
       vInOtherVehicleZoneState.setReadyToSetState(true);
+      */
     }
   }
 
@@ -106,10 +108,10 @@ class VehicleLocation {
 
           setState(vInBreathingState); // changing state to breathing
         }
-      } else { // is in motion
-
+      } /*else { // is in motion
+        
         if (vehicle.inPlayerBreathingArea) { // vehicle is moving and is entering Player's area
-
+        
           if (vInPlayerAreaState.getReadyToSetState()) {
 
             setState(vInPlayerAreaState); // changing state to player's area
@@ -121,13 +123,14 @@ class VehicleLocation {
             setState(vInOtherVehicleZoneState); // changing state to player's area
           }
         }
-      }
+        
+      }*/
     } else if (getState() == vInBreathingState) {
 
       // ******************
       // BREATHING
       // ******************
-    } else if (getState() == vInPlayerAreaState) { // in player's area
+    } /*else if (getState() == vInPlayerAreaState) { // in player's area
 
       // ******************
       // IN PLAYER AREA
@@ -153,7 +156,7 @@ class VehicleLocation {
           setState(vInMovingState); // changing state to moving
         }
       }
-    }
+    }*/
   }
 
 
@@ -332,7 +335,7 @@ class VInBreathingState implements VehicleLocationState {
 }
 
 // ********************************************************
-
+/*
 class VInPlayerAreaState implements VehicleLocationState {
 
   boolean readyToSetState;
@@ -366,9 +369,9 @@ class VInPlayerAreaState implements VehicleLocationState {
     readyToSetState = rtss;
   }
 }
-
+*/
 // ********************************************************
-
+/*
 class VInOtherVehicleZoneState implements VehicleLocationState {
 
   boolean readyToSetState;
@@ -401,6 +404,7 @@ class VInOtherVehicleZoneState implements VehicleLocationState {
     readyToSetState = rtss;
   }
 }
+*/
 // ********************************************************
 
 class VInDeadState implements VehicleLocationState {

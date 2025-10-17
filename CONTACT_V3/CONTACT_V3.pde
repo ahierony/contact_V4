@@ -220,8 +220,10 @@ int fadeAnimationCounter;
 
 void setup() {
 
-  size(1024, 768, JAVA2D); // 800, 800 // 1440, 900
-  //fullScreen(1);
+  //size(1024, 768, JAVA2D); // 800, 800 // 1440, 900
+  fullScreen(2);
+  pixelDensity(1);
+  
 
   //*********************************************************************
   //gamePadIsOn = false;
@@ -232,7 +234,7 @@ void setup() {
   showDistance = false;
   playSound = false; // enables sound // current sound until Woohun updates
   audioIsPlaying = false; // new sound by woohun not ready yet
-  playSoundContactV1 = true;
+  playSoundContactV1 = false;
   //*********************************************************************
 
   if (screengrab) {
@@ -258,19 +260,17 @@ void setup() {
   colorMode(HSB, 360, 100, 100);
 
   int rowLength;
-  int unitSize = 1000;
-
-
+  int unitSize = 600; // 600 x 5 // 1000 x 3  > to create more density but preserve smaller frame
 
   if (debugMode) {
     rowLength = 3;
     setUnitSize(rowLength * unitSize, rowLength * unitSize, rowLength, 0.5); // float _unitSize, int _unitRow, float _worldScale
   } else {
-    rowLength = 3;
+    rowLength = 5;
     setUnitSize(rowLength * unitSize, rowLength * unitSize, rowLength, 0.5); // float _unitSize, int _unitRow, float _worldScale
   }
 
-  collision = new Collision();
+  
 
   setupDeviceMode();
   setupb2d();
@@ -284,6 +284,7 @@ void setup() {
   vehicles = new ArrayList<Vehicle>();
   bg = new Bg(unitTotal);
 
+  collision = new Collision();
 
   bgTrailBox = new BgTrailBox(unitTotal, unit_w, unit_h);
 
@@ -704,9 +705,6 @@ void draw() {
     }
   }
 
-
-  
-  println(player.lung.getState());
 } // draw
 
 
@@ -895,8 +893,6 @@ boolean fadeAnimationIsOver() {
   fill(0, 99, 0, fadeAnimationCounter);
   rectMode(CORNER);
   rect(0, 0, width, height);
-
-  println("fadeAnimationCounter ", fadeAnimationCounter);
 
   if (fadeAnimationCounter == 255) {
 
@@ -1191,7 +1187,7 @@ void setupDeviceMode() {
     // Serial port setup.
     printArray(Serial.list());
 
-    port = new Serial(this, Serial.list()[3], 9600);
+    port = new Serial(this, Serial.list()[2], 9600);
 
     port.bufferUntil('\n');
 

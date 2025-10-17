@@ -112,6 +112,15 @@ class Player {
   color leftEyeColor;
   color rightEyeColor;
 
+  int left_minRangeX = 0;
+  int left_maxRangeX = 1023;
+  int left_minRangeY = 0;
+  int left_maxRangeY = 1023;
+  int right_minRangeX = 0;
+  int right_maxRangeX = 1023;
+  int right_minRangeY = 0;
+  int right_maxRangeY = 1023;
+
   // ********************************************************
   // CONSTRUCTOR
   // ********************************************************
@@ -205,9 +214,9 @@ class Player {
     //println("player lung state ", player.lung.getState());
 
     playerTheta = _theta;
-    
-    
-     updateEyeColor();
+
+
+    updateEyeColor();
 
     // -------------------------------------
 
@@ -245,8 +254,8 @@ class Player {
     area.update();
 
     //areaRadius = area.radius;
-    
-   
+
+
 
     motion.update();
 
@@ -263,7 +272,7 @@ class Player {
     }
 
 
-    
+
 
     //updateTrail();
   } // update()
@@ -476,15 +485,16 @@ class Player {
   //--------------------------------------------------------------
 
   void updateInputJoystick(int left_xAxis, int left_yAxis, int right_xAxis, int right_yAxis ) {
-    
-    int left_minRangeX = 390;
-    int left_maxRangeX = 670;
-    int left_minRangeY = 370;
-    int left_maxRangeY = 570;
-    int right_minRangeX = 360;
-    int right_maxRangeX = 630;
-    int right_minRangeY = 360;
-    int right_maxRangeY = 650;
+    /*
+    left_minRangeX = 390;
+     left_maxRangeX = 670;
+     left_minRangeY = 370;
+     left_maxRangeY = 570;
+     right_minRangeX = 360;
+     right_maxRangeX = 630;
+     right_minRangeY = 360;
+     right_maxRangeY = 650;
+     */
 
     if (leftEye.coltxt == "red") {
 
@@ -654,7 +664,7 @@ class Player {
     oppositeColorAngle = colorWheelAngle;
 
     oppositeColorAngle -= 180;
-    
+
     if (oppositeColorAngle < 0) {
       oppositeColorAngle += 360;
     }
@@ -663,21 +673,16 @@ class Player {
 
       leftEyeColor = color(oppositeColorAngle, saturation, blobBrightness);
       rightEyeColor = color(colorWheelAngle, saturation, blobBrightness);
-      
     } else if (lockedEye == "right") {
 
       leftEyeColor = color(colorWheelAngle, saturation, blobBrightness);
       rightEyeColor = color(oppositeColorAngle, saturation, blobBrightness);
-      
     } else if (lockedEye == "both" && player.location.getState() != player.location.pLocVehicleZoneState) {
 
       leftEyeColor = color(oppositeColorAngle, saturation, blobBrightness);
       rightEyeColor = color(oppositeColorAngle, saturation, blobBrightness);
-      
-      
-      
     } else {
-      
+
       leftEyeColor = color(colorWheelAngle, saturation, blobBrightness);
       rightEyeColor = color(colorWheelAngle, saturation, blobBrightness);
     }

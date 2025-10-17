@@ -323,10 +323,12 @@ class PLocBreathingState implements PlayerLocationState {
     }
 
     setLungState();
-
+    
+    /*
     if (collision.checkPlayerAgainstVehicleInArea()) {
       updateCollision();
     }
+    */
 
     if (player.readyToUpdateDistanceArea) {
       checkPlayerDistanceAreaAgainstVehiclesDistanceZone();
