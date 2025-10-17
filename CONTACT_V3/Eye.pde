@@ -260,7 +260,7 @@ class Eye {
 
     //
     
-    //println("fillColor ", fillColor);
+    //println("inImpulse ", inImpulse);
 
     
   } // update

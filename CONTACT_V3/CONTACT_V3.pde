@@ -217,6 +217,7 @@ import processing.svg.*;
 boolean recordSVG = false;
 
 int fadeAnimationCounter;
+float backgroundSoundVolEase;
 
 void setup() {
 
@@ -313,6 +314,8 @@ void setup() {
 
 void setupSounds() {
 
+  backgroundSoundVolEase = 0.1;
+
   backgroundSounds = new SoundFile[9];
 
   for (int i=0; i < backgroundSounds.length; i++) {
@@ -322,16 +325,15 @@ void setupSounds() {
   int randomBackgroundSound = int(random(0, backgroundSounds.length));
   //println("randomBackgroundSound ", randomBackgroundSound);
   currentBackgroundSound = backgroundSounds[randomBackgroundSound];
-  currentBackgroundSound.amp(0.5);
+  currentBackgroundSound.amp(backgroundSoundVolEase);
   currentBackgroundSound.play();
   switchBackgroundSound = true;
-  
-  p_touch_v_audio.amp(1.0);
+
   p_touch_v_audio = new SoundFile(this, "sounds/p_touch_v.mp3");
-  
-  p_enter_v_zone_audio.amp(1.0);
-  p_enter_v_zone_audio = new SoundFile(this, "sounds/p_enter_v_zone.mp3");
-  
+  p_touch_v_audio.amp(1.0);
+
+  // p_enter_v_zone_audio.amp(1.0);
+  // p_enter_v_zone_audio = new SoundFile(this, "sounds/p_enter_v_zone.mp3");
 }
 
 //--------------------------------------------------------------
@@ -345,12 +347,44 @@ void updateSounds() {
       int randomBackgroundSound = int(random(0, backgroundSounds.length));
       currentBackgroundSound = backgroundSounds[randomBackgroundSound];
       switchBackgroundSound = false;
+      currentBackgroundSound.amp(backgroundSoundVolEase);
       currentBackgroundSound.play();
     }
   } else {
     switchBackgroundSound = true;
   }
 }
+
+//--------------------------------------------------------------
+/*
+boolean backgroundSoundVolEase(boolean fadeIn) {
+ 
+ if (fadeIn) {
+ 
+ backgroundSoundVolEase -= 0.05;
+ 
+ if (backgroundSoundVolEase == 0.0) {
+ 
+ return true;
+ } else {
+ 
+ return false;
+ }
+ } else {
+ 
+ backgroundSoundVolEase += 0.05;
+ 
+ if (backgroundSoundVolEase == 0.3) {
+ 
+ return true;
+ } else {
+ 
+ return false;
+ }
+ }
+ 
+ }
+ */
 
 //--------------------------------------------------------------
 
@@ -409,6 +443,7 @@ void resetContact() {
   bgTrailBox = null;
 
   fadeAnimationCounter = 0;
+  backgroundSoundVolEase = 0;
 
   //**********************
 
@@ -613,13 +648,15 @@ void draw() {
       popMatrix();
     } // TRAILS END
 
+    /*
     pushMatrix();
-
-    translate(width/2, height/2);
-
-    bgTrailBox.display(worldScale);
-
-    popMatrix();
+     
+     translate(width/2, height/2);
+     
+     bgTrailBox.display(worldScale);
+     
+     popMatrix();
+     */
   }
 
 
@@ -895,7 +932,7 @@ boolean fadeAnimationIsOver() {
   rectMode(CORNER);
   rect(0, 0, width, height);
 
-  println("fadeAnimationCounter ", fadeAnimationCounter);
+  //println("fadeAnimationCounter ", fadeAnimationCounter);
 
   if (fadeAnimationCounter == 255) {
 
@@ -905,6 +942,7 @@ boolean fadeAnimationIsOver() {
     return false;
   }
 }
+
 
 //--------------------------------------------------------------
 
@@ -1048,6 +1086,11 @@ void keyPressed() {
       break;
     case 's':
       leftEyeDown = true;
+      break;
+    case ' ':
+
+    //player.lung.setState(player.lung.emptyState);
+    println("space");
       break;
     }
   }
