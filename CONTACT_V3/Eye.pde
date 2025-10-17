@@ -209,15 +209,17 @@ class Eye {
 
   //--------------------------------------------------------------
 
-  void updateJoystickInput(int _x, int _y) {
+  void updateJoystickInput(int _x, int _y, int minRangeX, int maxRangeX, int minRangeY, int maxRangeY) {
 
-
-    float minRange = 400; // 0
-    float maxRange = 600; // 1023
+    //float minRange = 400 // mini sticks;
+    //float maxRange = 600; // mini sticks;
+    
+    //float minRange = 450; //  0
+    //float maxRange = 600; // 1023
     
       
-    sensorX = map(_x, minRange, maxRange, -eyeOuterRadius + eyeInnerRadius, eyeOuterRadius - eyeInnerRadius);
-    sensorY = map(_y, minRange, maxRange, -eyeOuterRadius + eyeInnerRadius, eyeOuterRadius - eyeInnerRadius);
+    sensorX = map(_x, minRangeX, maxRangeX, -eyeOuterRadius + eyeInnerRadius, eyeOuterRadius - eyeInnerRadius);
+    sensorY = map(_y, minRangeY, maxRangeY, -eyeOuterRadius + eyeInnerRadius, eyeOuterRadius - eyeInnerRadius);
 
     sensorX = constrain(sensorX, -eyeOuterRadius + eyeInnerRadius, eyeOuterRadius - eyeInnerRadius);
     sensorY = constrain(sensorY, -eyeOuterRadius + eyeInnerRadius, eyeOuterRadius - eyeInnerRadius);
@@ -260,7 +262,7 @@ class Eye {
 
     //
     
-    //println("inImpulse ", inImpulse);
+    //println("fillColor ", fillColor);
 
     
   } // update
@@ -380,7 +382,7 @@ class Eye {
       }
     } else {
 
-      if (pushTimer.isFinished() && !inImpulse) {
+      if (pushTimer.isFinished()){// && !inImpulse) {
         pupilState = "unlocked";
         //inImpulse = false;
         

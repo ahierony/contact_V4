@@ -115,12 +115,6 @@ class PlayerLocation {
             if (playSound) {
               data.trackPlayerInZone(true);
             }
-
-            /*
-            if (playSoundContactV1) {
-             currentBackgroundSound.stop();
-             }
-             */
           }
         }
       } else {
@@ -191,13 +185,6 @@ class PlayerLocation {
             if (playSound) {
               data.trackPlayerInZone(false);
             }
-
-            /*
-            if (playSoundContactV1) {
-             println("hello");
-             currentBackgroundSound.play();
-             }
-             */
           }
         }
       }

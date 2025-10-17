@@ -476,17 +476,26 @@ class Player {
   //--------------------------------------------------------------
 
   void updateInputJoystick(int left_xAxis, int left_yAxis, int right_xAxis, int right_yAxis ) {
+    
+    int left_minRangeX = 390;
+    int left_maxRangeX = 670;
+    int left_minRangeY = 370;
+    int left_maxRangeY = 570;
+    int right_minRangeX = 360;
+    int right_maxRangeX = 630;
+    int right_minRangeY = 360;
+    int right_maxRangeY = 650;
 
     if (leftEye.coltxt == "red") {
 
-      leftEye.updateJoystickInput(left_xAxis, left_yAxis);
-      rightEye.updateJoystickInput(right_xAxis, right_yAxis);
+      leftEye.updateJoystickInput(left_xAxis, left_yAxis, left_minRangeX, left_maxRangeX, left_minRangeY, left_maxRangeY);
+      rightEye.updateJoystickInput(right_xAxis, right_yAxis, right_minRangeX, right_maxRangeX, right_minRangeY, right_maxRangeY);
 
       eyesAreInverted = false;
     } else if (leftEye.coltxt == "green") {
 
-      leftEye.updateJoystickInput(right_xAxis, right_yAxis);
-      rightEye.updateJoystickInput(left_xAxis, left_yAxis);
+      leftEye.updateJoystickInput(right_xAxis, right_yAxis, right_minRangeX, right_maxRangeX, right_minRangeY, right_maxRangeY);
+      rightEye.updateJoystickInput(left_xAxis, left_yAxis, left_minRangeX, left_maxRangeX, left_minRangeY, left_maxRangeY);
 
       eyesAreInverted = true;
     }
@@ -664,6 +673,8 @@ class Player {
 
       leftEyeColor = color(oppositeColorAngle, saturation, blobBrightness);
       rightEyeColor = color(oppositeColorAngle, saturation, blobBrightness);
+      
+      
       
     } else {
       

@@ -217,23 +217,22 @@ import processing.svg.*;
 boolean recordSVG = false;
 
 int fadeAnimationCounter;
-float backgroundSoundVolEase;
 
 void setup() {
 
   size(1024, 768, JAVA2D); // 800, 800 // 1440, 900
-  //fullScreen(2);
+  //fullScreen(1);
 
   //*********************************************************************
   //gamePadIsOn = false;
-  inputControls = InputControls.KEYBOARD; //KEYBOARD; //JOYSTICKS;
+  inputControls = InputControls.JOYSTICKS; //KEYBOARD; //JOYSTICKS;
   //protoSticks = false;
   debugMode = false;
   screengrab = false;
   showDistance = false;
   playSound = false; // enables sound // current sound until Woohun updates
   audioIsPlaying = false; // new sound by woohun not ready yet
-  playSoundContactV1 = false;
+  playSoundContactV1 = true;
   //*********************************************************************
 
   if (screengrab) {
@@ -245,9 +244,8 @@ void setup() {
 
   //*************** OSCP5 SOUND ***************************************
 
-  oscP5 = new OscP5(this, 12000);
-  //myRemoteLocation = new NetAddress("104.39.248.119", 12000);
-  myRemoteLocation = new NetAddress("127.0.0.1", 12000);
+  //oscP5 = new OscP5(this, 12000);
+  //myRemoteLocation = new NetAddress("127.0.0.1", 12000);
 
   //*******************************************************************
   // contact v1 sounds
@@ -314,8 +312,6 @@ void setup() {
 
 void setupSounds() {
 
-  backgroundSoundVolEase = 0.1;
-
   backgroundSounds = new SoundFile[9];
 
   for (int i=0; i < backgroundSounds.length; i++) {
@@ -325,15 +321,16 @@ void setupSounds() {
   int randomBackgroundSound = int(random(0, backgroundSounds.length));
   //println("randomBackgroundSound ", randomBackgroundSound);
   currentBackgroundSound = backgroundSounds[randomBackgroundSound];
-  currentBackgroundSound.amp(backgroundSoundVolEase);
+  currentBackgroundSound.amp(0.5);
   currentBackgroundSound.play();
   switchBackgroundSound = true;
-
+  
   p_touch_v_audio = new SoundFile(this, "sounds/p_touch_v.mp3");
   p_touch_v_audio.amp(1.0);
-
-  // p_enter_v_zone_audio.amp(1.0);
-  // p_enter_v_zone_audio = new SoundFile(this, "sounds/p_enter_v_zone.mp3");
+  
+  //p_enter_v_zone_audio.amp(1.0);
+  //p_enter_v_zone_audio = new SoundFile(this, "sounds/p_enter_v_zone.mp3");
+  
 }
 
 //--------------------------------------------------------------
@@ -347,44 +344,12 @@ void updateSounds() {
       int randomBackgroundSound = int(random(0, backgroundSounds.length));
       currentBackgroundSound = backgroundSounds[randomBackgroundSound];
       switchBackgroundSound = false;
-      currentBackgroundSound.amp(backgroundSoundVolEase);
       currentBackgroundSound.play();
     }
   } else {
     switchBackgroundSound = true;
   }
 }
-
-//--------------------------------------------------------------
-/*
-boolean backgroundSoundVolEase(boolean fadeIn) {
- 
- if (fadeIn) {
- 
- backgroundSoundVolEase -= 0.05;
- 
- if (backgroundSoundVolEase == 0.0) {
- 
- return true;
- } else {
- 
- return false;
- }
- } else {
- 
- backgroundSoundVolEase += 0.05;
- 
- if (backgroundSoundVolEase == 0.3) {
- 
- return true;
- } else {
- 
- return false;
- }
- }
- 
- }
- */
 
 //--------------------------------------------------------------
 
@@ -443,7 +408,6 @@ void resetContact() {
   bgTrailBox = null;
 
   fadeAnimationCounter = 0;
-  backgroundSoundVolEase = 0;
 
   //**********************
 
@@ -647,16 +611,16 @@ void draw() {
 
       popMatrix();
     } // TRAILS END
-
+    
     /*
     pushMatrix();
-     
-     translate(width/2, height/2);
-     
-     bgTrailBox.display(worldScale);
-     
-     popMatrix();
-     */
+
+    translate(width/2, height/2);
+
+    bgTrailBox.display(worldScale);
+
+    popMatrix();
+    */
   }
 
 
@@ -687,7 +651,7 @@ void draw() {
 
 
   // TRAIL RECORDING STARTS
-
+  
   if (recordSVG) {
     endRecord();
     recordSVG = false;
@@ -696,7 +660,7 @@ void draw() {
 
 
 
-    audio.gameOver_playAudio();
+    //audio.gameOver_playAudio();
   }
 
   if (inputControls == InputControls.KEYBOARD) {
@@ -731,8 +695,8 @@ void draw() {
   }
 
   // TRAIL RECORDING ENDS
-
-  if (player.lung.getState() == player.lung.emptyState) {
+  //if (player.lung.getState() == player.lung.emptyState) {
+  if(player.lung.breath.movement == "empty") {
 
     if (fadeAnimationIsOver()) {
 
@@ -741,8 +705,8 @@ void draw() {
   }
 
 
-
-  //println("vehicle size ", vehicles.size());
+  
+  println(player.lung.getState());
 } // draw
 
 
@@ -932,7 +896,7 @@ boolean fadeAnimationIsOver() {
   rectMode(CORNER);
   rect(0, 0, width, height);
 
-  //println("fadeAnimationCounter ", fadeAnimationCounter);
+  println("fadeAnimationCounter ", fadeAnimationCounter);
 
   if (fadeAnimationCounter == 255) {
 
@@ -942,7 +906,6 @@ boolean fadeAnimationIsOver() {
     return false;
   }
 }
-
 
 //--------------------------------------------------------------
 
@@ -1087,11 +1050,6 @@ void keyPressed() {
     case 's':
       leftEyeDown = true;
       break;
-    case ' ':
-
-    //player.lung.setState(player.lung.emptyState);
-    println("space");
-      break;
     }
   }
 }
@@ -1233,7 +1191,7 @@ void setupDeviceMode() {
     // Serial port setup.
     printArray(Serial.list());
 
-    port = new Serial(this, Serial.list()[2], 9600);
+    port = new Serial(this, Serial.list()[3], 9600);
 
     port.bufferUntil('\n');
 
