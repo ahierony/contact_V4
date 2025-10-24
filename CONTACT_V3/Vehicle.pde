@@ -82,6 +82,7 @@ class Vehicle {
   boolean inOtherVehicleDistanceZone;
   boolean otherVehicleInDistanceZone;
   boolean otherVehicleInBreathingZone;
+  boolean otherBreathingVehicleComingClose;
 
   boolean isReadyForCollision;
   boolean readyToUpdateDistanceZone;
@@ -178,6 +179,8 @@ class Vehicle {
     inOtherVehicleDistanceZone = false;
     otherVehicleInDistanceZone = false;
     otherVehicleInBreathingZone = false;
+    
+    otherBreathingVehicleComingClose = false;
 
     colorAngleSwitchPlayer = 30; // 50; //45;
     colorAngleSwitchVehicle = 5; //7; //15; //7;
@@ -435,35 +438,20 @@ class Vehicle {
 
     if (angleDiff > 180) {
       angleDiff = 360 - angleDiff;
-      println("-180");
     }
-
-    println("incomingColorAngle ", incomingColorAngle);
-    println("breathingColorAngle ", breathingColorAngle);
-
-    println("angleDiff ", angleDiff);
-    println("angleSwitch ", angleSwitch);
-
-    println("");
-
-    //gravity = map(angleDiff, 0, angleSwitch, 0, gravityVal);
-    //gravity = 1000000;
 
     if (angleDiff > angleSwitch) {
       //println("go away");
       outcomingForceDirection = -1;
       
       gravity = map(angleDiff, angleSwitch, 180, 0, gravityVal);
-      //gravity = map(angleDiff, 0, angleSwitch, gravityVal, 0); // 300000
-      //println("gravity go away ", gravity);
+    
     } else {
       //println("come closer");
       outcomingForceDirection = 1;
       
       gravity = map(angleDiff, 0, angleSwitch, gravityVal, 0);
-      //gravity = map(angleDiff, 0, angleSwitch, 0, gravityVal); // 300000
-      //gravity = map(angleDiff, angleSwitch, 180, 0, gravityVal); // 300000//600000);
-      //println("gravity come closer ", gravity);
+      
     }
 
     return gravity;

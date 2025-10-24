@@ -28,34 +28,36 @@ class VehicleZone {
 
   boolean isBreathing;
   boolean switchFromExhaleToInhale;
+  boolean switchFromInhaleToExhale;
 
   //--------------------------------------------------------------
 
   VehicleZone(Vehicle v) {
 
     vehicle = v;
-    
+
     //radiusMax = vehicle.unitHalfSize;
-    radiusMax = unit_w;
+    radiusMax = unit_w * 0.5;
     //radiusMax = bgTrailBox.rectSize * 0.5;
     //println("radiusMax ", radiusMax);
     radiusMin = vehicle.blobRadius+5;
     distanceRadius = radiusMax;
     originalRadiusMax = radiusMax;
-    
+
     radius = radiusMin;
 
     holdState = new HoldZoneState();
     emptyState = new EmptyZoneState(vehicle);
     fullState = new FullZoneState(vehicle);
-    exhaleState = new ExhaleZoneState();
+    exhaleState = new ExhaleZoneState(vehicle);
     inhaleState = new InhaleZoneState(vehicle);
     inMotionNoZoneState = new InMotionNoZoneState();
     collisionState = new CollisionState(vehicle);
 
 
 
-    switchFromExhaleToInhale = false;
+    switchFromExhaleToInhale = true;
+    switchFromInhaleToExhale = true;
   }
 
   //--------------------------------------------------------------
@@ -132,8 +134,8 @@ class VehicleZone {
 
   //--------------------------------------------------------------
   void setZoneState() {
-     
-    radius = map(vehicle.breath.radius, vehicle.breath.radiusMin, vehicle.breath.radiusMax, radiusMin, distanceRadius);
+
+    radius = map(vehicle.breath.radius, vehicle.breath.radiusMin, vehicle.breath.radiusMax, radiusMin, radiusMax); //distanceRadius);
 
     // breathing radius
 
@@ -151,9 +153,22 @@ class VehicleZone {
         setState(inhaleState);
 
         switchFromExhaleToInhale = true;
+
+        if (vehicle.otherBreathingVehicleComingClose) {
+
+          if (switchFromInhaleToExhale) {
+
+            println("switch");
+
+            vehicle.breath.aVelocity *= -1;
+            switchFromInhaleToExhale = false;
+          }
+        }
       } else if (vehicle.breath.direction == "exhale") {
 
         setState(exhaleState);
+        
+        switchFromInhaleToExhale = true;
 
         if (vehicle.playerInDistanceZone || vehicle.otherVehicleInDistanceZone) {
 
@@ -343,15 +358,21 @@ class FullZoneState implements VehicleZoneState {
 class ExhaleZoneState implements VehicleZoneState {
 
   boolean readyToSetState;
+  
+  Vehicle vehicle;
 
-  ExhaleZoneState() {
+  ExhaleZoneState(Vehicle v) {
 
     readyToSetState = true;
+    
+    vehicle = v;
   }
 
   //--------------------------------------------------------------
 
   void update() {
+    
+    vehicle.otherBreathingVehicleComingClose = false;
   }
 
   public boolean getReadyToSetState() {

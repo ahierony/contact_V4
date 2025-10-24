@@ -69,8 +69,9 @@ class Bg_Unit {
 
     stroke(126);
 
-    if (debugMode)
+    //if (debugMode)
       rect(0, 0, unit_w, unit_h);
+      //println("unit_w in rect ", unit_w);
 
     popMatrix();
   }

@@ -117,6 +117,8 @@ Bg bg;
 float unit_w; //2000;
 float unit_h;
 
+int unitSize;
+
 //float borderRadiusMax;
 
 int rowLength;
@@ -223,7 +225,7 @@ void setup() {
   //size(1024, 768, JAVA2D); // 800, 800 // 1440, 900
   fullScreen(2);
   pixelDensity(1);
-  
+
 
   //*********************************************************************
   //gamePadIsOn = false;
@@ -260,7 +262,7 @@ void setup() {
   colorMode(HSB, 360, 100, 100);
 
   int rowLength;
-  int unitSize = 600; // 600 x 5 // 1000 x 3  > to create more density but preserve smaller frame
+  unitSize = 1000; // 600 x 5 // 1000 x 3  > to create more density but preserve smaller frame
 
   if (debugMode) {
     rowLength = 3;
@@ -270,12 +272,20 @@ void setup() {
     setUnitSize(rowLength * unitSize, rowLength * unitSize, rowLength, 0.5); // float _unitSize, int _unitRow, float _worldScale
   }
 
-  
+  // unitSize > rowLength * unitSize = unit_w/unit_h  > rect_w = sqrt(_unitTotal) * unit_w
+  // 600      > 5 * 600                               >   5 * 3000
 
   setupDeviceMode();
   setupb2d();
 
   unitTotal = int(pow(rowLength, 2));
+  
+  println("rowLength ", rowLength);
+  println("unitTotal ", unitTotal);
+
+  println("unit_w ", unit_w);
+  println("unit_h ", unit_h);
+  
 
   // Make a new player
   playerCenterSpherePosVecPixels = new Vec2(0, 0);
@@ -325,13 +335,12 @@ void setupSounds() {
   currentBackgroundSound.amp(0.5);
   currentBackgroundSound.play();
   switchBackgroundSound = true;
-  
+
   p_touch_v_audio = new SoundFile(this, "sounds/p_touch_v.mp3");
   p_touch_v_audio.amp(1.0);
-  
+
   //p_enter_v_zone_audio.amp(1.0);
   //p_enter_v_zone_audio = new SoundFile(this, "sounds/p_enter_v_zone.mp3");
-  
 }
 
 //--------------------------------------------------------------
@@ -612,6 +621,7 @@ void draw() {
 
       popMatrix();
     } // TRAILS END
+
     
     /*
     pushMatrix();
@@ -652,7 +662,7 @@ void draw() {
 
 
   // TRAIL RECORDING STARTS
-  
+
   if (recordSVG) {
     endRecord();
     recordSVG = false;
@@ -697,14 +707,13 @@ void draw() {
 
   // TRAIL RECORDING ENDS
   //if (player.lung.getState() == player.lung.emptyState) {
-  if(player.lung.breath.movement == "empty") {
+  if (player.lung.breath.movement == "empty") {
 
     if (fadeAnimationIsOver()) {
 
       recordSVG = true;
     }
   }
-
 } // draw
 
 

@@ -29,11 +29,14 @@ class BgTrailBox {
     offset = new PVector(0, 0);
     
     //float unitSize = 0.1;
+    
+    rect_w = unit_w;
+    rect_h = unit_h;
 
-    rect_w = sqrt(_unitTotal) * unit_w;
-    rect_h = sqrt(_unitTotal) * unit_h;
+    //rect_w = sqrt(_unitTotal) * unit_w;
+    //rect_h = sqrt(_unitTotal) * unit_h;
 
-    //println("rectSize ", rectSize);
+    //println("rect_w ", rect_w);
 
 
     //rectMode(CENTER);
@@ -68,9 +71,13 @@ class BgTrailBox {
     
 
     //if (debugMode)
+   
     noFill();
     stroke(255);
     rect(0, 0, rect_w, rect_h);
+    
+    //println("rect_w ", rect_w);
+    //println("rect_h ", rect_h);
 
     trailLeft.display();
     trailRight.display();
