@@ -289,7 +289,7 @@ class VInBreathingState implements VehicleLocationState {
 
       Vehicle v = vehicles.get(i);
 
-      if (!v.inMotion && vehicle != v) {
+      if (!v.inMotion && vehicle != v && v.location.getState() != v.location.vInDeadState) {
 
         Vec2 otherVehiclePos = box2d.getBodyPixelCoord(v.centerBoid.body);
 
@@ -484,7 +484,8 @@ class VInDeadState implements VehicleLocationState {
   //--------------------------------------------------------------
 
   void update() {
-
+    
+    
 
     if (readyToSetState) {
 

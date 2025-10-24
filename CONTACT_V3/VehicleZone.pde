@@ -158,8 +158,6 @@ class VehicleZone {
 
           if (switchFromInhaleToExhale) {
 
-            println("switch");
-
             vehicle.breath.aVelocity *= -1;
             switchFromInhaleToExhale = false;
           }
