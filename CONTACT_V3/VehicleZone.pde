@@ -81,6 +81,7 @@ class VehicleZone {
     }
 
     if (getState() != collisionState) { // test
+
       setZoneState();
     }
 
@@ -149,7 +150,7 @@ class VehicleZone {
     case "breathing":
 
       if (vehicle.breath.direction == "inhale") {
-
+        
         setState(inhaleState);
 
         switchFromExhaleToInhale = true;
@@ -163,12 +164,12 @@ class VehicleZone {
           }
         }
       } else if (vehicle.breath.direction == "exhale") {
-
-        setState(exhaleState);
         
+        setState(exhaleState);
+
         switchFromInhaleToExhale = true;
 
-        if (vehicle.playerInDistanceZone || vehicle.otherVehicleInDistanceZone) {
+        if (vehicle.playerInDistanceZone ) { //&& !vehicle.otherBreathingVehicleComingClose) { // || vehicle.otherVehicleInDistanceZone) {
 
           if (switchFromExhaleToInhale) {
 
@@ -356,20 +357,20 @@ class FullZoneState implements VehicleZoneState {
 class ExhaleZoneState implements VehicleZoneState {
 
   boolean readyToSetState;
-  
+
   Vehicle vehicle;
 
   ExhaleZoneState(Vehicle v) {
 
     readyToSetState = true;
-    
+
     vehicle = v;
   }
 
   //--------------------------------------------------------------
 
   void update() {
-    
+
     vehicle.otherBreathingVehicleComingClose = false;
   }
 
@@ -410,7 +411,7 @@ class InhaleZoneState implements VehicleZoneState {
       setReadyToSetState(false);
 
       if (zoneResize) {
-        checkDistanceZoneAgainstVehiclesDistanceZone();
+        //checkDistanceZoneAgainstVehiclesDistanceZone();
       }
     }
   }

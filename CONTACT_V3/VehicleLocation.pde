@@ -264,7 +264,8 @@ class VInBreathingState implements VehicleLocationState {
         vehicle.breath.breathe();
         //println("start breathing");
       }
-
+      
+      /*
       if (vehicle.readyToUpdateDistanceZone) {
 
         if (vehicle.zone.getState() == vehicle.zone.emptyState) {
@@ -274,6 +275,7 @@ class VInBreathingState implements VehicleLocationState {
 
         vehicle.readyToUpdateDistanceZone = false;
       }
+      */
 
       checkVehicleBreathingZoneAgainstOther();
     }

@@ -43,6 +43,12 @@ class Bg {
 
     //bgSize = unit_w * unitLength;
 
+    int val_w = int((rowLength - 1) * 0.5);
+    int val_h = int((rowLength - 1) * 0.5);
+
+    wrapLimit_w = (unit_w * val_w) + (unit_w * 0.5); // 2000  1600 + 400
+    wrapLimit_h = (unit_h * val_h) + (unit_h * 0.5);
+
     // POSITION UNITS
     int index = 0;
     for (int j=0; j<unitLength; j++) {
@@ -78,14 +84,14 @@ class Bg {
 
 
           // three by three grid with only middle empty
-
+          /*
           if (i == 1 && j == 1) {
-            units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, index);
-            //println(index);
-          } else {
-            units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), true, index);
-          }
-
+           units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, index);
+           //println(index);
+           } else {
+           units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), true, index);
+           }
+          /*
           /*
            // four corners only
            
@@ -119,37 +125,38 @@ class Bg {
            }
            */
         } else { // debug mode false
-        
-        // three by three grid with only middle empty
-          /*
-          if (i == 1 && j == 1) {
-            units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, index);
-            //println(index);
-          } else {
-            units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), true, index);
-          }
-*/
 
-          // for CONTACT V3: three by three grid with only middle empty
-          
+          // three by three grid with only middle empty
+          /*
           if (i == 1 && j == 1) {
            units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, index);
            //println(index);
            } else {
            units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), true, index);
            }
+           */
+
+         
+          
+          if (i == 2 && j == 2 ) {  // for CONTACT V3: five by five grid with only middle empty
+          //if (i == 1 && j == 1) {  // for CONTACT V3: three by three grid with only middle empty
+           units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, index);
+           //println(index);
+           } else {
+           units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), true, index);
+           }
            
-           
+
 
           // 1 NODE
           /*
           // conditional logic to set amount of elements in the grid (1 element at position 0:0)
-          if (i == 0 && j == 0) {
-            units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), true, index);
-          } else {
-            units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, index);
-          }
-          */
+           if (i == 0 && j == 0) {
+           units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), true, index);
+           } else {
+           units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, index);
+           }
+           */
 
           /*
           // four corners only
@@ -163,14 +170,15 @@ class Bg {
            */
 
           // 24 NODES
-
+          // for CONTACT V3: five by five grid with only middle empty
           /*
           if (i == 0 && j == 0 || i == 0 && j == 1) {
-           units[index] = new Bg_Unit((unitOrigin.x - unitNum)+(i*unit_size), (unitOrigin.y - unitNum)+(j*unit_size), true, index);
-           } else {
-           units[index] = new Bg_Unit((unitOrigin.x - unitNum)+(i*unit_size), (unitOrigin.y - unitNum)+(j*unit_size), false, index);
-           }
-           */
+            units[index] = new Bg_Unit((unitOrigin.x - unitNum)+(i*unit_size), (unitOrigin.y - unitNum)+(j*unit_size), true, index);
+          } else {
+            units[index] = new Bg_Unit((unitOrigin.x - unitNum)+(i*unit_size), (unitOrigin.y - unitNum)+(j*unit_size), false, index);
+          }
+          */
+
 
 
           // full grid with half / half
@@ -185,14 +193,14 @@ class Bg {
         }
 
 
-         // 2 NODES
-           // conditional logic to set amount of elements in the grid (1 element at position 0:0)
-           /*
+        // 2 NODES
+        // conditional logic to set amount of elements in the grid (1 element at position 0:0)
+        /*
            if (i == 0 && j == 0 || i == 0 && j == 1) {
-           units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), true, index);
-           } else {
-           units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, index);
-           }
+         units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), true, index);
+         } else {
+         units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, index);
+         }
          */
 
 
@@ -217,11 +225,13 @@ class Bg {
       units[i].updatePos(vel);
     }
 
+    /*
     int val_w = int((rowLength - 1) * 0.5);
-    int val_h = int((rowLength - 1) * 0.5);
-
-    wrapLimit_w = (unit_w * val_w) + (unit_w * 0.5); // 2000  1600 + 400
-    wrapLimit_h = (unit_h * val_h) + (unit_h * 0.5);
+     int val_h = int((rowLength - 1) * 0.5);
+     
+     wrapLimit_w = (unit_w * val_w) + (unit_w * 0.5); // 2000  1600 + 400
+     wrapLimit_h = (unit_h * val_h) + (unit_h * 0.5);
+     */
 
     for (int i=0; i<units.length; i++) {
 

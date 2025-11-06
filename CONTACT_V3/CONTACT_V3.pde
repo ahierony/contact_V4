@@ -233,7 +233,7 @@ void setup() {
   //protoSticks = false;
   debugMode = false;
   screengrab = false;
-  showDistance = false;
+  showDistance = true;
   playSound = false; // enables sound // current sound until Woohun updates
   audioIsPlaying = false; // new sound by woohun not ready yet
   playSoundContactV1 = false;
@@ -262,7 +262,7 @@ void setup() {
   colorMode(HSB, 360, 100, 100);
 
   int rowLength;
-  unitSize = 1000; // 600 x 5 // 1000 x 3  > to create more density but preserve smaller frame
+  unitSize = 750; // 600 x 5 // 1000 x 3  > to create more density but preserve smaller frame
 
   if (debugMode) {
     rowLength = 3;
@@ -622,8 +622,8 @@ void draw() {
       popMatrix();
     } // TRAILS END
 
-    
     /*
+      
     pushMatrix();
 
     translate(width/2, height/2);
@@ -632,6 +632,7 @@ void draw() {
 
     popMatrix();
     */
+    
   }
 
 

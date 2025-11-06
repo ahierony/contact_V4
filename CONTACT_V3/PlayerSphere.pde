@@ -114,7 +114,7 @@ class PlayerSphere {
     float t = theta;
     t *= -1;
 
-    float mag = 50000; //float mag = 100000;
+    float mag = 30000; //50000; //float mag = 100000;
 
     float dx = mag * cos(t);
     float dy = mag * sin(t);

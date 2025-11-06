@@ -1,11 +1,14 @@
 
+issues with distance zones and breathing to fix: in vehicle zone line 
+
+
 - work on vehicle breathing. 
 
-1 implement Chad's idea. Fixed radius for vehicles and lookout and change direction when vehicles are detected.
+1 implement Chad's idea. Fixed radius for vehicles and lookout and change direction when vehicles are detected. // done
 
-2 random start for vehicle breathing is buggy
+2 random start for vehicle breathing is buggy // not needed
 
-3 vehicle radius does not update when vehicles die
+3 vehicle radius does not update when vehicles die // done
 
 
 

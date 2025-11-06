@@ -179,7 +179,7 @@ class Vehicle {
     inOtherVehicleDistanceZone = false;
     otherVehicleInDistanceZone = false;
     otherVehicleInBreathingZone = false;
-    
+
     otherBreathingVehicleComingClose = false;
 
     colorAngleSwitchPlayer = 30; // 50; //45;
@@ -262,14 +262,41 @@ class Vehicle {
       checkRippleCount();
     } else { // // VEHICLE IS NOT IN MOTION
 
+      boolean otherVehicleAlreadyHasPlayerInDistanceZone = false;
 
-      //println("zone ", zone.getState());
+      for (int i = 0; i < vehicles.size(); i++) {
 
-      checkIfPlayerInZone();
+        Vehicle v = vehicles.get(i);
+
+        if (v != this) {
+
+          if (v.playerInDistanceZone) {
+
+            otherVehicleAlreadyHasPlayerInDistanceZone = true;
+          }
+        }
+      }
+
+      if (!otherVehicleAlreadyHasPlayerInDistanceZone) {
+
+        checkIfPlayerInZone();
+      }
       //checkIfOtherVehicleInZone();
 
-      location.update();
+      /*
+      if (playerInDistanceZone && otherBreathingVehicleComingClose) {
+       
+       zone.setState(zone.holdState);
+       
+       } else {
+       
+       
+       
+       }
+       */
+
       zone.update();
+      location.update();
 
       posVecPixels.set(centerBoid.posVecPixels.x, centerBoid.posVecPixels.y);
     }
@@ -443,15 +470,13 @@ class Vehicle {
     if (angleDiff > angleSwitch) {
       //println("go away");
       outcomingForceDirection = -1;
-      
+
       gravity = map(angleDiff, angleSwitch, 180, 0, gravityVal);
-    
     } else {
       //println("come closer");
       outcomingForceDirection = 1;
-      
+
       gravity = map(angleDiff, 0, angleSwitch, gravityVal, 0);
-      
     }
 
     return gravity;
