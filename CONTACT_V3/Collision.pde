@@ -229,6 +229,8 @@ class Collision {
             killVehicle(vNum);
 
             vehicleRemaining--;
+            
+            //bgTrailBox.increaseStrokeWeight();
 
             println("vehicles remaining ", vehicleRemaining);
 

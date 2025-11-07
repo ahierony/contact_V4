@@ -70,7 +70,7 @@ class Bg_Unit {
     stroke(126);
 
     //if (debugMode)
-      rect(0, 0, unit_w, unit_h);
+      rect(0, 0, unit_w, unit_h); // display grid
       //println("unit_w in rect ", unit_w);
 
     popMatrix();
@@ -123,8 +123,9 @@ class Bg_Unit {
     PVector offset = new PVector(playerCenterSpherePosVecPixels.x, playerCenterSpherePosVecPixels.y);
     unitPos.add(offset);
 
-
-    PVector tempPos = new PVector(random(vehicleRadius_w, unit_w-vehicleRadius_w), random(vehicleRadius_h, unit_h-vehicleRadius_h));
+    float bufferW = unit_w * 0.1;
+    float bufferH = unit_h * 0.1;
+    PVector tempPos = new PVector(random(vehicleRadius_w + bufferW, unit_w-vehicleRadius_w - bufferW), random(vehicleRadius_h + bufferW, unit_h-vehicleRadius_h- bufferH));
     float sizeHalf_w = unit_w * 0.5;
     float sizeHalf_h = unit_h * 0.5;
     randomPos = new PVector(unitPos.x - sizeHalf_w + tempPos.x, unitPos.y - sizeHalf_h + tempPos.y);

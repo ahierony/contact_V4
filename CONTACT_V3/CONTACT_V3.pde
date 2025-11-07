@@ -233,7 +233,7 @@ void setup() {
   //protoSticks = false;
   debugMode = false;
   screengrab = false;
-  showDistance = true;
+  showDistance = false;
   playSound = false; // enables sound // current sound until Woohun updates
   audioIsPlaying = false; // new sound by woohun not ready yet
   playSoundContactV1 = false;
@@ -262,13 +262,13 @@ void setup() {
   colorMode(HSB, 360, 100, 100);
 
   int rowLength;
-  unitSize = 750; // 600 x 5 // 1000 x 3  > to create more density but preserve smaller frame
+  unitSize = 2500; //750; // 600 x 5 // 1000 x 3  > to create more density but preserve smaller frame
 
   if (debugMode) {
     rowLength = 3;
     setUnitSize(rowLength * unitSize, rowLength * unitSize, rowLength, 0.5); // float _unitSize, int _unitRow, float _worldScale
   } else {
-    rowLength = 5;
+    rowLength = 3;
     setUnitSize(rowLength * unitSize, rowLength * unitSize, rowLength, 0.5); // float _unitSize, int _unitRow, float _worldScale
   }
 
@@ -427,13 +427,9 @@ void resetContact() {
   currentM = new PVector(0, 0);
   vel = new PVector(0, 0);
 
-  //
   playerCenterSpherePosVecPixels = new Vec2(0, 0);
   player = new Player();
-  //
 
-  bgTrailBox = new BgTrailBox(unitTotal, unit_w, unit_h);
-  //
   vehicles = new ArrayList<Vehicle>();
   bg = new Bg(unitTotal);
   collision = new Collision();
@@ -441,6 +437,7 @@ void resetContact() {
 
   audio = new Audio();
 
+  bgTrailBox = new BgTrailBox(unitTotal, unit_w, unit_h);
 
   setBackgroundTimer();
 }

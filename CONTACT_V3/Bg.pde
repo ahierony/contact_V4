@@ -127,17 +127,17 @@ class Bg {
         } else { // debug mode false
 
           // three by three grid with only middle empty
-          /*
+          
           if (i == 1 && j == 1) {
            units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, index);
            //println(index);
            } else {
            units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), true, index);
            }
-           */
+           
 
          
-          
+           /*
           if (i == 2 && j == 2 ) {  // for CONTACT V3: five by five grid with only middle empty
           //if (i == 1 && j == 1) {  // for CONTACT V3: three by three grid with only middle empty
            units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, index);
@@ -145,6 +145,7 @@ class Bg {
            } else {
            units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), true, index);
            }
+           */
            
 
 

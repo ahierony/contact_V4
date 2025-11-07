@@ -75,8 +75,6 @@ class BgTrailBox {
 
     translate(pos.x, pos.y);
 
-
-
     //if (debugMode)
 
     noFill();
@@ -112,24 +110,24 @@ class BgTrailBox {
       pos.x = - trailBox_wrapLimit_w;
       offset.x += trailBox_wrapLimit_w*2;
 
-      increaseStrokeWeight();
+      //increaseStrokeWeight();
     } else if (pos.x < -trailBox_wrapLimit_w) {
       pos.x = trailBox_wrapLimit_w;
       offset.x -= trailBox_wrapLimit_w*2;
 
-      increaseStrokeWeight();
+      //increaseStrokeWeight();
     }
 
     if (pos.y > trailBox_wrapLimit_h) {
       pos.y = -trailBox_wrapLimit_h;
       offset.y += trailBox_wrapLimit_h*2;
 
-      increaseStrokeWeight();
+      //increaseStrokeWeight();
     } else if (pos.y < -trailBox_wrapLimit_h) {
       pos.y = trailBox_wrapLimit_h;
       offset.y -= trailBox_wrapLimit_h*2;
 
-      increaseStrokeWeight();
+      //increaseStrokeWeight();
     }
 
     //println(offsets);
@@ -146,7 +144,7 @@ class BgTrailBox {
     trailLeft.update(_leftEyePos.x, _leftEyePos.y, player.getLinearVelocity(), mainTheta);
     trailRight.update(_rightEyePos.x, _rightEyePos.y, player.getLinearVelocity(), mainTheta);
   }
-
+  /*
   void increaseStrokeWeight() {
 
     offsets.add(Integer.valueOf(trailLeft.marks.size()));
@@ -154,4 +152,5 @@ class BgTrailBox {
     offsetStrokeWeight += strokeWeightIncrease;
     strokeWeights.add(Integer.valueOf(offsetStrokeWeight));
   }
+  */
 }
