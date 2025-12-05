@@ -262,13 +262,13 @@ void setup() {
   colorMode(HSB, 360, 100, 100);
 
   int rowLength;
-  unitSize = 2500; //750; // 600 x 5 // 1000 x 3  > to create more density but preserve smaller frame
+  unitSize = 2000; //750; // 600 x 5 // 1000 x 3  > to create more density but preserve smaller frame
 
   if (debugMode) {
     rowLength = 3;
     setUnitSize(rowLength * unitSize, rowLength * unitSize, rowLength, 0.5); // float _unitSize, int _unitRow, float _worldScale
   } else {
-    rowLength = 3;
+    rowLength = 5;
     setUnitSize(rowLength * unitSize, rowLength * unitSize, rowLength, 0.5); // float _unitSize, int _unitRow, float _worldScale
   }
 
@@ -1008,6 +1008,12 @@ void keyPressed() {
     if (worldScale > minScale) {
 
       worldScale -= scaleValue;
+    } else if(worldScale <= minScale){
+      println("worldScale ", worldScale);
+      
+      worldScale -= .01;
+      
+      
     }
   }
   //} else if (key == ' ') {

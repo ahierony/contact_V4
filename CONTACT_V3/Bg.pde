@@ -19,10 +19,13 @@ class Bg {
 
   int unitRow, unitCol;
 
-  int centerUnit;
+  //int centerUnit;
 
   float wrapLimit_w;
   float wrapLimit_h;
+
+  //chatgpt
+  int[] arr = new int[25];
 
 
   // Constructor
@@ -49,170 +52,51 @@ class Bg {
     wrapLimit_w = (unit_w * val_w) + (unit_w * 0.5); // 2000  1600 + 400
     wrapLimit_h = (unit_h * val_h) + (unit_h * 0.5);
 
-    // POSITION UNITS
+    createRandomPlacementOfElements();
+
+    //for (int index =0; i<unitLength; index++) {
+
+
     int index = 0;
     for (int j=0; j<unitLength; j++) {
       for (int i=0; i<unitLength; i++) {
 
-        //println("i ", i);
+        if (arr[index] == 0 || arr[index] == 2) {
+          units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, index);
+        } else {
 
-        // 0 NODES
-        //units[index] = new Bg_Unit((unitOrigin.x - unitNum)+(i*unit_size), (unitOrigin.y - unitNum)+(j*unit_size), false, index);
-
-        // 8 NODES
-        /*
-         if (i == 1 && j == 1) {
-         units[index] = new Bg_Unit((unitOrigin.x - unitNum)+(i*unit_size), (unitOrigin.y - unitNum)+(j*unit_size), false, index);
-         println(index);
-         } else {
-         units[index] = new Bg_Unit((unitOrigin.x - unitNum)+(i*unit_size), (unitOrigin.y - unitNum)+(j*unit_size), true, index);
-         }
-         */
-
-
-        if (debugMode) {
-
-          /*
-          // 2 NODES
-           // conditional logic to set amount of elements in the grid (1 element at position 0:0)
-           if (i == 0 && j == 0 || i == 0 && j == 1) {
-           units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), true, index);
-           } else {
-           units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, index);
-           }
-           */
-
-
-          // three by three grid with only middle empty
-          /*
-          if (i == 1 && j == 1) {
-           units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, index);
-           //println(index);
-           } else {
-           units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), true, index);
-           }
-          /*
-          /*
-           // four corners only
-           
-           if ((i == 0 && j == 0) || (i == 2 && j == 0) || (i == 0 && j == 2) || (i == 2 && j == 2)) {
-           units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), true, index);
-           //println(index);
-           } else {
-           units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, index);
-           }
-           
-           */
-
-          // 1 NODE
-
-          // conditional logic to set amount of elements in the grid (1 element at position 0:0)
-          /*
-          if (i == 0 && j == 0) {
-           units[index] = new Bg_Unit((unitOrigin.x - unitNum)+(i*unit_size), (unitOrigin.y - unitNum)+(j*unit_size), true, index);
-           } else {
-           units[index] = new Bg_Unit((unitOrigin.x - unitNum)+(i*unit_size), (unitOrigin.y - unitNum)+(j*unit_size), false, index);
-           }
-           */
-
-
-          /*
-           if (i == 2 && j == 2) {
-           units[index] = new Bg_Unit((unitOrigin.x - unitNum)+(i*unit_size), (unitOrigin.y - unitNum)+(j*unit_size), false, index);
-           println(index);
-           } else {
-           units[index] = new Bg_Unit((unitOrigin.x - unitNum)+(i*unit_size), (unitOrigin.y - unitNum)+(j*unit_size), true, index);
-           }
-           */
-        } else { // debug mode false
-
-          // three by three grid with only middle empty
-          
-          if (i == 1 && j == 1) {
-           units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, index);
-           //println(index);
-           } else {
-           units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), true, index);
-           }
-           
-
-         
-           /*
-          if (i == 2 && j == 2 ) {  // for CONTACT V3: five by five grid with only middle empty
-          //if (i == 1 && j == 1) {  // for CONTACT V3: three by three grid with only middle empty
-           units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, index);
-           //println(index);
-           } else {
-           units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), true, index);
-           }
-           */
-           
-
-
-          // 1 NODE
-          /*
-          // conditional logic to set amount of elements in the grid (1 element at position 0:0)
-           if (i == 0 && j == 0) {
-           units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), true, index);
-           } else {
-           units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, index);
-           }
-           */
-
-          /*
-          // four corners only
-           
-           if ((i == 0 && j == 0) || (i == 2 && j == 0) || (i == 0 && j == 2) || (i == 2 && j == 2)) {
-           units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), true, index);
-           //println(index);
-           } else {
-           units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, index);
-           }
-           */
-
-          // 24 NODES
-          // for CONTACT V3: five by five grid with only middle empty
-          /*
-          if (i == 0 && j == 0 || i == 0 && j == 1) {
-            units[index] = new Bg_Unit((unitOrigin.x - unitNum)+(i*unit_size), (unitOrigin.y - unitNum)+(j*unit_size), true, index);
-          } else {
-            units[index] = new Bg_Unit((unitOrigin.x - unitNum)+(i*unit_size), (unitOrigin.y - unitNum)+(j*unit_size), false, index);
-          }
-          */
-
-
-
-          // full grid with half / half
-          /*
-          if (i == 2 && j == 2) {
-           units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, index);
-           //println(index);
-           } else {
-           units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), true, index);
-           }
-           */
+          units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), true, index);
         }
-
-
-        // 2 NODES
-        // conditional logic to set amount of elements in the grid (1 element at position 0:0)
-        /*
-           if (i == 0 && j == 0 || i == 0 && j == 1) {
-         units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), true, index);
-         } else {
-         units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, index);
-         }
-         */
-
-
-
-
-
         index++;
       }
+      
+    }
+    println("index ", index);
+  }
+
+  void createRandomPlacementOfElements() {
+
+    // Initialize all values
+    for (int i = 0; i < arr.length; i++) {
+      arr[i] = -1;
     }
 
-    centerUnit = 7;
+    // Place the value 2 at index 12
+    arr[12] = 2;
+
+    // Create an IntList with 16 zeros and 8 ones
+    IntList pool = new IntList();
+    for (int i = 0; i < 16; i++) pool.append(0);
+    for (int i = 0; i < 8; i++) pool.append(1);
+
+    // Randomly fill all other positions
+    for (int i = 0; i < arr.length; i++) {
+      if (i != 12) {
+        int randIndex = int(random(pool.size()));
+        arr[i] = pool.get(randIndex);
+        pool.remove(randIndex);
+      }
+    }
   }
 
 
