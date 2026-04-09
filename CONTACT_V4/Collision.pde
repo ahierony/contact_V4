@@ -233,6 +233,7 @@ class Collision {
             //bgTrailBox.increaseStrokeWeight();
 
             println("vehicles remaining ", vehicleRemaining);
+            
 
             v.playerInDistanceZone = false;
             //player.location.setState(player.location.pLocMovingState);

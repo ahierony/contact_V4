@@ -222,8 +222,8 @@ int fadeAnimationCounter;
 
 void setup() {
 
-  //size(1024, 768, JAVA2D); // 800, 800 // 1440, 900
-  fullScreen(2);
+  size(1024, 768, JAVA2D); // 800, 800 // 1440, 900
+  //fullScreen(2);
   pixelDensity(1);
 
 
@@ -262,7 +262,7 @@ void setup() {
   colorMode(HSB, 360, 100, 100);
 
   int rowLength;
-  unitSize = 2000; //750; // 600 x 5 // 1000 x 3  > to create more density but preserve smaller frame
+  unitSize = 1200; //750; // 600 x 5 // 1000 x 3  > to create more density but preserve smaller frame
 
   if (debugMode) {
     rowLength = 3;
@@ -279,13 +279,13 @@ void setup() {
   setupb2d();
 
   unitTotal = int(pow(rowLength, 2));
-  
+
   println("rowLength ", rowLength);
   println("unitTotal ", unitTotal);
 
   println("unit_w ", unit_w);
   println("unit_h ", unit_h);
-  
+
 
   // Make a new player
   playerCenterSpherePosVecPixels = new Vec2(0, 0);
@@ -442,7 +442,6 @@ void resetContact() {
   setBackgroundTimer();
 }
 //--------------------------------------------------------------
-
 void draw() {
 
   // TRAIL RECORDING STARTS
@@ -600,7 +599,8 @@ void draw() {
           drawFrameRate();
         } else {
           drawFrame();
-          //drawFrameRate();
+          drawFrameRate();
+          showRemainingVehiclesNum();
           noCursor();
         }
       }
@@ -621,17 +621,15 @@ void draw() {
 
     /*
       
-    pushMatrix();
-
-    translate(width/2, height/2);
-
-    bgTrailBox.display(worldScale);
-
-    popMatrix();
-    */
-    
+     pushMatrix();
+     
+     translate(width/2, height/2);
+     
+     bgTrailBox.display(worldScale);
+     
+     popMatrix();
+     */
   }
-
 
 
   // deprecated
@@ -705,7 +703,7 @@ void draw() {
 
   // TRAIL RECORDING ENDS
   //if (player.lung.getState() == player.lung.emptyState) {
-  if (player.lung.breath.movement == "empty") {
+  if (player.lung.breath.movement == "empty" || collision.vehicleRemaining == 0) {
 
     if (fadeAnimationIsOver()) {
 
@@ -901,7 +899,7 @@ boolean fadeAnimationIsOver() {
   rectMode(CORNER);
   rect(0, 0, width, height);
 
-  if (fadeAnimationCounter == 255) {
+  if (fadeAnimationCounter == 255 ) {
 
     return true;
   } else {
@@ -1008,12 +1006,10 @@ void keyPressed() {
     if (worldScale > minScale) {
 
       worldScale -= scaleValue;
-    } else if(worldScale <= minScale){
+    } else if (worldScale <= minScale) {
       println("worldScale ", worldScale);
-      
+
       worldScale -= .01;
-      
-      
     }
   }
   //} else if (key == ' ') {
@@ -1130,7 +1126,7 @@ void useKeyLeft() {
  }
  }
  */
-//--------------------------------------------------------------
+
 
 void drawFrameRate() {
   fill(255);
@@ -1138,6 +1134,14 @@ void drawFrameRate() {
   text(frameRate, 15, 30);
 }
 
+//--------------------------------------------------------------
+void showRemainingVehiclesNum() {
+  fill(255);
+  textSize(18);
+  //int len = vehicles.size();
+  //String numTxt = str(len);
+  text(collision.vehicleRemaining, width-50, 30);
+}
 //--------------------------------------------------------------
 
 // Monitor serial ports and extract data from string
@@ -1162,10 +1166,10 @@ void serialEvent(Serial port)
       int[] vals = int(splitTokens(incoming, ","));
 
       // we assign to variables
-      incoming_leftJoystick_xAxis = vals[2];
-      incoming_leftJoystick_yAxis = vals[3];
-      incoming_rightJoystick_xAxis = vals[0];
-      incoming_rightJoystick_yAxis = vals[1];
+      incoming_leftJoystick_xAxis = vals[0];
+      incoming_leftJoystick_yAxis = vals[1];
+      incoming_rightJoystick_xAxis = vals[2];
+      incoming_rightJoystick_yAxis = vals[3];
 
       newData = true;
     }

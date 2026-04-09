@@ -70,7 +70,7 @@ class Bg_Unit {
     stroke(126);
 
     //if (debugMode)
-      rect(0, 0, unit_w, unit_h); // display grid
+     // rect(0, 0, unit_w, unit_h); // display grid
       //println("unit_w in rect ", unit_w);
 
     popMatrix();

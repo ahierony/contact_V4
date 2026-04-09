@@ -485,16 +485,29 @@ class Player {
   //--------------------------------------------------------------
 
   void updateInputJoystick(int left_xAxis, int left_yAxis, int right_xAxis, int right_yAxis ) {
+    
+    // values for portable mini sticks 
+    
     /*
-    left_minRangeX = 390;
-     left_maxRangeX = 670;
-     left_minRangeY = 370;
-     left_maxRangeY = 570;
-     right_minRangeX = 360;
-     right_maxRangeX = 630;
-     right_minRangeY = 360;
-     right_maxRangeY = 650;
-     */
+    left_minRangeX = 400;
+    left_maxRangeX = 530;
+    left_minRangeY = 450;
+    left_maxRangeY = 600;
+    right_minRangeX = 450;
+    right_maxRangeX = 560;
+    right_minRangeY = 450;
+    right_maxRangeY = 560;
+    */
+    
+    left_minRangeX = 0;
+    left_maxRangeX = 1023;
+    left_minRangeY = 0;
+    left_maxRangeY = 1023;
+    right_minRangeX = 0;
+    right_maxRangeX = 1023;
+    right_minRangeY = 0;
+    right_maxRangeY = 1023;
+
 
     if (leftEye.coltxt == "red") {
 
