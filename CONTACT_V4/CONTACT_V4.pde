@@ -229,14 +229,14 @@ void setup() {
 
   //*********************************************************************
   //gamePadIsOn = false;
-  inputControls = InputControls.JOYSTICKS; //KEYBOARD; //JOYSTICKS;
+  inputControls = InputControls.KEYBOARD; //KEYBOARD; //JOYSTICKS;
   //protoSticks = false;
   debugMode = false;
   screengrab = false;
   showDistance = false;
-  playSound = false; // enables sound // current sound until Woohun updates
-  audioIsPlaying = false; // new sound by woohun not ready yet
   playSoundContactV1 = false;
+  //playSound = false; // enables sound // current sound until Woohun updates
+  //audioIsPlaying = false; // new sound by woohun not ready yet
   //*********************************************************************
 
   if (screengrab) {
@@ -326,7 +326,7 @@ void setupSounds() {
   backgroundSounds = new SoundFile[9];
 
   for (int i=0; i < backgroundSounds.length; i++) {
-    backgroundSounds[i] = new SoundFile(this, "sounds/background" + i + ".mp3");
+    backgroundSounds[i] = new SoundFile(this, "../../SOUNDS/background" + i + ".mp3");
   }
 
   int randomBackgroundSound = int(random(0, backgroundSounds.length));
@@ -336,11 +336,11 @@ void setupSounds() {
   currentBackgroundSound.play();
   switchBackgroundSound = true;
 
-  p_touch_v_audio = new SoundFile(this, "sounds/p_touch_v.mp3");
+  p_touch_v_audio = new SoundFile(this, "../../SOUNDS/p_touch_v.mp3");
   p_touch_v_audio.amp(1.0);
 
   //p_enter_v_zone_audio.amp(1.0);
-  //p_enter_v_zone_audio = new SoundFile(this, "sounds/p_enter_v_zone.mp3");
+  //p_enter_v_zone_audio = new SoundFile(this, "../../SOUNDS/p_enter_v_zone.mp3");
 }
 
 //--------------------------------------------------------------
@@ -1334,5 +1334,5 @@ void drawCorner() {
 // Use a keypress so thousands of files aren't created
 void mousePressed() {
 
-  recordSVG = true;
+  //recordSVG = true;
 }

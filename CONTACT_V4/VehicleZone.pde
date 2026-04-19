@@ -158,8 +158,10 @@ class VehicleZone {
         if (vehicle.otherBreathingVehicleComingClose) {
 
           if (switchFromInhaleToExhale) {
+            
+            vehicle.breath.aVelocity = 0;
 
-            vehicle.breath.aVelocity *= -1;
+            //vehicle.breath.aVelocity *= -1;
             switchFromInhaleToExhale = false;
           }
         }
@@ -183,7 +185,9 @@ class VehicleZone {
 
     case "full":
       setState(fullState);
-
+      
+      isBreathing = false;
+      /*
       if (vehicle.playerInBreathingZone || vehicle.otherVehicleInBreathingZone) {
 
         isBreathing = false;
@@ -191,6 +195,7 @@ class VehicleZone {
 
         isBreathing = true;
       }
+      */
       break;
     default:
       break;
