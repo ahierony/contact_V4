@@ -1,5 +1,26 @@
 TODO LIST
 
+************** IN PROGRESS ********************
+
+1) RESTORE MOVING VEHICLE
+
+- update VehicleLocationState
+
+
+
+
+
+************** DONE **************
+
+
+************** TODO **************
+
+2) ADD LUNG TO MOVING VEHICLE
+
+3) ADD VIBRATING MEMBRANDE TO BREATING VEHICLE
+
+******************************************
+
 
 
 BEFORE MAY 13 SYMPOSIUM

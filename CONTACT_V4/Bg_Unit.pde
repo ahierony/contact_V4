@@ -36,7 +36,7 @@ class Bg_Unit {
 
       if (index%2 == 0) {
 
-        createVehicle(false, "DYNAMIC"); // true
+        createVehicle(true, "DYNAMIC"); // true
       } else {
 
         createVehicle(false, "DYNAMIC"); // false
