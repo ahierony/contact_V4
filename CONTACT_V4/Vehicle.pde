@@ -224,7 +224,7 @@ class Vehicle {
 
   void update() {
 
-    //println("vehicle location ", location.getState());
+    println("vehicle location ", location.getState());
 
     ellipseMode(RADIUS);
 
@@ -238,18 +238,18 @@ class Vehicle {
       inOtherVehicleDistanceZone = false;
       inOtherVehicleBreathingZone = false;
 
-      /*
+
       for (Vehicle v : vehicles) {
-       
-       if (v != this) {
-       
-       if (v.location.getState() == v.location.vInBreathingState) {
-       
-       checkIfInOtherVehicleZone(v);
-       }
-       }
-       }
-       */
+
+        if (v != this) {
+
+          if (v.location.getState() == v.location.vInBreathingState) {
+
+            checkIfInOtherVehicleZone(v);
+          }
+        }
+      }
+
 
       location.update();
 
@@ -259,7 +259,7 @@ class Vehicle {
 
       updateTrail();
 
-      checkRippleCount();
+      //checkRippleCount(); // vehicle stops moving and starts breathing // not in this version
     } else { // // VEHICLE IS NOT IN MOTION
 
       boolean otherVehicleAlreadyHasPlayerInDistanceZone = false;
@@ -420,21 +420,21 @@ class Vehicle {
    }
    */
   //--------------------------------------------------------------
-  /*
+
   void applyZoneForceOnVehicle(Vehicle otherV) {
-   
-   float gravity = calculateGravity(colorWheelAngle, otherV.colorWheelAngle, 100000, colorAngleSwitchVehicle);
-   
-   Vec2 pos = centerBoid.body.getWorldCenter();
-   Vec2 otherPos = otherV.centerBoid.body.getWorldCenter();
-   
-   float mass = centerBoid.body.m_mass;
-   
-   Vec2 force = calculateForce(pos, otherPos, gravity, mass);
-   
-   centerBoid.applyForce(force);
-   }
-   */
+
+    float gravity = calculateGravity(colorWheelAngle, otherV.colorWheelAngle, 100000, colorAngleSwitchVehicle);
+
+    Vec2 pos = centerBoid.body.getWorldCenter();
+    Vec2 otherPos = otherV.centerBoid.body.getWorldCenter();
+
+    float mass = centerBoid.body.m_mass;
+
+    Vec2 force = calculateForce(pos, otherPos, gravity, mass);
+
+    centerBoid.applyForce(force);
+  }
+
   //--------------------------------------------------------------
 
   void applyZoneForceOnPlayer(Player player) { // 100000 / 300000
@@ -621,107 +621,107 @@ class Vehicle {
   // ********************************************************
   // VEHICLE IS IN OTHER VEHICLE ZONE
   // ********************************************************
-  /*
+
   void checkIfInOtherVehicleZone(Vehicle otherV) {
-   
-   if (isInOtherVehicleZone(otherV, otherV.zone.distanceRadius)) {
-   
-   inOtherVehicleDistanceZone = true;
-   
-   if (isInOtherVehicleZone(otherV, otherV.zone.radius)) {
-   
-   inOtherVehicleBreathingZone = true;
-   applyZoneForceOnVehicle(otherV); // apply succion/repel gravity between vehicle breathing and vehicle moving
-   }
-   }
-   }
-   
-   //--------------------------------------------------------------
-   
-   boolean isInOtherVehicleZone(Vehicle otherV, float otherZoneRadius) {
-   
-   Vec2 vehiclePosPix = box2d.getBodyPixelCoord(centerBoid.body);
-   
-   Vec2 otherVehiclePosPix = box2d.getBodyPixelCoord(otherV.centerBoid.body);
-   
-   float d_pix = dist(vehiclePosPix.x, vehiclePosPix.y, otherVehiclePosPix.x, otherVehiclePosPix.y);
-   
-   if (d_pix < otherZoneRadius + blobRadius) {
-   
-   return true;
-   } else {
-   
-   return false;
-   }
-   }
-   */
+
+    if (isInOtherVehicleZone(otherV, otherV.zone.distanceRadius)) {
+
+      inOtherVehicleDistanceZone = true;
+
+      if (isInOtherVehicleZone(otherV, otherV.zone.radius)) {
+
+        inOtherVehicleBreathingZone = true;
+        applyZoneForceOnVehicle(otherV); // apply succion/repel gravity between vehicle breathing and vehicle moving
+      }
+    }
+  }
+
+  //--------------------------------------------------------------
+
+  boolean isInOtherVehicleZone(Vehicle otherV, float otherZoneRadius) {
+
+    Vec2 vehiclePosPix = box2d.getBodyPixelCoord(centerBoid.body);
+
+    Vec2 otherVehiclePosPix = box2d.getBodyPixelCoord(otherV.centerBoid.body);
+
+    float d_pix = dist(vehiclePosPix.x, vehiclePosPix.y, otherVehiclePosPix.x, otherVehiclePosPix.y);
+
+    if (d_pix < otherZoneRadius + blobRadius) {
+
+      return true;
+    } else {
+
+      return false;
+    }
+  }
+
   // ********************************************************
   // OTHER VEHICLE IS ZONE
   // ********************************************************
-  /*
+
   void checkIfOtherVehicleInZone() {
-   
-   distanceFinal = false;
-   breathingFinal = false;
-   otherVehicleInDistanceZone = false;
-   otherVehicleInBreathingZone = false;
-   
-   checkIfOtherVehicleIsInZoneRadius();
-   
-   if (distanceFinal) {
-   
-   otherVehicleInDistanceZone = true;
-   
-   if (breathingFinal) {
-   
-   otherVehicleInBreathingZone = true;
-   }
-   }
-   }
-   
-   //--------------------------------------------------------------
-   
-   void checkIfOtherVehicleIsInZoneRadius() {
-   
-   for (Vehicle otherV : vehicles) {
-   
-   if (otherV != this) {
-   
-   if (otherV.inMotion) {
-   
-   if (isOtherVehicleInZone(otherV, zone.distanceRadius)) {
-   
-   distanceFinal = true;
-   
-   if (isOtherVehicleInZone(otherV, zone.radius)) {
-   
-   breathingFinal = true;
-   }
-   }
-   }
-   }
-   }
-   }
-   
-   //--------------------------------------------------------------
-   
-   boolean isOtherVehicleInZone(Vehicle otherV, float zoneRadius) {
-   
-   Vec2 vehiclePosPix = box2d.getBodyPixelCoord(centerBoid.body);
-   
-   Vec2 otherVehiclePosPix = box2d.getBodyPixelCoord(otherV.centerBoid.body);
-   
-   float d_pix = dist(vehiclePosPix.x, vehiclePosPix.y, otherVehiclePosPix.x, otherVehiclePosPix.y);
-   
-   if (d_pix < zoneRadius + otherV.blobRadius) {
-   
-   return true;
-   } else {
-   
-   return false;
-   }
-   }
-   */
+
+    distanceFinal = false;
+    breathingFinal = false;
+    otherVehicleInDistanceZone = false;
+    otherVehicleInBreathingZone = false;
+
+    checkIfOtherVehicleIsInZoneRadius();
+
+    if (distanceFinal) {
+
+      otherVehicleInDistanceZone = true;
+
+      if (breathingFinal) {
+
+        otherVehicleInBreathingZone = true;
+      }
+    }
+  }
+
+  //--------------------------------------------------------------
+
+  void checkIfOtherVehicleIsInZoneRadius() {
+
+    for (Vehicle otherV : vehicles) {
+
+      if (otherV != this) {
+
+        if (otherV.inMotion) {
+
+          if (isOtherVehicleInZone(otherV, zone.distanceRadius)) {
+
+            distanceFinal = true;
+
+            if (isOtherVehicleInZone(otherV, zone.radius)) {
+
+              breathingFinal = true;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  //--------------------------------------------------------------
+
+  boolean isOtherVehicleInZone(Vehicle otherV, float zoneRadius) {
+
+    Vec2 vehiclePosPix = box2d.getBodyPixelCoord(centerBoid.body);
+
+    Vec2 otherVehiclePosPix = box2d.getBodyPixelCoord(otherV.centerBoid.body);
+
+    float d_pix = dist(vehiclePosPix.x, vehiclePosPix.y, otherVehiclePosPix.x, otherVehiclePosPix.y);
+
+    if (d_pix < zoneRadius + otherV.blobRadius) {
+
+      return true;
+    } else {
+
+      return false;
+    }
+  }
+
 
   // ********************************************************
   // DELETE VEHICLE
@@ -749,7 +749,7 @@ class Vehicle {
   void display() {
 
     if (inMotion) {
-      trail.display();
+      //trail.display();
     } else {
       zone.display();
     }

@@ -4,7 +4,9 @@ TODO LIST
 
 1) RESTORE MOVING VEHICLE
 
-- update VehicleLocationState
+- update VehicleLocationState // done
+
+- moving vehicle not attracted by breathing vehicle // bug
 
 
 

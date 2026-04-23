@@ -52,24 +52,48 @@ class Bg {
     wrapLimit_w = (unit_w * val_w) + (unit_w * 0.5); // 2000  1600 + 400
     wrapLimit_h = (unit_h * val_h) + (unit_h * 0.5);
 
-    createRandomPlacementOfElements();
-
-    //for (int index =0; i<unitLength; index++) {
+    //createRandomPlacementOfElements();
 
 
     int index = 0;
     for (int j=0; j<unitLength; j++) {
       for (int i=0; i<unitLength; i++) {
 
+        // RANDOM NODES
+        /*
         if (arr[index] == 0 || arr[index] == 2) {
-          units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, index);
-        } else {
+         units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, index);
+         } else {
+         
+         units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), true, index);
+         }
+         */
 
+
+        // 2 NODES
+        
+        // conditional logic to set amount of elements in the grid (1 element at position 0:0)
+         if (i == 0 && j == 0 || i == 0 && j == 1) {
           units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), true, index);
+        } else {
+          units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, index);
         }
+         
+
+
+        // 1 NODE
+        /*
+        // conditional logic to set amount of elements in the grid (1 element at position 0:0)
+        if (i == 0 && j == 0) {
+          units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), true, index);
+        } else {
+          units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, index);
+        }
+        */
+
+
         index++;
       }
-      
     }
     println("index ", index);
   }
