@@ -48,58 +48,58 @@ class Collision {
    }
    }
    }
-   
-   //--------------------------------------------------------------
-   boolean readyToGiveBirth = false;
-   
-   // VEHICLE AGAINST VEHICLE
-   
-   void checkVehicleAgainstVehicle() {
-   
-   for (int i = 0; i < vehicles.size(); i++) {
-   
-   Vehicle v = vehicles.get(i);
-   
-   for (int j = 0; j < vehicles.size(); j++) {
-   
-   Vehicle o = vehicles.get(j);
-   
-   if (v != o) {
-   
-   if (o.inMotion && !v.inMotion) {
-   
-   if (vehiclesAreTouching(o, v)) {
-   
-   if ( v.zone.getState() != v.zone.collisionState) {
-   
-   if (v.zone.collisionState.getReadyToSetState()) {
-   
-   manageBirth(o, v);
-   switchVehicleFromBreathingToMoving(v);
-   //v.zone.setState(v.zone.collisionState);
-   }
-   }
-   }
-   } else if (!o.inMotion && v.inMotion) {
-   
-   if (vehiclesAreTouching(v, o)) {
-   
-   if ( o.zone.getState() != o.zone.collisionState) {
-   
-   if (o.zone.collisionState.getReadyToSetState()) {
-   
-   manageBirth(v, o);
-   switchVehicleFromBreathingToMoving(v);
-   //o.zone.setState(o.zone.collisionState);
-   }
-   }
-   }
-   }
-   }
-   }
-   }
-   }
    */
+  //--------------------------------------------------------------
+  boolean readyToGiveBirth = false;
+
+  // VEHICLE AGAINST VEHICLE
+
+  void checkVehicleAgainstVehicle() {
+
+    for (int i = 0; i < vehicles.size(); i++) {
+
+      Vehicle v = vehicles.get(i);
+
+      for (int j = 0; j < vehicles.size(); j++) {
+
+        Vehicle o = vehicles.get(j);
+
+        if (v != o) {
+
+          if (o.inMotion && !v.inMotion) {
+
+            if (vehiclesAreTouching(o, v)) {
+
+              if ( v.zone.getState() != v.zone.collisionState) {
+
+                if (v.zone.collisionState.getReadyToSetState()) {
+
+                  manageBirth(o, v);
+                  //switchVehicleFromBreathingToMoving(v);
+                  v.zone.setState(v.zone.collisionState);
+                }
+              }
+            }
+          } else if (!o.inMotion && v.inMotion) {
+
+            if (vehiclesAreTouching(v, o)) {
+
+              if ( o.zone.getState() != o.zone.collisionState) {
+
+                if (o.zone.collisionState.getReadyToSetState()) {
+
+                  manageBirth(v, o);
+                  //switchVehicleFromBreathingToMoving(v);
+                  o.zone.setState(o.zone.collisionState);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
   void manageBirth(Vehicle vInMotion, Vehicle vBreathing) {
 
     giveVehicleBirth(vInMotion, vBreathing);
@@ -152,7 +152,7 @@ class Collision {
   //--------------------------------------------------------------
 
   // RIPPLES AGAINST PLAYER
-
+   /*
   void checkPlayerAgainstVehicleRipples() {
 
     for (int j = 0; j < vehicles.size(); j++) {
@@ -180,7 +180,7 @@ class Collision {
       }
     }
   }
-
+*/
   //--------------------------------------------------------------
 
 
@@ -229,11 +229,11 @@ class Collision {
             killVehicle(vNum);
 
             vehicleRemaining--;
-            
+
             //bgTrailBox.increaseStrokeWeight();
 
             println("vehicles remaining ", vehicleRemaining);
-            
+
 
             v.playerInDistanceZone = false;
             //player.location.setState(player.location.pLocMovingState);

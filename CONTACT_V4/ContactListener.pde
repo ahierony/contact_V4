@@ -64,7 +64,39 @@ class CustomListener implements ContactListener {
 
   void endContact(Contact cp) {
     
-    
+    // TODO Auto-generated method stub
+    // Get both fixtures
+    f1 = cp.getFixtureA();
+    f2 = cp.getFixtureB();
+    // Get both bodies
+    b1 = f1.getBody();
+    b2 = f2.getBody();
+    // Get our objects that reference these bodies
+    o1 = b1.getUserData();
+    o2 = b2.getUserData();
+     
+     // If object 1 is a Box, then object 2 must be a particle
+     
+     if (o1.getClass() == PlayerSphere.class && o2.getClass() == VehicleSphere.class) {
+      PlayerSphere ps = (PlayerSphere) o1;
+      
+      VehicleSphere vs = (VehicleSphere) o2;
+        
+      vs.wasTouched = false; // vehicle was touched
+      
+      //println("vehicle was touched by player");
+   
+    } 
+    // If object 2 is a Box, then object 1 must be a particle
+    else if (o1.getClass() == VehicleSphere.class && o2.getClass() == PlayerSphere.class) {
+      PlayerSphere ps = (PlayerSphere) o2;
+      VehicleSphere vs = (VehicleSphere) o1;
+        
+      vs.wasTouched = false; // vehicle was touched
+      
+      //println("vehicle was touched by player");
+      
+    } 
   }
 
   void preSolve(Contact contact, Manifold oldManifold) {

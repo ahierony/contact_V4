@@ -481,9 +481,9 @@ class PLocVehicleZoneState implements PlayerLocationState {
       player.location.isHit = true;
     }
 
-    if (player.location.isHit) {
+    //if (player.location.isHit) {
       setLungState();
-    }
+    //}
 
     checkImpulseState();
   }
@@ -505,8 +505,8 @@ class PLocVehicleZoneState implements PlayerLocationState {
 
     if (player.lung.breath.movement == "full") {
       player.lung.setState(player.lung.fullState);
-      player.location.isHit = false;
-      player.location.setState(player.location.pLocMovingState);
+      //player.location.isHit = false;
+      //player.location.setState(player.location.pLocMovingState);
     }
 
     if (player.lung.getState() != player.lung.fullState) {

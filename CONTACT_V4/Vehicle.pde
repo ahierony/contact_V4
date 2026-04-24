@@ -183,7 +183,7 @@ class Vehicle {
     otherBreathingVehicleComingClose = false;
 
     colorAngleSwitchPlayer = 30; // 50; //45;
-    colorAngleSwitchVehicle = 5; //7; //15; //7;
+    colorAngleSwitchVehicle = 90; //5; //7; //15; //7;
 
     initialize();
   }

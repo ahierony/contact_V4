@@ -231,7 +231,7 @@ void setup() {
   //gamePadIsOn = false;
   inputControls = InputControls.JOYSTICKS; //KEYBOARD; //JOYSTICKS;
   //protoSticks = false;
-  debugMode = true;
+  debugMode = false;
   screengrab = false;
   showDistance = false;
   playSoundContactV1 = false;
@@ -262,14 +262,14 @@ void setup() {
   colorMode(HSB, 360, 100, 100);
 
   int rowLength;
-  unitSize = 1200; //750; // 600 x 5 // 1000 x 3  > to create more density but preserve smaller frame
+  unitSize = 600; // 1200 is contact v3 size //750; // 600 x 5 // 1000 x 3  > to create more density but preserve smaller frame
 
   if (debugMode) {
     rowLength = 3;
-    setUnitSize(rowLength * unitSize, rowLength * unitSize, rowLength, 0.5); // float _unitSize, int _unitRow, float _worldScale
+    setUnitSize(rowLength * unitSize, rowLength * unitSize, rowLength, 0.5); // float _unitSize, int _unitRow, float _worldScale (0.5)
   } else {
-    rowLength = 5;
-    setUnitSize(rowLength * unitSize, rowLength * unitSize, rowLength, 0.5); // float _unitSize, int _unitRow, float _worldScale
+    rowLength = 3;
+    setUnitSize(rowLength * unitSize, rowLength * unitSize, rowLength, 0.2); // float _unitSize, int _unitRow, float _worldScale (0.5)
   }
 
   // unitSize > rowLength * unitSize = unit_w/unit_h  > rect_w = sqrt(_unitTotal) * unit_w
@@ -279,13 +279,14 @@ void setup() {
   setupb2d();
 
   unitTotal = int(pow(rowLength, 2));
-
+    
+    /*
   println("rowLength ", rowLength);
   println("unitTotal ", unitTotal);
 
   println("unit_w ", unit_w);
   println("unit_h ", unit_h);
-
+*/
 
   // Make a new player
   playerCenterSpherePosVecPixels = new Vec2(0, 0);
@@ -561,7 +562,7 @@ void draw() {
 
       //collision.checkVehiclesAgainstVehicleRipples();
       //collision.checkPlayerAgainstVehicleRipples();
-      //collision.checkVehicleAgainstVehicle();
+      collision.checkVehicleAgainstVehicle();
 
       if (player.area.isVisible) {
 
