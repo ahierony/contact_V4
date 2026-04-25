@@ -31,7 +31,6 @@ class PlayerLung {
   float radius;
   float radiusMin;
   float radiusMax;
-  int radiusPixelsMargin;
 
   float currentRadius;
   float movingRadius;
@@ -51,7 +50,6 @@ class PlayerLung {
 
     radiusMin  = 45;
     radiusMax  = 150;
-    radiusPixelsMargin = 5;
 
     radius = radiusMax;
 
@@ -60,11 +58,11 @@ class PlayerLung {
 
     breath = new PlayerLungBreathe();
 
-    inhaleState = new InhaleState(player);
-    holdState = new HoldState(player);
-    exhaleState = new ExhaleState(player);
-    emptyState = new EmptyState(player);
-    fullState = new FullState(player);
+    inhaleState = new InhaleStatePlayer(player);
+    holdState = new HoldStatePlayer(player);
+    exhaleState = new ExhaleStatePlayer(player);
+    emptyState = new EmptyStatePlayer(player);
+    fullState = new FullStatePlayer(player);
 
 
     setState(fullState);
@@ -180,7 +178,7 @@ class PlayerLung {
 // STATE CLASSES
 // ********************************************************
 
-class ExhaleState implements PlayerLungState {
+class ExhaleStatePlayer implements PlayerLungState {
 
   boolean readyToSetState;
   //boolean updateExhale;
@@ -188,7 +186,7 @@ class ExhaleState implements PlayerLungState {
   Player player;
 
 
-  ExhaleState(Player p) {
+  ExhaleStatePlayer(Player p) {
 
     readyToSetState = true;
     player = p;
@@ -223,7 +221,7 @@ class ExhaleState implements PlayerLungState {
 
 //--------------------------------------------------------------
 
-class InhaleState implements PlayerLungState {
+class InhaleStatePlayer implements PlayerLungState {
 
   boolean readyToSetState;
   //boolean updateInhale;
@@ -231,7 +229,7 @@ class InhaleState implements PlayerLungState {
   Player player;
 
 
-  InhaleState(Player p) {
+  InhaleStatePlayer(Player p) {
 
     readyToSetState = true;
     player = p;
@@ -268,14 +266,14 @@ class InhaleState implements PlayerLungState {
 
 //--------------------------------------------------------------
 
-class FullState implements PlayerLungState {
+class FullStatePlayer implements PlayerLungState {
 
   Player player;
 
   boolean readyToSetState;
 
 
-  FullState(Player p) {
+  FullStatePlayer(Player p) {
 
     player = p;
   }
@@ -300,14 +298,14 @@ class FullState implements PlayerLungState {
 
 //--------------------------------------------------------------
 
-class EmptyState implements PlayerLungState {
+class EmptyStatePlayer implements PlayerLungState {
 
   Player player;
 
   boolean readyToSetState;
 
 
-  EmptyState(Player p) {
+  EmptyStatePlayer(Player p) {
 
     player = p;
   }
@@ -340,13 +338,13 @@ class EmptyState implements PlayerLungState {
 
 //--------------------------------------------------------------
 
-class HoldState implements PlayerLungState {
+class HoldStatePlayer implements PlayerLungState {
 
   Player player;
 
   boolean readyToSetState;
 
-  HoldState(Player p) {
+  HoldStatePlayer(Player p) {
 
     player = p;
   }

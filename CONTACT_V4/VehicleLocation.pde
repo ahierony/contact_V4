@@ -143,7 +143,8 @@ class VInMovingState implements VehicleLocationState {
 
     vehicle.centerBoid.isMoving();
 
-    addTrailRipples();
+    //addTrailRipples();
+    setLungState();
   }
 
   public boolean getReadyToSetState() {
@@ -154,10 +155,24 @@ class VInMovingState implements VehicleLocationState {
     readyToSetState = rtss;
   }
 
+  /*
   void addTrailRipples() {
-    Vec2 boidPos;
-    boidPos = box2d.getBodyPixelCoord(vehicle.centerBoid.body);
-    vehicle.trail.addRipples(boidPos.x, boidPos.y, vehicle.colorTrail, vehicle.fadeValue-100);
+   Vec2 boidPos;
+   boidPos = box2d.getBodyPixelCoord(vehicle.centerBoid.body);
+   vehicle.trail.addRipples(boidPos.x, boidPos.y, vehicle.colorTrail, vehicle.fadeValue-100);
+   }
+   */
+
+  void setLungState() {
+
+    if (vehicle.lung.breath.movement == "empty") {
+      vehicle.lung.setState(vehicle.lung.emptyState);
+    }
+
+    if (vehicle.lung.getState() != vehicle.lung.emptyState) {
+
+      vehicle.lung.setState(vehicle.lung.exhaleState);
+    }
   }
 }
 
@@ -266,12 +281,10 @@ class VInBreathingState implements VehicleLocationState {
 
     vehicleZoneTempRadius = vehicle.zone.originalRadiusMax;
 
-    Vec2 playerPosPix = box2d.getBodyPixelCoord(player.centerSphere.body);
+    //Vec2 playerPosPix = box2d.getBodyPixelCoord(player.centerSphere.body);
     Vec2 vehiclePosPix = box2d.getBodyPixelCoord(vehicle.centerBoid.body);
 
-    if (player.location.getState() == player.location.pLocBreathingState) {
-      checkVehicleZoneAgainstDistance(vehiclePosPix, playerPosPix, player.area.distanceRadius);
-    }
+
 
     for (int i = 0; i < vehicles.size(); i++) {
 
@@ -300,22 +313,22 @@ class VInBreathingState implements VehicleLocationState {
 
   /*
   boolean isOtherVehicleInZone(Vehicle otherV, float zoneRadius) {
-
-    Vec2 vehiclePosPix = box2d.getBodyPixelCoord(centerBoid.body);
-
-    Vec2 otherVehiclePosPix = box2d.getBodyPixelCoord(otherV.centerBoid.body);
-
-    float d_pix = dist(vehiclePosPix.x, vehiclePosPix.y, otherVehiclePosPix.x, otherVehiclePosPix.y);
-
-    if (d_pix < zoneRadius + otherV.blobRadius) {
-
-      return true;
-    } else {
-
-      return false;
-    }
-  }
-  */
+   
+   Vec2 vehiclePosPix = box2d.getBodyPixelCoord(centerBoid.body);
+   
+   Vec2 otherVehiclePosPix = box2d.getBodyPixelCoord(otherV.centerBoid.body);
+   
+   float d_pix = dist(vehiclePosPix.x, vehiclePosPix.y, otherVehiclePosPix.x, otherVehiclePosPix.y);
+   
+   if (d_pix < zoneRadius + otherV.blobRadius) {
+   
+   return true;
+   } else {
+   
+   return false;
+   }
+   }
+   */
 
   float checkVehicleZoneAgainstDistance(Vec2 vehiclePosPix, Vec2 otherPosPix, float otherRadius) {
 
@@ -343,6 +356,9 @@ class VInBreathingState implements VehicleLocationState {
 }
 
 // ********************************************************
+// IN OTHER VEHICLE ZONE
+// ********************************************************
+
 
 class VInOtherVehicleZoneState implements VehicleLocationState {
 
@@ -365,6 +381,20 @@ class VInOtherVehicleZoneState implements VehicleLocationState {
     if (readyToSetState) {
 
       setReadyToSetState(false);
+    }
+
+    setLungState();
+  }
+
+  void setLungState() {
+
+    if (vehicle.lung.breath.movement == "full") {
+      vehicle.lung.setState(vehicle.lung.fullState);
+    }
+
+    if (vehicle.lung.getState() != vehicle.lung.fullState) {
+
+      vehicle.lung.setState(vehicle.lung.inhaleState);
     }
   }
 
@@ -395,8 +425,6 @@ class VInDeadState implements VehicleLocationState {
   //--------------------------------------------------------------
 
   void update() {
-
-
 
     if (readyToSetState) {
 

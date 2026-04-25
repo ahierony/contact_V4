@@ -37,7 +37,7 @@ class VehicleBoid {
 
   float playerVehicleDistance;
   float previousVelocityLength;
-  
+
   Vehicle vehicle;
 
   VehicleBoid(float _x, float _y, float _r, String _type, int _categoryBits, int _maskBits) {
@@ -46,7 +46,7 @@ class VehicleBoid {
     bodyType = _type;
     categoryBits = _categoryBits;
     maskBits = _maskBits;
-    
+
     posVecPixels = new Vec2(_x, _y);
     boidPosition = new Vec2(0, 0);
     targetPosition = new Vec2(0, 0);
@@ -83,7 +83,7 @@ class VehicleBoid {
 
 
   // called from vehicleLocation > VInMovingState
-  void isMoving() { 
+  void isMoving() {
 
     offset = box2d.getBodyPixelCoord(player.centerSphere.body);
 
@@ -110,17 +110,8 @@ class VehicleBoid {
     playerVehicleDistance = dist(boidPosPixels.x, boidPosPixels.y, playerPosVecPixels.x, playerPosVecPixels.y);
 
     float playerOffset = radius * 5;
-        
-    if (player.location.getState() == player.location.pLocBreathingState) {
-      
-     
-      if (playerVehicleDistance > player.borderRadiusMax - playerOffset) {
 
-        status = "arrive";
-        arrive(targetPosition);
-        //col = blue;
-      }
-    } else if (player.location.getState() == player.location.pLocMovingState) {
+    if (player.location.getState() == player.location.pLocMovingState) {
 
       if (playerVehicleDistance > player.borderRadiusMin - playerOffset) {
         status = "arrive";
@@ -138,7 +129,7 @@ class VehicleBoid {
       status = "wander";
       wander();
       //col = green;
-    } 
+    }
 
     /*
     if (playerVehicleDistance <= player_threat_radius) {

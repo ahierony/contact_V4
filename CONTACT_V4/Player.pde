@@ -210,9 +210,6 @@ class Player {
 
   void update(float _theta) {
 
-
-    //println("player lung state ", player.lung.getState());
-
     playerTheta = _theta;
 
 
@@ -264,13 +261,7 @@ class Player {
     if (location.getState() == location.pLocMovingState || location.getState() == location.pLocVehicleZoneState) {
 
       area.setState(area.notBreathingState);
-    } else if (location.getState() == location.pLocBreathingState) {
-
-      area.setAreaState();
-
-      checkForVehicleInArea();
     }
-
 
 
 
@@ -485,20 +476,20 @@ class Player {
   //--------------------------------------------------------------
 
   void updateInputJoystick(int left_xAxis, int left_yAxis, int right_xAxis, int right_yAxis ) {
-    
-    // values for portable mini sticks 
-    
+
+    // values for portable mini sticks
+
     /*
     left_minRangeX = 400;
-    left_maxRangeX = 530;
-    left_minRangeY = 450;
-    left_maxRangeY = 600;
-    right_minRangeX = 450;
-    right_maxRangeX = 560;
-    right_minRangeY = 450;
-    right_maxRangeY = 560;
-    */
-    
+     left_maxRangeX = 530;
+     left_minRangeY = 450;
+     left_maxRangeY = 600;
+     right_minRangeX = 450;
+     right_maxRangeX = 560;
+     right_minRangeY = 450;
+     right_maxRangeY = 560;
+     */
+
     left_minRangeX = 0;
     left_maxRangeX = 1023;
     left_minRangeY = 0;

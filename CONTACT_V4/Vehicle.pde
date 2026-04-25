@@ -7,8 +7,11 @@ class Vehicle {
 
   VehicleZone zone;
   VehicleLocation location;
+  VehicleLung lung;
 
   VehicleTrail trail;
+
+  float calibrateLungRadius;
 
   float centerBoidRadius;
   float sphereRadius;  // The radius of each body that makes up the skeletonadius;
@@ -69,8 +72,6 @@ class Vehicle {
   int brightness;
   int saturation;
 
-
-
   int colorAngleSwitchPlayer;
   int colorAngleSwitchVehicle;
 
@@ -101,6 +102,8 @@ class Vehicle {
   Vehicle(float x, float y, int _colorAngle, boolean _inMotion, String type_, int unitNum_, Player p) {
 
     unitNum = unitNum_;
+    
+    inMotion = _inMotion;
 
     readyToUpdateDistanceZone = true;
 
@@ -108,7 +111,7 @@ class Vehicle {
 
     // the random color of the element: val between 0-360
     colorWheelAngle = _colorAngle;
-
+    
     bodyType = type_;
 
     // Add the box to the box2d world
@@ -118,7 +121,9 @@ class Vehicle {
     saturation = 100;
 
     colorElement = color(colorWheelAngle, saturation, brightness);
-    colorBreathing = color(colorWheelAngle, saturation, brightness, 100);
+    if(!inMotion){
+      colorBreathing = color(colorWheelAngle, saturation, brightness, 100);
+    }
     colorTrail = color(colorWheelAngle, saturation, brightness);
     colorWithinDistance = darkGrey;
 
@@ -142,11 +147,13 @@ class Vehicle {
 
     zone = new VehicleZone(this);
 
-    inMotion = _inMotion;
-
     if (!inMotion) {
       isReadyForCollision = true;
       zone.isBreathing = true;
+    } else {
+      calibrateLungRadius = 0;
+      lung = new VehicleLung(this);
+      lung.previousRadius = lung.radiusMax;
     }
 
     playerInBreathingZone = false;
@@ -224,16 +231,15 @@ class Vehicle {
 
   void update() {
 
-    println("vehicle location ", location.getState());
+    //println("vehicle location ", location.getState());
+    
+    
 
     ellipseMode(RADIUS);
 
     if (inMotion) { // VEHICLE IS IN MOTION
 
-      if (player.location.getState() == player.location.pLocBreathingState) {
-
-        checkIfInPlayerArea();
-      }
+ 
 
       inOtherVehicleDistanceZone = false;
       inOtherVehicleBreathingZone = false;
@@ -253,11 +259,13 @@ class Vehicle {
 
       location.update();
 
-      zone.update();
+      lung.update();
 
       centerBoid.update();
 
-      updateTrail();
+      //updateTrail();
+      
+      //println("vehicle lung state ", lung.getState());
 
       //checkRippleCount(); // vehicle stops moving and starts breathing // not in this version
     } else { // // VEHICLE IS NOT IN MOTION
@@ -748,13 +756,16 @@ class Vehicle {
 
   void display() {
 
-    if (inMotion) {
-      //trail.display();
-    } else {
+    if (!inMotion) {
       zone.display();
     }
 
     displayBlob();
+    
+    if (inMotion) {
+      //trail.display();
+      lung.display();
+    } 
 
     //displaySpheres();
   }
@@ -763,7 +774,7 @@ class Vehicle {
   //--------------------------------------------------------------
 
   void displayBlob() {
-
+    
     int many = spheres.size()-1;
 
     beginShape();

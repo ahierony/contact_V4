@@ -229,7 +229,7 @@ void setup() {
 
   //*********************************************************************
   //gamePadIsOn = false;
-  inputControls = InputControls.JOYSTICKS; //KEYBOARD; //JOYSTICKS;
+  inputControls = InputControls.KEYBOARD; //KEYBOARD; //JOYSTICKS;
   //protoSticks = false;
   debugMode = false;
   screengrab = false;
@@ -633,13 +633,6 @@ void draw() {
   }
 
 
-  // deprecated
-
-  if (playSound) {
-    trackData();
-  }
-
-
   if (audioIsPlaying) {
     audio.update();
   }
@@ -714,179 +707,6 @@ void draw() {
 } // draw
 
 
-// deprecated
-//*************** DATA TRACKING ***************************************
-
-void trackData() {
-
-  String player_movement;
-  String player_rotation;
-  int player_color;
-  String player_direction_vertical;
-  String player_direction_horizontal;
-  float player_speed;
-  String player_area_breathing;
-  float player_area_radius;
-  String player_lung_breathing;
-  float player_lung_radius;
-  boolean vehicle_in_area;
-  boolean vehicle_touch_player;
-  boolean player_in_zone;
-  boolean player_touch_vehicle;
-  float player_transitions_in_zone;
-
-  //
-
-
-  boolean printVals = false;
-  boolean printOSCs = true;
-
-
-  // ************* OSC *************
-  OscMessage osc_player_movement = new OscMessage("/player_movement");
-  OscMessage osc_player_rotation = new OscMessage("/player_rotation");
-  OscMessage osc_player_color = new OscMessage("/player_color");
-  OscMessage osc_player_direction_vertical = new OscMessage("/player_direction_vertical");
-  OscMessage osc_player_direction_horizontal = new OscMessage("/player_direction_horizontal");
-  OscMessage osc_player_speed = new OscMessage("/player_speed");
-  OscMessage osc_player_area_breathing = new OscMessage("/player_area_breathing");
-  OscMessage osc_player_area_radius = new OscMessage("/player_area_radius");
-  OscMessage osc_player_lung_breathing = new OscMessage("/player_lung_breathing");
-  OscMessage osc_player_lung_radius = new OscMessage("/player_lung_radius");
-
-  //OscMessage osc_player_transitions_in_zone = new OscMessage("/player_transitions_in_zone");
-
-
-  //println("");
-
-  //**** MOVEMENT ****
-  player_movement = data.trackPlayerMovement();
-  osc_player_movement.add(player_movement);
-  if (printVals) println("player movement: ", player_movement);
-  if (printOSCs) oscP5.send(osc_player_movement, myRemoteLocation);
-  //
-  //**** ROTATION ****
-  player_rotation = data.trackPlayerRotation();
-  osc_player_rotation.add(player_rotation);
-  if (printVals) println("player rotation: ", player_rotation);
-  if (printOSCs) oscP5.send(osc_player_rotation, myRemoteLocation);
-  //
-  //**** COLOR ****
-  player_color = data.trackPlayerColor();
-  osc_player_color.add(player_color);
-  if (printVals) println("player color : ", player_color);
-  if (printOSCs) oscP5.send(osc_player_color, myRemoteLocation);
-  //
-  //**** SPEED ****
-  player_speed = data.trackPlayerSpeed();
-  osc_player_speed.add(player_speed);
-  if (printVals) println("player speed : ", player_speed);
-  if (printOSCs) oscP5.send(osc_player_speed, myRemoteLocation);
-  //
-  //**** LUNG BREATHING ****
-  player_lung_breathing = data.trackPlayerLungBreathing();
-  osc_player_lung_breathing.add(player_lung_breathing);
-  if (printVals)println("player lung breathing ", player_lung_breathing);
-  if (printOSCs) oscP5.send(osc_player_lung_breathing, myRemoteLocation);
-  //
-  //**** LUNG RADIUS ****
-  player_lung_radius = data.trackPlayerLungRadius();
-  osc_player_lung_radius.add(player_lung_radius);
-  if (printVals)println("player lung radius ", player_lung_radius);
-  if (printOSCs) oscP5.send(osc_player_lung_radius, myRemoteLocation);
-
-  /*
-  //**** PLAYER IN ZONE ****
-   player_in_zone = data.trackPlayerInZone();
-   osc_player_in_zone.add(player_in_zone);
-   //println("player in zone: ", player_in_zone);
-   if (printOSCs) oscP5.send(osc_player_in_zone, myRemoteLocation);
-   */
-
-  //if (player.location.getState() == player.location.pLocVehicleZoneState || data.playerTouchedVehicle) {
-  /*
-    //**** PLAYER TRANSITIONS IN ZONE ****
-   player_transitions_in_zone = data.trackPlayerTransitionsInZone();
-   osc_player_transitions_in_zone.add(player_transitions_in_zone);
-   //println("player transitions in zone: ", player_transitions_in_zone);
-   if (player_transitions_in_zone > 0 && player_transitions_in_zone < player.blobRadius * 2) {
-   println("player transitions in zone: ", player_transitions_in_zone);
-   if (printOSCs) oscP5.send(osc_player_transitions_in_zone, myRemoteLocation);
-   }
-   */
-  //
-  //**** PLAYER IN ZONE ****
-
-
-  /*
-    player_in_zone = data.trackPlayerInZone();
-   osc_player_in_zone.add(player_in_zone);
-   println("player in zone: ", player_in_zone);
-   if (printOSCs) oscP5.send(osc_player_in_zone, myRemoteLocation);
-   */
-  //
-  /*
-    //**** PLAYER TOUCH VEHICLE ****
-   player_touch_vehicle = data.trackPlayerTouchVehicle();
-   osc_player_touch_vehicle.add(player_touch_vehicle);
-   if (player_touch_vehicle) println("vehicle touched player: ", player_touch_vehicle);
-   if (printOSCs) oscP5.send(osc_player_touch_vehicle, myRemoteLocation);
-   */
-  //
-  //} else if (player.location.getState() == player.location.pLocBreathingState || data.vehicleTouchedPlayer) {
-  if (player.location.getState() == player.location.pLocBreathingState) {
-    //
-    //**** AREA BREATHING ****
-    player_area_breathing =  data.trackPlayerAreaBreathing();
-    osc_player_area_breathing.add(player_area_breathing);
-    if (printVals) println("player area breathing: ", player_area_breathing);
-    if (printOSCs) oscP5.send(osc_player_area_breathing, myRemoteLocation);
-    //
-    //**** AREA RADIUS ****
-    player_area_radius =  data.trackPlayerAreaRadius();
-    osc_player_area_radius.add(player_area_radius);
-    if (printVals) println("player area radius: ", player_area_radius);
-    if (printOSCs) oscP5.send(osc_player_area_radius, myRemoteLocation);
-    //
-    /*
-    //**** VEHICLE IN AREA ****
-     vehicle_in_area = data.trackVehicleInArea();
-     osc_vehicle_in_area.add(vehicle_in_area);
-     if (printVals) println("vehicle in area: ", vehicle_in_area);
-     if (printOSCs) oscP5.send(osc_vehicle_in_area, myRemoteLocation);
-     //
-     //**** VEHICLE TOUCH PLAYER ****
-     vehicle_touch_player = data.trackVehicleTouchPlayer();
-     osc_vehicle_touch_player.add(vehicle_touch_player);
-     if (vehicle_touch_player) println("vehicle touched player: ", vehicle_touch_player);
-     if (printOSCs) oscP5.send(osc_vehicle_touch_player, myRemoteLocation);
-     */
-    //
-  } else if (player.location.getState() == player.location.pLocMovingState) {
-    //**** DIRECTION VERTICAL ****
-    player_direction_vertical =  data.trackPlayerDirectionVertical();
-    osc_player_direction_vertical.add(player_direction_vertical);
-    if (printVals) println("player direction vertical: ", player_direction_vertical);
-    if (printOSCs) oscP5.send(osc_player_direction_vertical, myRemoteLocation);
-    //
-    //**** DIRECTION HORIZONTAL ****
-    player_direction_horizontal =  data.trackPlayerDirectionHorizontal();
-    osc_player_direction_horizontal.add(player_direction_horizontal);
-    if (printVals) println("player direction horizontal: ", player_direction_horizontal);
-    if (printOSCs) oscP5.send(osc_player_direction_horizontal, myRemoteLocation);
-  }
-
-  //println("");
-}
-
-//*************** OSCP5 SOUND ***************************************
-
-void oscEvent(OscMessage theOscMessage) {
-  /* print the address pattern and the typetag of the received OscMessage */
-  print("### received an osc message.");
-  print(" addrpattern: "+theOscMessage.addrPattern());
-  println(" typetag: "+theOscMessage.typetag());
-}
 
 //--------------------------------------------------------------
 
