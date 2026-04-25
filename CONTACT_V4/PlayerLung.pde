@@ -85,10 +85,14 @@ class PlayerLung {
   void update() {
 
     state.update();
+    
+    println("colorangle update before ", player.colorWheelAngle);
 
     if (getState() == exhaleState) {
-      updateColorAngle();
+      //updateColorAngle();
     }
+    
+    println("colorangle update after ", player.colorWheelAngle);
 
     resetStates();
   }
@@ -133,7 +137,9 @@ class PlayerLung {
     ellipseMode(RADIUS);
 
     colorAngle = player.colorWheelAngle;
-
+    
+    println("colorangle display before ", player.colorWheelAngle);
+    /*
     if (getState() == exhaleState) {
 
       colorAngle = player.colorWheelAngle;
@@ -142,6 +148,11 @@ class PlayerLung {
 
       player.colorWheelAngle = colorAngle;
     }
+    */
+    
+    println("colorangle display after ", player.colorWheelAngle);
+    
+    println("colorAngle ", colorAngle);
 
     stroke(colorAngle, 100, 50);
     fill(colorAngle, 100, 50);

@@ -606,14 +606,14 @@ class Player {
 
     int colorAngle = colorWheelAngle;
 
-
+    /*
     if (lung.getState() == lung.exhaleState) {
 
       colorAngle = colorWheelAngle;
       colorAngle += 180;
       colorAngle %= 360;
     }
-
+*/
 
     int many = spheres.size()-1;
 
