@@ -17,7 +17,7 @@ class VehicleLungBreathe {
  
   VehicleLungBreathe() {
 
-    aVelocity = 0.01;     //0.025;
+    aVelocity = 0.0025;     //0.025;
 
     radiusMin = 100;
     radiusMax = 300;

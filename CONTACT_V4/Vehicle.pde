@@ -9,8 +9,6 @@ class Vehicle {
   VehicleLocation location;
   VehicleLung lung;
 
-  VehicleTrail trail;
-
   float calibrateLungRadius;
 
   float centerBoidRadius;
@@ -25,6 +23,8 @@ class Vehicle {
   float fadeSpeed;
 
   Vec2 posVecPixels;
+  Vec2 vPos;
+  PVector pos;
 
   float unitHalfSize;
 
@@ -93,6 +93,8 @@ class Vehicle {
   boolean distanceFinal;
   boolean breathingFinal;
 
+  VehicleMembrane membrane;
+
   //AUDIO
   //boolean vehicleBreathingAudioIsPlaying;
 
@@ -102,7 +104,7 @@ class Vehicle {
   Vehicle(float x, float y, int _colorAngle, boolean _inMotion, String type_, int unitNum_, Player p) {
 
     unitNum = unitNum_;
-    
+
     inMotion = _inMotion;
 
     readyToUpdateDistanceZone = true;
@@ -111,17 +113,18 @@ class Vehicle {
 
     // the random color of the element: val between 0-360
     colorWheelAngle = _colorAngle;
-    
+
     bodyType = type_;
 
     // Add the box to the box2d world
     posVecPixels = new Vec2(x, y);
+    pos = new PVector(x, y);
 
     brightness = 100;
     saturation = 100;
 
     colorElement = color(colorWheelAngle, saturation, brightness);
-    if(!inMotion){
+    if (!inMotion) {
       colorBreathing = color(colorWheelAngle, saturation, brightness, 100);
     }
     colorTrail = color(colorWheelAngle, saturation, brightness);
@@ -150,6 +153,7 @@ class Vehicle {
     if (!inMotion) {
       isReadyForCollision = true;
       zone.isBreathing = true;
+      membrane = new VehicleMembrane(x, y);
     } else {
       calibrateLungRadius = 0;
       lung = new VehicleLung(this);
@@ -173,8 +177,7 @@ class Vehicle {
     initialZoneGrowth = false;
     zoneAgainstZones = true;
 
-    Vec2 vPos = box2d.getBodyPixelCoord(centerBoid.body);
-    trail = new VehicleTrail(vPos.x, vPos.y);
+    vPos = box2d.getBodyPixelCoord(centerBoid.body);
 
     startedRipples = false;
 
@@ -231,15 +234,15 @@ class Vehicle {
 
   void update() {
 
-    //println("vehicle location ", location.getState());
-    
-    
+
+
+
 
     ellipseMode(RADIUS);
 
     if (inMotion) { // VEHICLE IS IN MOTION
 
- 
+
 
       inOtherVehicleDistanceZone = false;
       inOtherVehicleBreathingZone = false;
@@ -263,8 +266,6 @@ class Vehicle {
 
       centerBoid.update();
 
-      //updateTrail();
-      
       //println("vehicle lung state ", lung.getState());
 
       //checkRippleCount(); // vehicle stops moving and starts breathing // not in this version
@@ -303,31 +304,19 @@ class Vehicle {
        }
        */
 
-      zone.update();
+
       location.update();
 
-      posVecPixels.set(centerBoid.posVecPixels.x, centerBoid.posVecPixels.y);
-    }
-  }
+      zone.update();
 
-  //--------------------------------------------------------------
+      if (zone.getState() == zone.fullState) {
 
-  void updateTrail() {
-    //Vec2 boidPos;
-    //boidPos = box2d.getBodyPixelCoord(centerBoid.body);
-    trail.update();
-  }
-
-  //--------------------------------------------------------------
-
-  void checkRippleCount() {
-
-    if (trail.rippleCount == trail.maxRipples) {
-
-      if (checkOtherVehiclesAndPlayerDistanceZones()) {
-
-        stopMovingStartBreathing();
+        membrane.update(zone.radius);
       }
+
+
+
+      posVecPixels.set(centerBoid.posVecPixels.x, centerBoid.posVecPixels.y);
     }
   }
 
@@ -348,32 +337,6 @@ class Vehicle {
 
       return false;
     }
-  }
-
-  //--------------------------------------------------------------
-
-  void stopMovingStartBreathing() {
-
-    startedRipples = false;
-
-    location.setState(location.vInBreathingState);
-    zone.setState(zone.emptyState);
-
-    isReadyForCollision = true;
-    zone.isBreathing = true;
-
-    inMotion = false;
-    centerBoid.body.setType(BodyType.STATIC);
-    fadeValue = originFadeValue;
-    //vehicleTouchedPlayer = false;
-    trail.ripples.clear();
-    trail.rippleCount = 0;
-
-    Vec2 vPos = box2d.getBodyPixelCoord(centerBoid.body);
-
-    killBlob();
-    makeBlob(vPos);
-    zone.resetRadius();
   }
 
   // ********************************************************
@@ -412,21 +375,6 @@ class Vehicle {
   // APPLY FORCES
   // ********************************************************
 
-  //--------------------------------------------------------------
-  /*
-  void applyAreaForceOnVehicle(Player player) {
-   
-   float gravity = calculateGravity(colorWheelAngle, player.colorWheelAngle, 100000, colorAngleSwitchPlayer);
-   
-   Vec2 pos = centerBoid.body.getWorldCenter();
-   Vec2 playerPos = player.centerSphere.body.getWorldCenter();
-   
-   float mass = centerBoid.body.m_mass;
-   
-   Vec2 force = calculateForce(pos, playerPos, gravity, mass);
-   centerBoid.applyForce(force);
-   }
-   */
   //--------------------------------------------------------------
 
   void applyZoneForceOnVehicle(Vehicle otherV) {
@@ -510,67 +458,6 @@ class Vehicle {
     return force;
   }
 
-  // ********************************************************
-  // VEHICLE IN PLAYER AREA
-  // ********************************************************
-
-  void checkIfInPlayerArea() {
-
-    inPlayerDistanceArea = false;
-    inPlayerBreathingArea = false;
-
-    if (!touchedPlayer) {
-
-      if (isInPlayerArea(player.area.distanceRadius)) {
-
-        inPlayerDistanceArea = true;
-
-        if (isInPlayerArea(player.area.radius)) {
-
-          inPlayerBreathingArea = true;
-        } else {
-
-          inPlayerBreathingArea = false;
-        }
-      } else {
-
-        inPlayerDistanceArea = false;
-      }
-
-      if (!inPlayerDistanceArea) {
-        inPlayerBreathingArea = false;
-      }
-    } else { // touched player
-
-      touchedPlayer = false;
-
-      inPlayerDistanceArea = false;
-      inPlayerBreathingArea = false;
-
-      //player.area.setState(player.area.notBreathingState);
-      //player.location.setState(player.location.pLocMovingState
-    }
-  }
-
-
-  //--------------------------------------------------------------
-
-  boolean isInPlayerArea(float areaRadius) {
-
-    Vec2 vehiclePosPix = box2d.getBodyPixelCoord(centerBoid.body);
-
-    Vec2 playerPosPix = box2d.getBodyPixelCoord(player.centerSphere.body);
-
-    float d_pix = dist(vehiclePosPix.x, vehiclePosPix.y, playerPosPix.x, playerPosPix.y);
-
-    if (d_pix < areaRadius + blobRadius) {
-
-      return true;
-    } else {
-
-      return false;
-    }
-  }
 
   // ********************************************************
   // PLAYER IS IN VEHICLE ZONE
@@ -761,11 +648,19 @@ class Vehicle {
     }
 
     displayBlob();
-    
+
     if (inMotion) {
       //trail.display();
       lung.display();
-    } 
+    } else {
+
+      if ( zone.getState() == zone.fullState) {
+
+        membrane.display();
+      }
+    }
+
+
 
     //displaySpheres();
   }
@@ -774,7 +669,7 @@ class Vehicle {
   //--------------------------------------------------------------
 
   void displayBlob() {
-    
+
     int many = spheres.size()-1;
 
     beginShape();

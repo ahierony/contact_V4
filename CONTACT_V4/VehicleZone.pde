@@ -331,12 +331,14 @@ class FullZoneState implements VehicleZoneState {
 
   boolean readyToSetState;
   Vehicle vehicle;
+ 
 
   FullZoneState(Vehicle v) {
 
     vehicle = v;
 
     readyToSetState = true;
+    
   }
 
   //--------------------------------------------------------------
@@ -346,6 +348,7 @@ class FullZoneState implements VehicleZoneState {
     if (readyToSetState) {
       readyToSetState = false;
     }
+    
   }
 
   public boolean getReadyToSetState() {

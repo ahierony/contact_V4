@@ -229,7 +229,7 @@ void setup() {
 
   //*********************************************************************
   //gamePadIsOn = false;
-  inputControls = InputControls.KEYBOARD; //KEYBOARD; //JOYSTICKS;
+  inputControls = InputControls.JOYSTICKS; //KEYBOARD; //JOYSTICKS;
   //protoSticks = false;
   debugMode = false;
   screengrab = false;
@@ -589,8 +589,6 @@ void draw() {
         player.display();
       }
 
-      removeVehicles();
-
       popMatrix();
 
       popMatrix();
@@ -726,34 +724,6 @@ boolean fadeAnimationIsOver() {
   } else {
 
     return false;
-  }
-}
-
-//--------------------------------------------------------------
-
-void removeVehicles() {
-
-  for (int i = vehicles.size()-1; i >= 0; i--) {
-    Vehicle v = vehicles.get(i);
-
-    if (v.inMotion) {
-
-      if (v.trail.ripples.size() > 0) {
-
-        v.startedRipples = true;
-
-        // Particles that leave the screen, we delete them
-        // (note they have to be deleted from both the box2d world and our list
-
-        for (int j = v.trail.ripples.size()-1; j >= 0; j--) {
-          VehicleRipple r = v.trail.ripples.get(j);
-
-          if (r.opacity == 0) {
-            v.trail.ripples.remove(j);
-          }
-        }
-      }
-    }
   }
 }
 
