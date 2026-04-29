@@ -643,24 +643,22 @@ class Vehicle {
 
   void display() {
 
+
     if (!inMotion) {
-      zone.display();
-    }
-
-    displayBlob();
-
-    if (inMotion) {
-      //trail.display();
-      lung.display();
-    } else {
 
       if ( zone.getState() == zone.fullState) {
 
-        membrane.display();
+        membrane.display(colorBreathing);
+      } else {
+
+        zone.display();
       }
+
+      displayBlob();
+    } else {
+
+      lung.display();
     }
-
-
 
     //displaySpheres();
   }
@@ -699,7 +697,6 @@ class Vehicle {
     pos.x = int(pos.x);
     pos.y = int(pos.y);
 
-
     curveVertex(pos.x, pos.y);
 
     endShape(); // with or without cp,  not use CLOSE
@@ -713,7 +710,6 @@ class Vehicle {
   void displaySpheres() {
 
     centerBoid.display();
-
 
     for (int i=0; i < spheres.size(); i++) {
       VehicleSphere sphere = spheres.get(i);
