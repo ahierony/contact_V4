@@ -226,7 +226,8 @@ class Collision {
               p_touch_v_audio.play();
             }
 
-            killVehicle(vNum);
+            //killVehicle(vNum);
+            v.die();
 
             vehicleRemaining--;
 
@@ -309,7 +310,7 @@ class Collision {
    */
   //--------------------------------------------------------------
 
-
+  /*
   void killVehicle(int vNum) {
 
     Vehicle v = vehicles.get(vNum);
@@ -318,4 +319,5 @@ class Collision {
     v.location.setState(v.location.vInDeadState);
     //vehicles.remove(vNum);
   }
+  */
 }

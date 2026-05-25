@@ -33,7 +33,7 @@ class VehicleLungBreathe {
 
   void setExhale() {
     
-    aVelocity = 0.01;
+    aVelocity = 0.0075;
     
     currentM = "exhale";
     
@@ -45,7 +45,7 @@ class VehicleLungBreathe {
   
   void setInhale() {
     
-    aVelocity = 0.025;
+    aVelocity = 0.0075;
     
     currentM = "inhale";
     

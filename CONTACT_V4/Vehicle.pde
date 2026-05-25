@@ -266,10 +266,22 @@ class Vehicle {
 
       centerBoid.update();
 
-      //println("vehicle lung state ", lung.getState());
+
+      if (location.getState() == location.vInMovingState) {
+
+        if (lung.getState() == lung.emptyState) {
+          
+          
+          die();
+        }
+      } 
+
+      println("vehicle location state ", location.getState());
 
       //checkRippleCount(); // vehicle stops moving and starts breathing // not in this version
     } else { // // VEHICLE IS NOT IN MOTION
+
+      
 
       boolean otherVehicleAlreadyHasPlayerInDistanceZone = false;
 
@@ -622,6 +634,22 @@ class Vehicle {
   // DELETE VEHICLE
   // ********************************************************
 
+  void die() {
+
+    //Vehicle v = vehicles.get(vNum);
+
+    killBlob();
+    location.setState(location.vInDeadState);
+    
+    /*
+    if (vehicle.jointSphere.body.getType() == BodyType.DYNAMIC) {
+      vehicle.jointSphere.body.setType(BodyType.STATIC);
+    }
+    */
+
+    //vehicles.remove(vNum);
+  }
+
   void killBlob() {
 
     centerBoid.killBody();
@@ -636,6 +664,8 @@ class Vehicle {
      }
      */
   }
+
+
 
   // ********************************************************
   // DISPLAY
@@ -747,25 +777,30 @@ class Vehicle {
   //--------------------------------------------------------------
 
   void displayDeadVehicle() {
+    
+    println("display dead vehicle");
 
     ellipseMode(RADIUS);
 
     pushMatrix();
+    
+    Vec2 pos = box2d.getBodyPixelCoord(centerBoid.body);
 
-    translate(posVecPixels.x, posVecPixels.y);
+    translate(pos.x, pos.y);
 
     //if (showDistance) {
     // outer circle for checking distance
 
-    strokeWeight(3);
+    strokeWeight(10);
     stroke(darkGrey);
     //fill(vehicle.darkGrey);
-    noFill();
+    //noFill();
+    
     //circle(0, 0, zone.distanceRadius);
     //}
 
-    noFill();
-    circle(0, 0, zone.radius);
+    //noFill();
+    //circle(0, 0, zone.radius);
     // repel / attract zone (breathing)
 
     //strokeWeight(1);
@@ -774,6 +809,7 @@ class Vehicle {
 
     //fill(vehicle.colorBreathing); // TEST
     noFill();
+    //fill(0, 255, 0);
     circle(0, 0, radius);
 
     popMatrix();

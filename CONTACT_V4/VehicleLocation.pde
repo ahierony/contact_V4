@@ -145,6 +145,7 @@ class VInMovingState implements VehicleLocationState {
 
     //addTrailRipples();
     setLungState();
+    
   }
 
   public boolean getReadyToSetState() {
@@ -430,6 +431,8 @@ class VInDeadState implements VehicleLocationState {
 
       setReadyToSetState(false);
     }
+    
+    vehicle.displayDeadVehicle();
   }
 
   public boolean getReadyToSetState() {

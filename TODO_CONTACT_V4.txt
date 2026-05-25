@@ -4,9 +4,7 @@ TODO LIST
 
 1) RESTORE MOVING VEHICLE
 
-- update VehicleLocationState // done
-
-- moving vehicle not attracted by breathing vehicle // bug
+- vehicle comes out of membrane still refilling lung
 
 
 
@@ -20,6 +18,8 @@ TODO LIST
 2) ADD LUNG TO MOVING VEHICLE
 
 3) ADD VIBRATING MEMBRANDE TO BREATING VEHICLE
+
+4) Background color corresponds to health of environment
 
 ******************************************
 

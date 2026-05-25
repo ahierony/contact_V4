@@ -1,0 +1,31 @@
+-- player
+
+lung breath speed increase
+lung breath speed decrease
+
+movement speed
+roation speed (?)
+
+
+-- vehicle
+
+lung breath speed increase
+lung breath speed decrease
+
+movement speed
+
+
+-- environment
+
+player distress speed
+vehicle distress speed
+
+gravity threshold
+
+
+
+-- background
+
+transition speed
+
+what affects transition?
