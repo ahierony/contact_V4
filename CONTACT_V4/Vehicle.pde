@@ -276,7 +276,8 @@ class Vehicle {
         }
       } 
 
-      println("vehicle location state ", location.getState());
+      println("vehicle lung state ", lung.getState());
+      println("current M ", lung.breath.currentM);
 
       //checkRippleCount(); // vehicle stops moving and starts breathing // not in this version
     } else { // // VEHICLE IS NOT IN MOTION

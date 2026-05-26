@@ -4,9 +4,11 @@ TODO LIST
 
 1) RESTORE MOVING VEHICLE
 
-- vehicle comes out of membrane still refilling lung
+- vehicle stops lung refill outisde of zone
+- vehicle keeps lung refill after contact
 
 
+- add trails to vehicles > for painting
 
 
 

@@ -31,7 +31,7 @@ class VehicleLung {
   float radius;
   float radiusMin;
   float radiusMax;
- 
+
   float currentRadius;
   float movingRadius;
   float previousRadius;
@@ -50,7 +50,7 @@ class VehicleLung {
 
     radiusMin  = 32;
     radiusMax  = 105;
-    
+
     radius = radiusMax;
 
     isBreathing = true;
@@ -83,7 +83,7 @@ class VehicleLung {
   //--------------------------------------------------------------
 
   void update() {
-    
+
     state.update();
 
     if (getState() == exhaleState) {
@@ -100,6 +100,14 @@ class VehicleLung {
     if (getState() != emptyState) {
 
       emptyState.setReadyToSetState(true);
+    } 
+    
+    if (getState() == inhaleState) {
+      exhaleState.setReadyToSetState(true);
+    } 
+    
+    if (getState() == exhaleState) {
+      inhaleState.setReadyToSetState(true);
     }
   }
 
@@ -107,18 +115,18 @@ class VehicleLung {
   //--------------------------------------------------------------
 
   //--------------------------------------------------------------
-/*
+  /*
   void updateColorAngle() {
-
-    colorAngle = vehicle.colorWheelAngle;
-
-    colorAngle = vehicle.colorWheelAngle;
-    colorAngle += 180;
-    colorAngle %= 360;
-
-    vehicle.colorWheelAngle = colorAngle;
-  }
-*/
+   
+   colorAngle = vehicle.colorWheelAngle;
+   
+   colorAngle = vehicle.colorWheelAngle;
+   colorAngle += 180;
+   colorAngle %= 360;
+   
+   vehicle.colorWheelAngle = colorAngle;
+   }
+   */
   //--------------------------------------------------------------
 
   void display() {
@@ -133,18 +141,18 @@ class VehicleLung {
     ellipseMode(RADIUS);
 
     colorAngle = vehicle.colorWheelAngle;
-    
+
     /*
     if (getState() == exhaleState) {
+     
+     colorAngle = vehicle.colorWheelAngle;
+     colorAngle += 180;
+     colorAngle %= 360;
+     
+     vehicle.colorWheelAngle = colorAngle;
+     }
+     */
 
-      colorAngle = vehicle.colorWheelAngle;
-      colorAngle += 180;
-      colorAngle %= 360;
-
-      vehicle.colorWheelAngle = colorAngle;
-    }
-    */
-    
     stroke(colorAngle, 100, 50);
     fill(colorAngle, 100, 50);
 
@@ -157,17 +165,16 @@ class VehicleLung {
 
       strokeWeight(2);
       noFill();
-      
     } else {
-      
-      
+
+
       fill(colorAngle, vehicle.saturation, vehicle.brightness);
     }
 
     circle(0, 0, radius);
 
     popMatrix();
-    
+
     strokeWeight(1);
   }
 
@@ -199,9 +206,11 @@ class ExhaleStateVehicle implements VehicleLungState {
 
   void update() {
 
-    if (!vehicle.lung.startExhale) {
+    //if (!vehicle.lung.startExhale) {
+    if(readyToSetState) {
       vehicle.lung.breath.setExhale();
-      vehicle.lung.startExhale  = true;
+      //vehicle.lung.startExhale  = true;
+      readyToSetState = false;
       //updateExhale = true;
     }
 
@@ -242,10 +251,11 @@ class InhaleStateVehicle implements VehicleLungState {
 
   void update() {
 
-    if (!vehicle.lung.startInhale) {
-
+    //if (!vehicle.lung.startInhale) {
+    if(readyToSetState) {
       vehicle.lung.breath.setInhale();
-      vehicle.lung.startInhale  = true;
+      //vehicle.lung.startInhale  = true;
+      readyToSetState = false;
       // updateInhale = true;
     }
 
@@ -321,12 +331,12 @@ class EmptyStateVehicle implements VehicleLungState {
 
       vehicle.lung.breath.setEmpty();
       vehicle.lung.radius = map(vehicle.lung.breath.radius, vehicle.lung.breath.radiusMin, vehicle.lung.breath.radiusMax, vehicle.lung.radiusMin, vehicle.lung.radiusMax);
-      
+
       /*
       if (vehicle.jointSphere.body.getType() == BodyType.DYNAMIC) {
-        vehicle.jointSphere.body.setType(BodyType.STATIC);
-      }
-      */
+       vehicle.jointSphere.body.setType(BodyType.STATIC);
+       }
+       */
     }
   }
 

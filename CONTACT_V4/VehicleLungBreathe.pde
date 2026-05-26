@@ -17,7 +17,7 @@ class VehicleLungBreathe {
  
   VehicleLungBreathe() {
 
-    aVelocity = 0.0025;     //0.025;
+    aVelocity = 0.005; // 0.001;     //0.025;
 
     radiusMin = 100;
     radiusMax = 300;
@@ -30,10 +30,11 @@ class VehicleLungBreathe {
     currentM = "full";
     movement = "full";
   }  
+  
 
   void setExhale() {
     
-    aVelocity = 0.0075;
+    //aVelocity = 0.0075;
     
     currentM = "exhale";
     
@@ -45,7 +46,7 @@ class VehicleLungBreathe {
   
   void setInhale() {
     
-    aVelocity = 0.0075;
+    //aVelocity = 0.0075;
     
     currentM = "inhale";
     
