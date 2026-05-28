@@ -12,16 +12,6 @@ import org.jbox2d.common.*;
 import org.jbox2d.dynamics.*;
 import org.jbox2d.dynamics.joints.*;
 
-//*************** OSCP5 SOUND ***************************************
-
-import oscP5.*;
-import netP5.*;
-
-OscP5 oscP5;
-NetAddress myRemoteLocation;
-
-//*******************************************************************
-
 
 // A reference to our box2d world
 Box2DProcessing box2d;
@@ -161,10 +151,6 @@ Collision collision;
 // AUDIO
 //*********************************************************************
 
-// deprecated
-Data data;
-boolean playSound;
-
 // contact v1 sound
 
 import processing.sound.*;
@@ -179,9 +165,6 @@ SoundFile currentBackgroundSound;
 
 SoundFile p_enter_v_zone_audio;
 SoundFile p_touch_v_audio;
-
-Audio audio;
-boolean audioIsPlaying;
 
 //
 
@@ -229,12 +212,12 @@ void setup() {
 
   //*********************************************************************
   //gamePadIsOn = false;
-  inputControls = InputControls.KEYBOARD; //KEYBOARD; //JOYSTICKS;
+  inputControls = InputControls.JOYSTICKS; //KEYBOARD; //JOYSTICKS;
   //protoSticks = false;
   debugMode = false;
   screengrab = false;
   showDistance = false;
-  playSoundContactV1 = false;
+  playSoundContactV1 = true;
   //playSound = false; // enables sound // current sound until Woohun updates
   //audioIsPlaying = false; // new sound by woohun not ready yet
   //*********************************************************************
@@ -298,9 +281,6 @@ void setup() {
   collision = new Collision();
 
   bgTrailBox = new BgTrailBox(unitTotal, unit_w, unit_h);
-
-  data = new Data(); // deprecated
-  audio = new Audio();
 
   setBackgroundTimer();
 
@@ -409,7 +389,6 @@ void resetContact() {
   box2d = null;
   vehicles.clear();
   collision = null;
-  data = null;
 
   for (int i=0; i < bg.units.length; i++) {
     bg.units[i] = null;
@@ -434,9 +413,6 @@ void resetContact() {
   vehicles = new ArrayList<Vehicle>();
   bg = new Bg(unitTotal);
   collision = new Collision();
-  data = new Data(); // deprecated
-
-  audio = new Audio();
 
   bgTrailBox = new BgTrailBox(unitTotal, unit_w, unit_h);
 
@@ -628,11 +604,6 @@ void draw() {
      
      popMatrix();
      */
-  }
-
-
-  if (audioIsPlaying) {
-    audio.update();
   }
 
   // TRAILS START

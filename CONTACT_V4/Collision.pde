@@ -206,21 +206,10 @@ class Collision {
 
           if (v.isReadyForCollision) {
 
-            //data.playerTouchedVehicle = true;
-
-            if (playSound) {
-              data.trackPlayerTouchedVehicle(true);
-            }
-
             //println("player touched vehicle ");
             //println(player.location.getState());
 
             vehicleWasTouched = true;
-
-
-            if (audioIsPlaying) {
-              audio.playerIsTouchingVehicle_playAudio();
-            }
 
             if (playSoundContactV1) {
               p_touch_v_audio.play();

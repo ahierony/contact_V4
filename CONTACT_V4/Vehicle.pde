@@ -779,8 +779,6 @@ class Vehicle {
 
   void displayDeadVehicle() {
     
-    println("display dead vehicle");
-
     ellipseMode(RADIUS);
 
     pushMatrix();

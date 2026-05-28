@@ -112,9 +112,7 @@ class PlayerLocation {
 
             setState(pLocVehicleZoneState);
 
-            if (playSound) {
-              data.trackPlayerInZone(true);
-            }
+            
           }
         }
       } else {
@@ -170,9 +168,7 @@ class PlayerLocation {
 
           setState(pLocMovingState);
 
-          if (playSound) {
-            data.trackPlayerInZone(false);
-          }
+          
         }
       } else {
 
@@ -182,9 +178,7 @@ class PlayerLocation {
 
             setState(pLocMovingState);
 
-            if (playSound) {
-              data.trackPlayerInZone(false);
-            }
+            
           }
         }
       }

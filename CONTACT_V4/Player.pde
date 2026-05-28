@@ -415,12 +415,7 @@ class Player {
           if (v.inPlayerBreathingArea) {
             vehicleInBreathingArea = true;
 
-            if (playSound) {
-              if (checkForVehiclesMovingInOutofPlayerArea) {
-                data.trackVehicleInArea(true);
-                checkForVehiclesMovingInOutofPlayerArea = false;
-              }
-            }
+            
           }
         }
       }
@@ -429,12 +424,7 @@ class Player {
     if (!vehicleInDistanceArea) {
       vehicleInBreathingArea = false;
 
-      if (playSound) {
-        if (!checkForVehiclesMovingInOutofPlayerArea) {
-          data.trackVehicleInArea(false);
-          checkForVehiclesMovingInOutofPlayerArea = true;
-        }
-      }
+      
     }
   }
 
