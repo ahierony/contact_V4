@@ -7,6 +7,8 @@ TODO LIST
 - vehicle stops lung refill outisde of zone
 - vehicle keeps lung refill after contact
 
+- only one vehicle / player at a time. If more, they get shut out
+
 
 - add trails to vehicles > for painting
 

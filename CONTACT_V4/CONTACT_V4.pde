@@ -212,12 +212,12 @@ void setup() {
 
   //*********************************************************************
   //gamePadIsOn = false;
-  inputControls = InputControls.JOYSTICKS; //KEYBOARD; //JOYSTICKS;
+  inputControls = InputControls.KEYBOARD; //KEYBOARD; //JOYSTICKS;
   //protoSticks = false;
   debugMode = false;
   screengrab = false;
   showDistance = false;
-  playSoundContactV1 = true;
+  playSoundContactV1 = false;
   //playSound = false; // enables sound // current sound until Woohun updates
   //audioIsPlaying = false; // new sound by woohun not ready yet
   //*********************************************************************

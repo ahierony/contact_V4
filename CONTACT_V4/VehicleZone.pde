@@ -106,6 +106,12 @@ class VehicleZone {
 
   void display() {
 
+    //
+
+    if (vehicle.membrane.currentRadius > 0) {
+      radius = vehicle.membrane.currentRadius;
+    }
+
     ellipseMode(RADIUS);
 
     pushMatrix();
@@ -123,10 +129,21 @@ class VehicleZone {
 
     // repel / attract zone (breathing)
 
+    // debug with membrane
+    /*
+    strokeWeight(3);
+     stroke(vehicle.darkGrey);
+     noFill();
+     */
+
+    // without membrane
+
     strokeWeight(1);
     stroke(vehicle.colorBreathing);
-
     fill(vehicle.colorBreathing); // TEST
+
+
+    //circle(0, 0, vehicle.membrane.currentRadius);
     circle(0, 0, radius);
 
     popMatrix();
@@ -150,7 +167,7 @@ class VehicleZone {
     case "breathing":
 
       if (vehicle.breath.direction == "inhale") {
-        
+
         setState(inhaleState);
 
         switchFromExhaleToInhale = true;
@@ -158,7 +175,7 @@ class VehicleZone {
         if (vehicle.otherBreathingVehicleComingClose) {
 
           if (switchFromInhaleToExhale) {
-            
+
             vehicle.breath.aVelocity = 0;
 
             //vehicle.breath.aVelocity *= -1;
@@ -166,7 +183,7 @@ class VehicleZone {
           }
         }
       } else if (vehicle.breath.direction == "exhale") {
-        
+
         setState(exhaleState);
 
         switchFromInhaleToExhale = true;
@@ -185,17 +202,17 @@ class VehicleZone {
 
     case "full":
       setState(fullState);
-      
+
       isBreathing = false;
       /*
       if (vehicle.playerInBreathingZone || vehicle.otherVehicleInBreathingZone) {
-
-        isBreathing = false;
-      } else { // no vehicle in area
-
-        isBreathing = true;
-      }
-      */
+       
+       isBreathing = false;
+       } else { // no vehicle in area
+       
+       isBreathing = true;
+       }
+       */
       break;
     default:
       break;
@@ -331,14 +348,13 @@ class FullZoneState implements VehicleZoneState {
 
   boolean readyToSetState;
   Vehicle vehicle;
- 
+
 
   FullZoneState(Vehicle v) {
 
     vehicle = v;
 
     readyToSetState = true;
-    
   }
 
   //--------------------------------------------------------------
@@ -348,7 +364,6 @@ class FullZoneState implements VehicleZoneState {
     if (readyToSetState) {
       readyToSetState = false;
     }
-    
   }
 
   public boolean getReadyToSetState() {

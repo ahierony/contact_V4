@@ -193,7 +193,7 @@ class Vehicle {
     otherBreathingVehicleComingClose = false;
 
     colorAngleSwitchPlayer = 30; // 50; //45;
-    colorAngleSwitchVehicle = 90; //5; //7; //15; //7;
+    colorAngleSwitchVehicle = 0; //90; //5; //7; //15; //7;
 
     initialize();
   }
@@ -234,15 +234,9 @@ class Vehicle {
 
   void update() {
 
-
-
-
-
     ellipseMode(RADIUS);
 
     if (inMotion) { // VEHICLE IS IN MOTION
-
-
 
       inOtherVehicleDistanceZone = false;
       inOtherVehicleBreathingZone = false;
@@ -276,8 +270,8 @@ class Vehicle {
         }
       } 
 
-      println("vehicle lung state ", lung.getState());
-      println("current M ", lung.breath.currentM);
+      //println("vehicle lung state ", lung.getState());
+      //println("current M ", lung.breath.currentM);
 
       //checkRippleCount(); // vehicle stops moving and starts breathing // not in this version
     } else { // // VEHICLE IS NOT IN MOTION
@@ -437,12 +431,12 @@ class Vehicle {
     }
 
     if (angleDiff > angleSwitch) {
-      //println("go away");
+      println("go away");
       outcomingForceDirection = -1;
 
       gravity = map(angleDiff, angleSwitch, 180, 0, gravityVal);
     } else {
-      //println("come closer");
+      println("come closer");
       outcomingForceDirection = 1;
 
       gravity = map(angleDiff, 0, angleSwitch, gravityVal, 0);
@@ -513,7 +507,7 @@ class Vehicle {
 
     float d_pix = dist(vehiclePosPix.x, vehiclePosPix.y, playerPosPix.x, playerPosPix.y);
 
-    if (d_pix < zoneRadius + p.blobRadius) {
+    if (d_pix < zoneRadius - p.blobRadius) {
 
       colorWithinDistance = colorBreathing;
 
@@ -679,7 +673,8 @@ class Vehicle {
 
       if ( zone.getState() == zone.fullState) {
 
-        membrane.display(colorBreathing);
+        //membrane.display(colorBreathing);
+        zone.display();
       } else {
 
         zone.display();
