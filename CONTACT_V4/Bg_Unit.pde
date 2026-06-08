@@ -39,7 +39,7 @@ class Bg_Unit {
         createVehicle(true, "DYNAMIC"); // true
       } else {
 
-        createVehicle(false, "DYNAMIC"); // false
+        createVehicle(false, "STATIC"); // false
       }
     }
 
@@ -47,7 +47,8 @@ class Bg_Unit {
 
     readyToCreateAgent = false;
 
-    Vec2 pPos = box2d.getBodyPixelCoord(player.centerSphere.body);
+    //Vec2 pPos = box2d.getBodyPixelCoord(player.centerSphere.body);
+    
     //trailLeft = new PlayerTrail(pPos.x, pPos.y);
     //trailRight = new PlayerTrail(pPos.x, pPos.y);
   }

@@ -11,44 +11,7 @@ class Collision {
   //--------------------------------------------------------------
 
 
-  // RIPPLES AGAINST VEHICLE
-  /*
-  void checkVehiclesAgainstVehicleRipples() {
-   
-   for (int i = 0; i < vehicles.size(); i++) {
-   
-   Vehicle v = vehicles.get(i);
-   
-   for (int j = 0; j < vehicles.size(); j++) {
-   
-   Vehicle o = vehicles.get(j);
-   
-   if (v != o) {
-   
-   if (o.inMotion) {
-   
-   if (o.trail.ripples != null) {
-   
-   for (int k = 0; k < o.trail.ripples.size(); k++) {
-   
-   VehicleRipple r = o.trail.ripples.get(k);
-   
-   Vec2 thisPosPix = box2d.getBodyPixelCoord(v.centerBoid.body);
-   
-   float d_pix = dist(thisPosPix.x, thisPosPix.y, r.x, r.y);
-   
-   if (d_pix < v.blobRadius + (r.radius)) {
-   
-   r.opacity = 0;
-   }
-   }
-   }
-   }
-   }
-   }
-   }
-   }
-   */
+ 
   //--------------------------------------------------------------
   boolean readyToGiveBirth = false;
 
@@ -151,38 +114,6 @@ class Collision {
 
   //--------------------------------------------------------------
 
-  // RIPPLES AGAINST PLAYER
-   /*
-  void checkPlayerAgainstVehicleRipples() {
-
-    for (int j = 0; j < vehicles.size(); j++) {
-
-      Vehicle o = vehicles.get(j);
-
-      if (o.inMotion) {
-
-        if (o.trail.ripples != null) {
-
-          for (int k = 0; k < o.trail.ripples.size(); k++) {
-
-            VehicleRipple r = o.trail.ripples.get(k);
-
-            Vec2 playerPosPix = box2d.getBodyPixelCoord(player.centerSphere.body);
-
-            float d_pix = dist(playerPosPix.x, playerPosPix.y, r.x, r.y);
-
-            if (d_pix < player.blobRadius + (r.radius)) {
-
-              r.opacity = 0;
-            }
-          }
-        }
-      }
-    }
-  }
-*/
-  //--------------------------------------------------------------
-
 
   // PLAYER AGAINST VEHICLES
 
@@ -216,14 +147,15 @@ class Collision {
             }
 
             //killVehicle(vNum);
-            v.die();
+            v.collideWithPlayer();
 
             vehicleRemaining--;
 
             //bgTrailBox.increaseStrokeWeight();
 
-            println("vehicles remaining ", vehicleRemaining);
-
+            //println("vehicles remaining ", vehicleRemaining);
+            
+            println("player collided");
 
             v.playerInDistanceZone = false;
             //player.location.setState(player.location.pLocMovingState);
@@ -237,76 +169,6 @@ class Collision {
     return vehicleWasTouched;
   }
 
-  /*
-  boolean checkPlayerAgainstVehicleInArea() { // called from player location
-   
-   boolean playerWasTouched = false;
-   
-   int vNum = 0;
-   
-   for (int i = 0; i < vehicles.size(); i++) {
-   
-   Vehicle v = vehicles.get(i);
-   
-   for (VehicleSphere vs : v.spheres) {
-   
-   if (vs.wasTouched) {
-   
-   playerWasTouched = true;
-   vNum = i;
-   
-   vs.wasTouched = false;
-   
-   if (player.location.getState() == player.location.pLocBreathingState) { // in player area
-   
-   //data.vehicleTouchedPlayer = true;
-   
-   if (playSound) {
-   data.trackVehicleTouchedPlayer(true);
-   }
-   
-   
-   playerWasTouched = true;
-   
-   killVehicle(vNum);
-   
-   break;
-   }
-   }
-   }
-   }
-   
-   return playerWasTouched;
-   }
-   */
-
-  //--------------------------------------------------------------
-  /*
-  void switchVehicleFromBreathingToMoving(Vehicle v) {
-   
-   v.location.setState(v.location.vInMovingState);
-   v.zone.setState(v.zone.inMotionNoZoneState);
-   
-   // // vehicle is breathing zone / no motion
-   v.inMotion = true;
-   v.zone.isBreathing = true;
-   bg.units[v.unitNum].containsVehicle = false;
-   v.playerInDistanceZone = false;
-   v.playerInBreathingZone = false;
-   
-   v.centerBoid.status = "flee";
-   }
-   */
   //--------------------------------------------------------------
 
-  /*
-  void killVehicle(int vNum) {
-
-    Vehicle v = vehicles.get(vNum);
-
-    v.killBlob();
-    v.location.setState(v.location.vInDeadState);
-    //vehicles.remove(vNum);
-  }
-  */
 }

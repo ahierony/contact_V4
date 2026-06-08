@@ -120,7 +120,7 @@ class Player {
   int right_maxRangeX = 1023;
   int right_minRangeY = 0;
   int right_maxRangeY = 1023;
-
+  
   // ********************************************************
   // CONSTRUCTOR
   // ********************************************************

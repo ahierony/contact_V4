@@ -19,6 +19,8 @@ class PlayerLocation {
   Vehicle currentVehicle;
 
   boolean isHit;
+  
+  boolean playerInLungRefillZone;
 
 
   //--------------------------------------------------------------
@@ -34,6 +36,7 @@ class PlayerLocation {
     setState(pLocMovingState);
 
     isHit = false;
+    playerInLungRefillZone = false;
   }
 
   //--------------------------------------------------------------
@@ -269,10 +272,12 @@ class PLocVehicleZoneState implements PlayerLocationState {
 
   boolean readyToSetState;
   Player player;
+  boolean playerInLungRefillZone;
 
   PLocVehicleZoneState(Player p) {
 
     readyToSetState = true;
+    playerInLungRefillZone = false;
 
     player = p;
   }
@@ -285,7 +290,7 @@ class PLocVehicleZoneState implements PlayerLocationState {
 
       setReadyToSetState(false);
     }
-
+    
     if (player.lung.getState() != player.lung.emptyState) {
       player.lung.setState(player.lung.holdState);
     }
@@ -295,9 +300,9 @@ class PLocVehicleZoneState implements PlayerLocationState {
       player.location.isHit = true;
     }
 
-    //if (player.location.isHit) {
+    if(player.location.playerInLungRefillZone){
       setLungState();
-    //}
+    }
 
     checkImpulseState();
   }

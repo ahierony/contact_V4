@@ -95,6 +95,8 @@ class Vehicle {
 
   VehicleMembrane membrane;
 
+  boolean repellPlayer;
+
   //AUDIO
   //boolean vehicleBreathingAudioIsPlaying;
 
@@ -193,7 +195,9 @@ class Vehicle {
     otherBreathingVehicleComingClose = false;
 
     colorAngleSwitchPlayer = 30; // 50; //45;
-    colorAngleSwitchVehicle = 0; //90; //5; //7; //15; //7;
+    colorAngleSwitchVehicle = 90; //90; //5; //7; //15; //7;
+
+    repellPlayer = false;
 
     initialize();
   }
@@ -264,11 +268,11 @@ class Vehicle {
       if (location.getState() == location.vInMovingState) {
 
         if (lung.getState() == lung.emptyState) {
-          
-          
+
+
           die();
         }
-      } 
+      }
 
       //println("vehicle lung state ", lung.getState());
       //println("current M ", lung.breath.currentM);
@@ -276,7 +280,7 @@ class Vehicle {
       //checkRippleCount(); // vehicle stops moving and starts breathing // not in this version
     } else { // // VEHICLE IS NOT IN MOTION
 
-      
+
 
       boolean otherVehicleAlreadyHasPlayerInDistanceZone = false;
 
@@ -402,8 +406,15 @@ class Vehicle {
 
   void applyZoneForceOnPlayer(Player player) { // 100000 / 300000
 
+    
+    if (repellPlayer) {
+      colorAngleSwitchPlayer = 1;
+    } else {
+      colorAngleSwitchPlayer = 30;
+    }
+    
     float gravity = calculateGravity(player.colorWheelAngle, colorWheelAngle, 100000, colorAngleSwitchPlayer); // 100000 // 75000
-
+    
     Vec2 pos = centerBoid.body.getWorldCenter();
     Vec2 playerPos = player.centerSphere.body.getWorldCenter();
 
@@ -507,9 +518,15 @@ class Vehicle {
 
     float d_pix = dist(vehiclePosPix.x, vehiclePosPix.y, playerPosPix.x, playerPosPix.y);
 
-    if (d_pix < zoneRadius - p.blobRadius) {
+    if (d_pix < zoneRadius + p.blobRadius) { //  - p.blobRadius
 
       colorWithinDistance = colorBreathing;
+
+      if (d_pix < zoneRadius - p.blobRadius) {
+        player.location.playerInLungRefillZone = true;
+      } else {
+        player.location.playerInLungRefillZone = false;
+      }
 
       return true;
     } else {
@@ -624,6 +641,14 @@ class Vehicle {
     }
   }
 
+  // ********************************************************
+  // AFTER COLLISION WITH PLAYER
+  // ********************************************************
+
+  void collideWithPlayer() {
+
+    repellPlayer = true;
+  }
 
   // ********************************************************
   // DELETE VEHICLE
@@ -635,12 +660,12 @@ class Vehicle {
 
     killBlob();
     location.setState(location.vInDeadState);
-    
+
     /*
     if (vehicle.jointSphere.body.getType() == BodyType.DYNAMIC) {
-      vehicle.jointSphere.body.setType(BodyType.STATIC);
-    }
-    */
+     vehicle.jointSphere.body.setType(BodyType.STATIC);
+     }
+     */
 
     //vehicles.remove(vNum);
   }
@@ -773,11 +798,11 @@ class Vehicle {
   //--------------------------------------------------------------
 
   void displayDeadVehicle() {
-    
+
     ellipseMode(RADIUS);
 
     pushMatrix();
-    
+
     Vec2 pos = box2d.getBodyPixelCoord(centerBoid.body);
 
     translate(pos.x, pos.y);
@@ -789,7 +814,7 @@ class Vehicle {
     stroke(darkGrey);
     //fill(vehicle.darkGrey);
     //noFill();
-    
+
     //circle(0, 0, zone.distanceRadius);
     //}
 

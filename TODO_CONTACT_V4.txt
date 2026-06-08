@@ -4,10 +4,15 @@ TODO LIST
 
 1) RESTORE MOVING VEHICLE
 
-- vehicle stops lung refill outisde of zone
+- vehicle stops lung refill outisde of zone // done
 - vehicle keeps lung refill after contact
 
-- only one vehicle / player at a time. If more, they get shut out
+before starting to alter environment states
+
+- being in the membrane means being fully in in order to get a refill
+- more than one agent or player but only one gets to make contact
+- if contact with player or vehicle, everybody gets shut out, repelled until nobody is in the membrane
+
 
 
 - add trails to vehicles > for painting
