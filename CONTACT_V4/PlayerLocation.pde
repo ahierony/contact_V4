@@ -234,11 +234,6 @@ class PLocMovingState implements PlayerLocationState {
 
     if (readyToSetState) {
 
-      player.area.setState(player.area.notBreathingState);
-
-      player.area.isVisible = false;
-      player.area.isBreathing = false;
-
       setReadyToSetState(false);
     }
 
@@ -297,7 +292,7 @@ class PLocVehicleZoneState implements PlayerLocationState {
 
     if (collision.checkPlayerAgainstVehicleInZone()) {
       //updateCollision();
-      player.location.isHit = true;
+      //player.location.isHit = true;
     }
 
     if(player.location.playerInLungRefillZone){

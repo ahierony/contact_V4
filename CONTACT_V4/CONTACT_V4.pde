@@ -262,14 +262,14 @@ void setup() {
   setupb2d();
 
   unitTotal = int(pow(rowLength, 2));
-    
-    /*
-  println("rowLength ", rowLength);
-  println("unitTotal ", unitTotal);
 
-  println("unit_w ", unit_w);
-  println("unit_h ", unit_h);
-*/
+  /*
+  println("rowLength ", rowLength);
+   println("unitTotal ", unitTotal);
+   
+   println("unit_w ", unit_w);
+   println("unit_h ", unit_h);
+   */
 
   // Make a new player
   playerCenterSpherePosVecPixels = new Vec2(0, 0);
@@ -540,30 +540,20 @@ void draw() {
       //collision.checkPlayerAgainstVehicleRipples();
       collision.checkVehicleAgainstVehicle();
 
-      if (player.area.isVisible) {
 
-        player.display();
 
-        for (Vehicle v : vehicles) {
+      for (Vehicle v : vehicles) {
 
-          if (!v.inMotion) {
-            v.run(vehicles);
-          } else {
-            v.run(vehicles);
-          }
+        if (!v.inMotion) {
+          v.run(vehicles);
+        } else {
+          v.run(vehicles);
         }
-      } else { // recordSVG
-
-        for (Vehicle v : vehicles) {
-          if (!v.inMotion) {
-            v.run(vehicles);
-          } else {
-            v.run(vehicles);
-          }
-        }
-
-        player.display();
       }
+
+
+      player.display();
+
 
       popMatrix();
 

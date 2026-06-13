@@ -39,7 +39,7 @@ class CustomListener implements ContactListener {
      // If object 1 is a Box, then object 2 must be a particle
      
      if (o1.getClass() == PlayerSphere.class && o2.getClass() == VehicleSphere.class) {
-      PlayerSphere ps = (PlayerSphere) o1;
+      //PlayerSphere ps = (PlayerSphere) o1;
       
       VehicleSphere vs = (VehicleSphere) o2;
         
@@ -50,14 +50,24 @@ class CustomListener implements ContactListener {
     } 
     // If object 2 is a Box, then object 1 must be a particle
     else if (o1.getClass() == VehicleSphere.class && o2.getClass() == PlayerSphere.class) {
-      PlayerSphere ps = (PlayerSphere) o2;
+      //PlayerSphere ps = (PlayerSphere) o2;
       VehicleSphere vs = (VehicleSphere) o1;
         
       vs.wasTouched = true; // vehicle was touched
       
-      //println("vehicle was touched by player");
+    } 
+    else if (o1.getClass() == VehicleSphere.class && o2.getClass() == VehicleSphere.class) {
+      VehicleSphere vs1 = (VehicleSphere) o1;
+      VehicleSphere vs2 = (VehicleSphere) o2;
+        
+      if(vs1.body.getType() == BodyType.STATIC){
+        vs1.wasTouched = true; // vehicle was touched
+      } else if(vs2.body.getType() == BodyType.STATIC){
+        vs2.wasTouched = true; // vehicle was touched
+      }
       
     } 
+    
     
   }
 
@@ -93,6 +103,19 @@ class CustomListener implements ContactListener {
       VehicleSphere vs = (VehicleSphere) o1;
         
       vs.wasTouched = false; // vehicle was touched
+      
+      //println("vehicle was touched by player");
+      
+    } 
+    else if (o1.getClass() == VehicleSphere.class && o2.getClass() == VehicleSphere.class) {
+      VehicleSphere vs1 = (VehicleSphere) o1;
+      VehicleSphere vs2 = (VehicleSphere) o2;
+        
+      if(vs1.body.getType() == BodyType.STATIC){
+        vs1.wasTouched = false; // vehicle was touched
+      } else if(vs2.body.getType() == BodyType.STATIC){
+        vs2.wasTouched = false; // vehicle was touched
+      }
       
       //println("vehicle was touched by player");
       

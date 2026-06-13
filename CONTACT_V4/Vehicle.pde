@@ -74,6 +74,8 @@ class Vehicle {
 
   int colorAngleSwitchPlayer;
   int colorAngleSwitchVehicle;
+  int baseSwitchPlayer;
+  int baseSwitchVehicle;
 
   Player player;
 
@@ -95,7 +97,8 @@ class Vehicle {
 
   VehicleMembrane membrane;
 
-  boolean repellPlayer;
+  boolean repellOther;
+
 
   //AUDIO
   //boolean vehicleBreathingAudioIsPlaying;
@@ -194,10 +197,12 @@ class Vehicle {
 
     otherBreathingVehicleComingClose = false;
 
-    colorAngleSwitchPlayer = 30; // 50; //45;
-    colorAngleSwitchVehicle = 90; //90; //5; //7; //15; //7;
+    baseSwitchPlayer = 30;
+    baseSwitchVehicle = 360; // 90;
+    colorAngleSwitchPlayer = baseSwitchPlayer; // 50; //45;
+    colorAngleSwitchVehicle = baseSwitchVehicle; //90; //5; //7; //15; //7;
 
-    repellPlayer = false;
+    repellOther = false;
 
     initialize();
   }
@@ -301,7 +306,9 @@ class Vehicle {
 
         checkIfPlayerInZone();
       }
-      //checkIfOtherVehicleInZone();
+      
+      
+      checkIfOtherVehicleInZone();
 
       /*
       if (playerInDistanceZone && otherBreathingVehicleComingClose) {
@@ -328,7 +335,18 @@ class Vehicle {
 
 
       posVecPixels.set(centerBoid.posVecPixels.x, centerBoid.posVecPixels.y);
-    }
+
+      // after collision with either vehicle or player, zone repells until nobody is in the zone
+      if (repellOther) {
+      
+        if (!otherVehicleInBreathingZone && !playerInBreathingZone) {
+          repellOther = false;
+          zone.setState(zone.fullState);
+  
+        }
+      }
+   
+    } // VEHICLE IS NOT IN MOTION
   }
 
   //--------------------------------------------------------------
@@ -390,6 +408,12 @@ class Vehicle {
 
   void applyZoneForceOnVehicle(Vehicle otherV) {
 
+    if (otherV.repellOther) {
+      colorAngleSwitchVehicle = 1;
+    } else {
+      colorAngleSwitchVehicle = baseSwitchVehicle;
+    }
+
     float gravity = calculateGravity(colorWheelAngle, otherV.colorWheelAngle, 100000, colorAngleSwitchVehicle);
 
     Vec2 pos = centerBoid.body.getWorldCenter();
@@ -406,15 +430,15 @@ class Vehicle {
 
   void applyZoneForceOnPlayer(Player player) { // 100000 / 300000
 
-    
-    if (repellPlayer) {
+
+    if (repellOther) {
       colorAngleSwitchPlayer = 1;
     } else {
-      colorAngleSwitchPlayer = 30;
+      colorAngleSwitchPlayer = baseSwitchPlayer;
     }
-    
+
     float gravity = calculateGravity(player.colorWheelAngle, colorWheelAngle, 100000, colorAngleSwitchPlayer); // 100000 // 75000
-    
+
     Vec2 pos = centerBoid.body.getWorldCenter();
     Vec2 playerPos = player.centerSphere.body.getWorldCenter();
 
@@ -509,6 +533,7 @@ class Vehicle {
       playerInBreathingZone = false;
     }
   }
+
 
   boolean isPlayerInZone(Player p, float zoneRadius) {
 
@@ -642,12 +667,14 @@ class Vehicle {
   }
 
   // ********************************************************
-  // AFTER COLLISION WITH PLAYER
+  // AFTER COLLISION
   // ********************************************************
 
-  void collideWithPlayer() {
+  void collided() {
 
-    repellPlayer = true;
+    repellOther = true;
+    
+    println("collision!");
   }
 
   // ********************************************************

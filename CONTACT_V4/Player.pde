@@ -83,7 +83,6 @@ class Player {
   int saturation;
 
   PlayerLung lung;
-  PlayerArea area;
   PlayerLocation location;
   PlayerMotion motion;
 
@@ -187,7 +186,6 @@ class Player {
     lockedEye = "none";
 
     lung = new PlayerLung(this);
-    area = new PlayerArea(this);
     location = new PlayerLocation(this);
     motion = new PlayerMotion(this);
 
@@ -208,7 +206,7 @@ class Player {
   // UPDATE
   // ********************************************************
 
-  void update(float _theta) {
+  void update(float _theta) {  
 
     playerTheta = _theta;
 
@@ -248,7 +246,6 @@ class Player {
 
 
     lung.update();
-    area.update();
 
     //areaRadius = area.radius;
 
@@ -256,12 +253,6 @@ class Player {
 
     motion.update();
 
-
-
-    if (location.getState() == location.pLocMovingState || location.getState() == location.pLocVehicleZoneState) {
-
-      area.setState(area.notBreathingState);
-    }
 
    // updateTrail();
     
@@ -554,11 +545,6 @@ class Player {
 
     if (debugMode)
       displayBorderRadius();
-
-    if (area.isVisible) {
-
-      area.display();
-    }
 
     displayBlob();
 

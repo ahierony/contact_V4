@@ -1,6 +1,17 @@
 TODO LIST
 
+
 ************** IN PROGRESS ********************
+
+@@ player contact with environment: 
+
+- vehicle static and vehicle dynamic need collision contactlistner
+- when player makes contact, controls disabled in membrane
+- new born vehicle need to be rejected from environment
+- figure out why vehicle is behind zone??
+
+
+
 
 1) RESTORE MOVING VEHICLE
 
@@ -11,7 +22,12 @@ before starting to alter environment states
 
 - being in the membrane means being fully in in order to get a refill
 - more than one agent or player but only one gets to make contact
-- if contact with player or vehicle, everybody gets shut out, repelled until nobody is in the membrane
+
+
+
+*** if contact with player or vehicle, everybody gets shut out, repelled until nobody is in the membrane
+*** player lung goes to hold state
+
 
 
 

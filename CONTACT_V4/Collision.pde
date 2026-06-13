@@ -37,7 +37,12 @@ class Collision {
 
                 if (v.zone.collisionState.getReadyToSetState()) {
 
-                  manageBirth(o, v);
+                  //manageBirth(o, v);
+                  
+                  v.collided();
+                  
+                  println("collision!");
+                  
                   //switchVehicleFromBreathingToMoving(v);
                   v.zone.setState(v.zone.collisionState);
                 }
@@ -51,7 +56,10 @@ class Collision {
 
                 if (o.zone.collisionState.getReadyToSetState()) {
 
-                  manageBirth(v, o);
+                  //manageBirth(v, o);
+                  
+                  o.collided();
+                  
                   //switchVehicleFromBreathingToMoving(v);
                   o.zone.setState(o.zone.collisionState);
                 }
@@ -147,7 +155,7 @@ class Collision {
             }
 
             //killVehicle(vNum);
-            v.collideWithPlayer();
+            v.collided();
 
             vehicleRemaining--;
 
@@ -157,7 +165,7 @@ class Collision {
             
             println("player collided");
 
-            v.playerInDistanceZone = false;
+            //v.playerInDistanceZone = false;
             //player.location.setState(player.location.pLocMovingState);
 
             break;

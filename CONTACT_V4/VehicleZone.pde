@@ -525,11 +525,11 @@ class CollisionState implements VehicleZoneState {
 
     if (readyToSetState) {
 
-      vehicle.breath.setEmpty();
+      //vehicle.breath.setEmpty();
 
       readyToSetState = false;
 
-      vehicle.zone.setState(vehicle.zone.emptyState);
+      //vehicle.zone.setState(vehicle.zone.emptyState);
 
       vehicle.updateColorNum();
     }
