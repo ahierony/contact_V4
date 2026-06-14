@@ -53,6 +53,7 @@ class PlayerSphere {
 
     // Define a fixture
     FixtureDef fd = new FixtureDef();
+    fd.filter.groupIndex = -10000;
     fd.shape = cs;
 
     // Parameters that affect physics

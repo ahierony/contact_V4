@@ -114,8 +114,9 @@ class Collision {
     Vec2 newVelocity = vBreathingPos.add(velocity);
 
     int vehicleColorNum = int(random(0, 360));
-
-    Vehicle vehicle = new Vehicle(newVelocity.x, newVelocity.y, vehicleColorNum, true, "DYNAMIC", 0, player);
+    
+    int vehicleIndex = vehicles.size();
+    Vehicle vehicle = new Vehicle(newVelocity.x, newVelocity.y, vehicleColorNum, true, "DYNAMIC", 0, player, vehicleIndex);
 
     vehicles.add(vehicle);
   }

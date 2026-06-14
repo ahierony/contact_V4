@@ -132,8 +132,10 @@ class Bg_Unit {
     randomPos = new PVector(unitPos.x - sizeHalf_w + tempPos.x, unitPos.y - sizeHalf_h + tempPos.y);
 
     basicPos = PVector.sub(randomPos, unitPos);
-
-    vehicle = new Vehicle(randomPos.x, randomPos.y, vehicleColorNum, inMotion, type, index, player);
+    
+    int vehicleIndex = vehicles.size();
+    //println("vehicleIndex ", vehicleIndex);
+    vehicle = new Vehicle(randomPos.x, randomPos.y, vehicleColorNum, inMotion, type, index, player, vehicleIndex);
     vehicles.add(vehicle);
   }
 

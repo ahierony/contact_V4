@@ -26,7 +26,7 @@ boolean skeleton;
 
 // BOX2D COLLISION FILTERING
 final short CATEGORY_PLAYER = 0x0001;  // 0000000000000001 in binary
-final short CATEGORY_VEHICLE = 0x0002; // 0000000000000010 in binary
+final short CATEGORY_VEHICLE = 0x0001; //0x0002; // 0000000000000010 in binary
 
 final short MASK_PLAYER = CATEGORY_VEHICLE; //CATEGORY_VEHICLE | CATEGORY_SCENERY; // or ~CATEGORY_PLAYER
 final short MASK_VEHICLE = CATEGORY_PLAYER; //CATEGORY_PLAYER | CATEGORY_SCENERY; // or ~CATEGORY_MONSTER
@@ -689,7 +689,7 @@ boolean fadeAnimationIsOver() {
 }
 
 //--------------------------------------------------------------
-
+/*
 void createVehicleCopy(Vehicle v) {
 
   Vec2 playerPos = box2d.getBodyPixelCoord(player.centerSphere.body);
@@ -712,7 +712,7 @@ void createVehicleCopy(Vehicle v) {
 
   vehicles.add(vehicle);
 }
-
+*/
 //--------------------------------------------------------------
 
 void updatePlayerEyeSides(float mainTheta) {

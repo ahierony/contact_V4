@@ -99,6 +99,7 @@ class Vehicle {
 
   boolean repellOther;
 
+  int vehicleIndexSlotNumber;
 
   //AUDIO
   //boolean vehicleBreathingAudioIsPlaying;
@@ -106,7 +107,9 @@ class Vehicle {
   //--------------------------------------------------------------
 
   // Constructor
-  Vehicle(float x, float y, int _colorAngle, boolean _inMotion, String type_, int unitNum_, Player p) {
+  Vehicle(float x, float y, int _colorAngle, boolean _inMotion, String type_, int unitNum_, Player p, int vIndex) {
+    
+    vehicleIndexSlotNumber = vIndex;
 
     unitNum = unitNum_;
 
@@ -876,7 +879,7 @@ class Vehicle {
     sphereRadius = 35; //25;
     centerBoidRadius = 35;
 
-    centerBoid = new VehicleBoid(posVecPixels_.x, posVecPixels_.y, centerBoidRadius, bodyType, CATEGORY_VEHICLE, MASK_VEHICLE);
+    centerBoid = new VehicleBoid(posVecPixels_.x, posVecPixels_.y, centerBoidRadius, bodyType, CATEGORY_VEHICLE, MASK_VEHICLE, vehicleIndexSlotNumber);
     // make body
 
 
@@ -888,7 +891,7 @@ class Vehicle {
       float x = posVecPixels_.x + radius * sin(t);
       float y = posVecPixels_.y + radius * cos(t);
 
-      spheres.add(new VehicleSphere(x, y, sphereRadius, "DYNAMIC", CATEGORY_VEHICLE, MASK_VEHICLE));
+      spheres.add(new VehicleSphere(x, y, sphereRadius, "DYNAMIC", CATEGORY_VEHICLE, MASK_VEHICLE, vehicleIndexSlotNumber));
 
       cvjd.addBody(spheres.get(i).body);
 

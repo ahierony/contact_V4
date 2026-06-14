@@ -39,8 +39,12 @@ class VehicleBoid {
   float previousVelocityLength;
 
   Vehicle vehicle;
+  
+  int vehicleIndex;
 
-  VehicleBoid(float _x, float _y, float _r, String _type, int _categoryBits, int _maskBits) {
+  VehicleBoid(float _x, float _y, float _r, String _type, int _categoryBits, int _maskBits, int vIndex) {
+    
+    vehicleIndex = vIndex;
 
     radius = _r;
     bodyType = _type;
@@ -349,6 +353,9 @@ class VehicleBoid {
 
     // Define a fixture
     FixtureDef fd = new FixtureDef();
+    
+    fd.filter.groupIndex = -vehicleIndex;
+    
     fd.shape = cs;
 
     fd.filter.categoryBits = _categoryBits;

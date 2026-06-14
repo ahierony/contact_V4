@@ -5,8 +5,8 @@ class VehicleSphere {
 
   float w, h;
   Vec2 posVecPixels;
-  float bodyRadius; 
-  
+  float bodyRadius;
+
   color red = color(255, 0, 0);
   color green = color(0, 255, 0);
   color blue = color(0, 0, 255);
@@ -14,18 +14,22 @@ class VehicleSphere {
 
   boolean wasTouched;
   
-  VehicleSphere(float _x, float _y, float _r, String type, int categoryBits, int maskBits) {
+  int vehicleIndex;
+
+  VehicleSphere(float _x, float _y, float _r, String type, int categoryBits, int maskBits, int vIndex) {
+    
+    vehicleIndex = vIndex;
 
     bodyRadius = _r;
     cB = categoryBits;
     mB = maskBits;
-  
-    posVecPixels = new Vec2(_x, _y);  
+
+    posVecPixels = new Vec2(_x, _y);
     w = _r;
     h = _r;
 
     wasTouched = false;
-  
+
     makeBody(type);
 
     col = color(175, 126);
@@ -60,14 +64,17 @@ class VehicleSphere {
 
     // Define a fixture
     FixtureDef fd = new FixtureDef();
+     
+    fd.filter.groupIndex = -vehicleIndex;
+    
     fd.shape = cs;
-    
-    
+
+
     // Parameters that affect physics
     fd.density = 1;
     fd.friction = 0.1;
     fd.restitution = 0.1;
-    
+
 
     // for collision avoidance
     fd.filter.categoryBits = cB;
@@ -77,9 +84,8 @@ class VehicleSphere {
     body.createFixture(fd);
 
     body.setUserData(this);
-    
-    body.setLinearDamping(0.5f);
 
+    body.setLinearDamping(0.5f);
   }
 
   // This function removes the particle from the box2d world
@@ -96,7 +102,7 @@ class VehicleSphere {
     translate(pos.x, pos.y);
     rotate(a);
     fill(col);
-     circle(0, 0, bodyRadius);
+    circle(0, 0, bodyRadius);
     popMatrix();
   }
 
