@@ -24,6 +24,11 @@ boolean newData;
 // Draw creature design or skeleton?
 boolean skeleton;
 
+// DATA & SCROLLBAR
+boolean showvalues = true;
+boolean scrollbar = false;
+Data data;
+
 // BOX2D COLLISION FILTERING
 final short CATEGORY_PLAYER = 0x0001;  // 0000000000000001 in binary
 final short CATEGORY_VEHICLE = 0x0001; //0x0002; // 0000000000000010 in binary
@@ -296,6 +301,8 @@ void setup() {
   leftEyeDown = false;
 
   fadeAnimationCounter = 0;
+  
+  data = new Data();
 } // setup
 
 //--------------------------------------------------------------
@@ -564,9 +571,9 @@ void draw() {
           drawFrameRate();
         } else {
           drawFrame();
-          drawFrameRate();
+          //drawFrameRate();
           showRemainingVehiclesNum();
-          noCursor();
+          //noCursor();
         }
       }
     } else {
@@ -663,6 +670,9 @@ void draw() {
       recordSVG = true;
     }
   }
+  
+  data.display();
+  
 } // draw
 
 
@@ -691,28 +701,28 @@ boolean fadeAnimationIsOver() {
 //--------------------------------------------------------------
 /*
 void createVehicleCopy(Vehicle v) {
-
-  Vec2 playerPos = box2d.getBodyPixelCoord(player.centerSphere.body);
-  Vec2 vehiclePos = box2d.getBodyPixelCoord(v.centerBoid.body);
-
-  Vec2 velocity = playerPos.sub(vehiclePos);
-
-  float len = velocity.length();
-  len += 200; //50;
-  velocity.normalize();
-  velocity.mulLocal(len);
-
-
-  Vec2 newVelocity = playerPos.add(velocity);
-
-  //float vehicleRadius = ((unit_size*.3)*0.5)*0.7;
-  int vehicleColorNum = int(random(0, 360));
-
-  Vehicle vehicle = new Vehicle(newVelocity.x, newVelocity.y, vehicleColorNum, true, "DYNAMIC", 0, player);
-
-  vehicles.add(vehicle);
-}
-*/
+ 
+ Vec2 playerPos = box2d.getBodyPixelCoord(player.centerSphere.body);
+ Vec2 vehiclePos = box2d.getBodyPixelCoord(v.centerBoid.body);
+ 
+ Vec2 velocity = playerPos.sub(vehiclePos);
+ 
+ float len = velocity.length();
+ len += 200; //50;
+ velocity.normalize();
+ velocity.mulLocal(len);
+ 
+ 
+ Vec2 newVelocity = playerPos.add(velocity);
+ 
+ //float vehicleRadius = ((unit_size*.3)*0.5)*0.7;
+ int vehicleColorNum = int(random(0, 360));
+ 
+ Vehicle vehicle = new Vehicle(newVelocity.x, newVelocity.y, vehicleColorNum, true, "DYNAMIC", 0, player);
+ 
+ vehicles.add(vehicle);
+ }
+ */
 //--------------------------------------------------------------
 
 void updatePlayerEyeSides(float mainTheta) {

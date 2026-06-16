@@ -40,6 +40,7 @@ class Bg_Unit {
       } else {
 
         createVehicle(false, "STATIC"); // false
+
       }
     }
 

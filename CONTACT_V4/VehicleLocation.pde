@@ -383,6 +383,7 @@ class VInOtherVehicleZoneState implements VehicleLocationState {
 
       setReadyToSetState(false);
     }
+    
 
     setLungState();
   }

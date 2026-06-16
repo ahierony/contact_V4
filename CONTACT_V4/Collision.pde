@@ -37,7 +37,7 @@ class Collision {
 
                 if (v.zone.collisionState.getReadyToSetState()) {
 
-                  //manageBirth(o, v);
+                  manageBirth(o, v);
                   
                   v.collided();
                   
@@ -56,7 +56,7 @@ class Collision {
 
                 if (o.zone.collisionState.getReadyToSetState()) {
 
-                  //manageBirth(v, o);
+                  manageBirth(v, o);
                   
                   o.collided();
                   

@@ -107,10 +107,11 @@ class VehicleZone {
   void display() {
 
     //
-
+    /*
     if (vehicle.membrane.currentRadius > 0) {
       radius = vehicle.membrane.currentRadius;
     }
+    */
 
     ellipseMode(RADIUS);
 

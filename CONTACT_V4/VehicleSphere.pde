@@ -13,11 +13,11 @@ class VehicleSphere {
   color col;
 
   boolean wasTouched;
-  
+
   int vehicleIndex;
 
   VehicleSphere(float _x, float _y, float _r, String type, int categoryBits, int maskBits, int vIndex) {
-    
+
     vehicleIndex = vIndex;
 
     bodyRadius = _r;
@@ -40,6 +40,8 @@ class VehicleSphere {
     BodyDef bd = new BodyDef();
     if (type == "DYNAMIC") {
       bd.type = BodyType.DYNAMIC;
+      
+      
     } else if (type == "STATIC") {
       bd.type = BodyType.STATIC;
     }
@@ -64,9 +66,9 @@ class VehicleSphere {
 
     // Define a fixture
     FixtureDef fd = new FixtureDef();
-     
+
     fd.filter.groupIndex = -vehicleIndex;
-    
+
     fd.shape = cs;
 
 

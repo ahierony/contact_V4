@@ -99,7 +99,7 @@ class Vehicle {
 
   boolean repellOther;
 
-  int vehicleIndexSlotNumber;
+  int vI;
 
   //AUDIO
   //boolean vehicleBreathingAudioIsPlaying;
@@ -108,8 +108,8 @@ class Vehicle {
 
   // Constructor
   Vehicle(float x, float y, int _colorAngle, boolean _inMotion, String type_, int unitNum_, Player p, int vIndex) {
-    
-    vehicleIndexSlotNumber = vIndex;
+
+    vI = vIndex;
 
     unitNum = unitNum_;
 
@@ -161,7 +161,7 @@ class Vehicle {
     if (!inMotion) {
       isReadyForCollision = true;
       zone.isBreathing = true;
-      membrane = new VehicleMembrane(x, y);
+      membrane = new VehicleMembrane(x, y, zone.radiusMax);
     } else {
       calibrateLungRadius = 0;
       lung = new VehicleLung(this);
@@ -280,6 +280,14 @@ class Vehicle {
 
           die();
         }
+      } else if(location.getState() == location.vInOtherVehicleZoneState){
+        
+        
+        //e.energy -= 0.5;
+        //e.energy = max(e.energy, 0);
+        
+        
+        
       }
 
       //println("vehicle lung state ", lung.getState());
@@ -309,8 +317,8 @@ class Vehicle {
 
         checkIfPlayerInZone();
       }
-      
-      
+
+
       checkIfOtherVehicleInZone();
 
       /*
@@ -330,10 +338,10 @@ class Vehicle {
 
       zone.update();
 
-      if (zone.getState() == zone.fullState) {
+      //if (zone.getState() == zone.fullState) {
 
-        membrane.update(zone.radius);
-      }
+      membrane.update(vehicles, data.regenRateSlider.getPos());
+      //}
 
 
 
@@ -341,14 +349,17 @@ class Vehicle {
 
       // after collision with either vehicle or player, zone repells until nobody is in the zone
       if (repellOther) {
-      
+
         if (!otherVehicleInBreathingZone && !playerInBreathingZone) {
           repellOther = false;
           zone.setState(zone.fullState);
-  
         }
       }
-   
+      
+      
+      
+      
+      
     } // VEHICLE IS NOT IN MOTION
   }
 
@@ -502,8 +513,16 @@ class Vehicle {
 
     return force;
   }
-
-
+  
+  // ********************************************************
+  // MEMBRANE CODE
+  // ********************************************************
+  
+  void alterMembraneEnergy(Vehicle v){
+    
+     v.membrane.energy -= 0.5;
+     v.membrane.energy = max(v.membrane.energy, 0);
+  }
   // ********************************************************
   // PLAYER IS IN VEHICLE ZONE
   // ********************************************************
@@ -579,6 +598,8 @@ class Vehicle {
 
         inOtherVehicleBreathingZone = true;
         applyZoneForceOnVehicle(otherV); // apply succion/repel gravity between vehicle breathing and vehicle moving
+        // membrane
+        alterMembraneEnergy(otherV);
       }
     }
   }
@@ -676,7 +697,7 @@ class Vehicle {
   void collided() {
 
     repellOther = true;
-    
+
     println("collision!");
   }
 
@@ -726,17 +747,22 @@ class Vehicle {
 
     if (!inMotion) {
 
+      zone.display();
+      membrane.display(data.sensingRadiusSlider.getPos());
+      
+      /*
       if ( zone.getState() == zone.fullState) {
 
-        //membrane.display(colorBreathing);
         zone.display();
+        membrane.display(data.sensingRadiusSlider.getPos());
       } else {
 
         zone.display();
       }
+      */
 
       displayBlob();
-    } else {
+    } else { 
 
       lung.display();
     }
@@ -879,7 +905,7 @@ class Vehicle {
     sphereRadius = 35; //25;
     centerBoidRadius = 35;
 
-    centerBoid = new VehicleBoid(posVecPixels_.x, posVecPixels_.y, centerBoidRadius, bodyType, CATEGORY_VEHICLE, MASK_VEHICLE, vehicleIndexSlotNumber);
+    centerBoid = new VehicleBoid(posVecPixels_.x, posVecPixels_.y, centerBoidRadius, bodyType, CATEGORY_VEHICLE, MASK_VEHICLE, vI+1);
     // make body
 
 
@@ -891,7 +917,7 @@ class Vehicle {
       float x = posVecPixels_.x + radius * sin(t);
       float y = posVecPixels_.y + radius * cos(t);
 
-      spheres.add(new VehicleSphere(x, y, sphereRadius, "DYNAMIC", CATEGORY_VEHICLE, MASK_VEHICLE, vehicleIndexSlotNumber));
+      spheres.add(new VehicleSphere(x, y, sphereRadius, "DYNAMIC", CATEGORY_VEHICLE, MASK_VEHICLE, vI+1));
 
       cvjd.addBody(spheres.get(i).body);
 
