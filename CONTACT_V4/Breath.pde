@@ -64,7 +64,7 @@ class Breath {
   void initialize() {
 
     theta = radians(530);
-    movement = "empty";
+    movement = "full";
     direction = "inhale";
   }
 

@@ -36,7 +36,7 @@ class DataScrollbar
     newPos = pos;
   }
 
-  void draw() {
+  void display() {
     stroke(150);
     strokeWeight(2);
     line(xpos, ypos, xpos + swidth, ypos);

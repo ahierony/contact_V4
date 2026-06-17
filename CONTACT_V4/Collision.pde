@@ -1,17 +1,17 @@
 class Collision {
 
-  int vehicleRemaining;
+  int agentsRemaining;
 
 
   Collision() {
 
-    vehicleRemaining = vehicles.size();
+    agentsRemaining = agents.size();
   }
 
   //--------------------------------------------------------------
 
 
- 
+
   //--------------------------------------------------------------
   boolean readyToGiveBirth = false;
 
@@ -19,51 +19,32 @@ class Collision {
 
   void checkVehicleAgainstVehicle() {
 
-    for (int i = 0; i < vehicles.size(); i++) {
+    for (int i = 0; i < agents.size(); i++) {
 
-      Vehicle v = vehicles.get(i);
+      Agent a = agents.get(i);
 
-      for (int j = 0; j < vehicles.size(); j++) {
+      for (int j = 0; j < environments.size(); j++) {
 
-        Vehicle o = vehicles.get(j);
+        Environment e = environments.get(j);
 
-        if (v != o) {
+        //if (v != o) {
 
-          if (o.inMotion && !v.inMotion) {
+        //if (o.inMotion && !v.inMotion) {
 
-            if (vehiclesAreTouching(o, v)) {
+        if (vehiclesAreTouching(e, a)) {
 
-              if ( v.zone.getState() != v.zone.collisionState) {
+          if ( a.v.zone.getState() != a.v.zone.collisionState) {
 
-                if (v.zone.collisionState.getReadyToSetState()) {
+            if (a.v.zone.collisionState.getReadyToSetState()) {
 
-                  manageBirth(o, v);
-                  
-                  v.collided();
-                  
-                  println("collision!");
-                  
-                  //switchVehicleFromBreathingToMoving(v);
-                  v.zone.setState(v.zone.collisionState);
-                }
-              }
-            }
-          } else if (!o.inMotion && v.inMotion) {
+              manageBirth(e, a);
 
-            if (vehiclesAreTouching(v, o)) {
+              a.v.collided();
 
-              if ( o.zone.getState() != o.zone.collisionState) {
+              println("collision!");
 
-                if (o.zone.collisionState.getReadyToSetState()) {
-
-                  manageBirth(v, o);
-                  
-                  o.collided();
-                  
-                  //switchVehicleFromBreathingToMoving(v);
-                  o.zone.setState(o.zone.collisionState);
-                }
-              }
+              //switchVehicleFromBreathingToMoving(v);
+              a.v.zone.setState(a.v.zone.collisionState);
             }
           }
         }
@@ -71,26 +52,28 @@ class Collision {
     }
   }
 
-  void manageBirth(Vehicle vInMotion, Vehicle vBreathing) {
 
-    giveVehicleBirth(vInMotion, vBreathing);
+  void manageBirth(Environment envo, Agent agent) {
 
-    Vec2 vehiclePosVecPixels = box2d.getBodyPixelCoord(vBreathing.centerBoid.body);
-    vehiclePosVecPixels.subLocal(vBreathing.centerBoid.offset);
+    giveVehicleBirth(envo, agent);
+
+    Vec2 vehiclePosVecPixels = box2d.getBodyPixelCoord(envo.v.centerBoid.body);
+    vehiclePosVecPixels.subLocal(envo.v.centerBoid.offset);
     Vec2 targetPosition = box2d.coordPixelsToWorld(vehiclePosVecPixels);
 
-    vInMotion.centerBoid.status = "flee";
-    vInMotion.centerBoid.flee(targetPosition);
+    agent.v.centerBoid.status = "flee";
+    agent.v.centerBoid.flee(targetPosition);
   }
 
-  boolean vehiclesAreTouching(Vehicle vInMotion, Vehicle vBreathing) {
+  //boolean vehiclesAreTouching(Vehicle vInMotion, Vehicle vBreathing) {
+  boolean vehiclesAreTouching(Environment envo, Agent agent) {
 
-    Vec2 vBreathingPos = box2d.getBodyPixelCoord(vBreathing.centerBoid.body);
-    Vec2 vInMotionPos = box2d.getBodyPixelCoord(vInMotion.centerBoid.body);
+    Vec2 envoPos = box2d.getBodyPixelCoord(envo.v.centerBoid.body);
+    Vec2 agentPos = box2d.getBodyPixelCoord(agent.v.centerBoid.body);
 
-    float d_pix = dist(vBreathingPos.x, vBreathingPos.y, vInMotionPos.x, vInMotionPos.y);
+    float d_pix = dist(envoPos.x, envoPos.y, agentPos.x, agentPos.y);
 
-    if (d_pix < vInMotion.blobRadius + vBreathing.blobRadius) {
+    if (d_pix < agent.v.blobRadius + envo.v.blobRadius) {
 
       return true;
     } else {
@@ -99,26 +82,26 @@ class Collision {
     }
   }
 
-  void giveVehicleBirth(Vehicle vInMotion, Vehicle vBreathing) {
+  void giveVehicleBirth(Environment envo, Agent ag) {
 
-    Vec2 vBreathingPos = box2d.getBodyPixelCoord(vBreathing.centerBoid.body);
-    Vec2 vInMotionPos = box2d.getBodyPixelCoord(vInMotion.centerBoid.body);
+    Vec2 envoPos = box2d.getBodyPixelCoord(envo.v.centerBoid.body);
+    Vec2 agentPos = box2d.getBodyPixelCoord(ag.v.centerBoid.body);
 
-    Vec2 velocity = vBreathingPos.sub(vInMotionPos);
+    Vec2 velocity = envoPos.sub(agentPos);
 
     float len = velocity.length();
     len += 200; //50;
     velocity.normalize();
     velocity.mulLocal(len);
 
-    Vec2 newVelocity = vBreathingPos.add(velocity);
+    Vec2 newVelocity = envoPos.add(velocity);
 
     int vehicleColorNum = int(random(0, 360));
-    
-    int vehicleIndex = vehicles.size();
-    Vehicle vehicle = new Vehicle(newVelocity.x, newVelocity.y, vehicleColorNum, true, "DYNAMIC", 0, player, vehicleIndex);
 
-    vehicles.add(vehicle);
+    int agentIndex = agents.size();
+    Agent agent = new Agent(newVelocity.x, newVelocity.y, vehicleColorNum, true, "DYNAMIC", 0, player, agentIndex);
+
+    agents.add(agent);
   }
 
   //--------------------------------------------------------------
@@ -132,11 +115,11 @@ class Collision {
 
     boolean vehicleWasTouched = false;
 
-    for (int i = 0; i < vehicles.size(); i++) {
+    for (int i = 0; i < environments.size(); i++) {
 
-      Vehicle v = vehicles.get(i);
+      Environment e = environments.get(i);
 
-      for (VehicleSphere vs : v.spheres) {
+      for (VehicleSphere vs : e.v.spheres) {
 
         if (vs.wasTouched) {
 
@@ -144,7 +127,7 @@ class Collision {
 
           vs.wasTouched = false;
 
-          if (v.isReadyForCollision) {
+          if (e.v.isReadyForCollision) {
 
             //println("player touched vehicle ");
             //println(player.location.getState());
@@ -156,14 +139,14 @@ class Collision {
             }
 
             //killVehicle(vNum);
-            v.collided();
+            e.v.collided();
 
-            vehicleRemaining--;
+            //vehicleRemaining--;
 
             //bgTrailBox.increaseStrokeWeight();
 
             //println("vehicles remaining ", vehicleRemaining);
-            
+
             println("player collided");
 
             //v.playerInDistanceZone = false;
@@ -179,5 +162,4 @@ class Collision {
   }
 
   //--------------------------------------------------------------
-
 }

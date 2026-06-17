@@ -44,7 +44,7 @@ class VehicleZone {
     distanceRadius = radiusMax;
     originalRadiusMax = radiusMax;
 
-    radius = radiusMin;
+    radius = radiusMax;
 
     holdState = new HoldZoneState();
     emptyState = new EmptyZoneState(vehicle);
@@ -153,12 +153,18 @@ class VehicleZone {
 
   //--------------------------------------------------------------
   void setZoneState() {
-
-    radius = map(vehicle.breath.radius, vehicle.breath.radiusMin, vehicle.breath.radiusMax, radiusMin, radiusMax); //distanceRadius);
+    
+    //setState(fullState);
+    
+    radius = radiusMax;
+    
+    //radius = map(vehicle.breath.radius, vehicle.breath.radiusMin, vehicle.breath.radiusMax, radiusMin, radiusMax); //distanceRadius);
 
     // breathing radius
 
-    isBreathing = true;
+    isBreathing = false;
+    
+    /*
 
     switch(vehicle.breath.movement) {
 
@@ -205,20 +211,14 @@ class VehicleZone {
       setState(fullState);
 
       isBreathing = false;
-      /*
-      if (vehicle.playerInBreathingZone || vehicle.otherVehicleInBreathingZone) {
-       
-       isBreathing = false;
-       } else { // no vehicle in area
-       
-       isBreathing = true;
-       }
-       */
+      
       break;
     default:
       break;
     }
+    */
   }
+  
 
   //--------------------------------------------------------------
 
@@ -228,7 +228,7 @@ class VehicleZone {
     distanceRadius = originalRadiusMax;
     radiusMax = originalRadiusMax;
   }
-
+  
 
   //--------------------------------------------------------------
 } // VehicleZone class

@@ -138,7 +138,9 @@ float previousAngle = 0;
 float currentAngle = 0;
 float avel = 0;
 
-ArrayList<Vehicle> vehicles;
+//ArrayList<Vehicle> vehicles;
+ArrayList<Agent> agents;
+ArrayList<Environment> environments;
 
 Vec2 playerCenterSpherePosVecPixels;
 float mainTheta;
@@ -280,7 +282,9 @@ void setup() {
   playerCenterSpherePosVecPixels = new Vec2(0, 0);
   player = new Player();
 
-  vehicles = new ArrayList<Vehicle>();
+  environments = new ArrayList<Environment>();
+  agents = new ArrayList<Agent>();
+  //vehicles = new ArrayList<Vehicle>();
   bg = new Bg(unitTotal);
 
   collision = new Collision();
@@ -301,7 +305,7 @@ void setup() {
   leftEyeDown = false;
 
   fadeAnimationCounter = 0;
-  
+
   data = new Data();
 } // setup
 
@@ -394,7 +398,9 @@ void resetContact() {
   player = null;
 
   box2d = null;
-  vehicles.clear();
+  agents.clear();
+  environments.clear();
+  //vehicles.clear();
   collision = null;
 
   for (int i=0; i < bg.units.length; i++) {
@@ -417,7 +423,9 @@ void resetContact() {
   playerCenterSpherePosVecPixels = new Vec2(0, 0);
   player = new Player();
 
-  vehicles = new ArrayList<Vehicle>();
+  environments = new ArrayList<Environment>();
+  agents = new ArrayList<Agent>();
+  //vehicles = new ArrayList<Vehicle>();
   bg = new Bg(unitTotal);
   collision = new Collision();
 
@@ -547,8 +555,19 @@ void draw() {
       //collision.checkPlayerAgainstVehicleRipples();
       collision.checkVehicleAgainstVehicle();
 
-
-
+      for(Agent a : agents){
+        
+        a.run(agents, environments);
+        
+      }
+      
+      for(Environment e : environments){
+        
+        e.run(agents, environments);
+        
+      }
+      
+     /*
       for (Vehicle v : vehicles) {
 
         if (!v.inMotion) {
@@ -557,6 +576,7 @@ void draw() {
           v.run(vehicles);
         }
       }
+      */
 
 
       player.display();
@@ -572,7 +592,7 @@ void draw() {
         } else {
           drawFrame();
           //drawFrameRate();
-          showRemainingVehiclesNum();
+          showRemainingAgentsNum();
           //noCursor();
         }
       }
@@ -663,16 +683,15 @@ void draw() {
 
   // TRAIL RECORDING ENDS
   //if (player.lung.getState() == player.lung.emptyState) {
-  if (player.lung.breath.movement == "empty" || collision.vehicleRemaining == 0) {
+  if (player.lung.breath.movement == "empty" || collision.agentsRemaining == 0) {
 
     if (fadeAnimationIsOver()) {
 
       recordSVG = true;
     }
   }
-  
+
   data.display();
-  
 } // draw
 
 
@@ -817,7 +836,18 @@ void keyPressed() {
     case 's':
       leftEyeDown = true;
       break;
+    case ' ':
+      println("dataSaved");
+      data.saveData();
+      break;
     }
+  }
+
+  switch(key) {
+  case ' ':
+    println("dataSaved");
+    data.saveData();
+    break;
   }
 }
 
@@ -897,12 +927,12 @@ void drawFrameRate() {
 }
 
 //--------------------------------------------------------------
-void showRemainingVehiclesNum() {
+void showRemainingAgentsNum() {
   fill(255);
   textSize(18);
   //int len = vehicles.size();
   //String numTxt = str(len);
-  text(collision.vehicleRemaining, width-50, 30);
+  text(collision.agentsRemaining, width-50, 30);
 }
 //--------------------------------------------------------------
 

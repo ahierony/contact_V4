@@ -12,7 +12,9 @@ class Bg_Unit {
   boolean overlap;
   color c;
 
-  Vehicle vehicle;
+  //Vehicle vehicle;
+  Agent agent;
+  Environment environment;
 
   int index;
 
@@ -36,11 +38,12 @@ class Bg_Unit {
 
       if (index%2 == 0) {
 
-        createVehicle(true, "DYNAMIC"); // true
+        createAgent();
+        //createVehicle(true, "DYNAMIC"); // true
       } else {
 
-        createVehicle(false, "STATIC"); // false
-
+        createEnvironment();
+        //createVehicle(false, "STATIC"); // false
       }
     }
 
@@ -49,7 +52,7 @@ class Bg_Unit {
     readyToCreateAgent = false;
 
     //Vec2 pPos = box2d.getBodyPixelCoord(player.centerSphere.body);
-    
+
     //trailLeft = new PlayerTrail(pPos.x, pPos.y);
     //trailRight = new PlayerTrail(pPos.x, pPos.y);
   }
@@ -72,8 +75,8 @@ class Bg_Unit {
     stroke(126);
 
     //if (debugMode)
-      rect(0, 0, unit_w, unit_h); // display grid
-      //println("unit_w in rect ", unit_w);
+    rect(0, 0, unit_w, unit_h); // display grid
+    //println("unit_w in rect ", unit_w);
 
     popMatrix();
   }
@@ -109,16 +112,11 @@ class Bg_Unit {
 
   // CODE FOR VEHICLE ********************************************
 
-  void createVehicle(boolean inMotion, String type) {
+  void createAgent() {
 
     float vehicleRadius_w = ((unit_w*.3)*0.5)*0.7;
     float vehicleRadius_h = ((unit_h*.3)*0.5)*0.7;
     int vehicleColorNum = int(random(0, 360)); // 0, 45, 90, 135, 180, 225, 270, 315
-    /*
-    int vehicleColorNum = int(random(0, 7));
-     int[] colorNums = {0, 45, 90, 135, 180, 225, 270};
-     vehicleColorNum = colorNums[vehicleColorNum];
-     */
 
     PVector unitPos = new PVector(pos.x, pos.y);
 
@@ -133,12 +131,63 @@ class Bg_Unit {
     randomPos = new PVector(unitPos.x - sizeHalf_w + tempPos.x, unitPos.y - sizeHalf_h + tempPos.y);
 
     basicPos = PVector.sub(randomPos, unitPos);
-    
+
+    int agentIndex = agents.size();
+    agent = new Agent(randomPos.x, randomPos.y, vehicleColorNum, true, "DYNAMIC", index, player, agentIndex);
+    agents.add(agent);
+  }
+
+  void createEnvironment() {
+
+    float vehicleRadius_w = ((unit_w*.3)*0.5)*0.7;
+    float vehicleRadius_h = ((unit_h*.3)*0.5)*0.7;
+    int vehicleColorNum = int(random(0, 360)); // 0, 45, 90, 135, 180, 225, 270, 315
+
+    PVector unitPos = new PVector(pos.x, pos.y);
+
+    PVector offset = new PVector(playerCenterSpherePosVecPixels.x, playerCenterSpherePosVecPixels.y);
+    unitPos.add(offset);
+
+    float bufferW = unit_w * 0.1;
+    float bufferH = unit_h * 0.1;
+    PVector tempPos = new PVector(random(vehicleRadius_w + bufferW, unit_w-vehicleRadius_w - bufferW), random(vehicleRadius_h + bufferW, unit_h-vehicleRadius_h- bufferH));
+    float sizeHalf_w = unit_w * 0.5;
+    float sizeHalf_h = unit_h * 0.5;
+    randomPos = new PVector(unitPos.x - sizeHalf_w + tempPos.x, unitPos.y - sizeHalf_h + tempPos.y);
+
+    basicPos = PVector.sub(randomPos, unitPos);
+
+    int environmentIndex = environments.size();
+    environment = new Environment(randomPos.x, randomPos.y, vehicleColorNum, false, "STATIC", index, player, environmentIndex);
+    environments.add(environment);
+  }
+  
+  /*
+  void createVehicle(boolean inMotion, String type) {
+
+    float vehicleRadius_w = ((unit_w*.3)*0.5)*0.7;
+    float vehicleRadius_h = ((unit_h*.3)*0.5)*0.7;
+    int vehicleColorNum = int(random(0, 360)); // 0, 45, 90, 135, 180, 225, 270, 315
+
+    PVector unitPos = new PVector(pos.x, pos.y);
+
+    PVector offset = new PVector(playerCenterSpherePosVecPixels.x, playerCenterSpherePosVecPixels.y);
+    unitPos.add(offset);
+
+    float bufferW = unit_w * 0.1;
+    float bufferH = unit_h * 0.1;
+    PVector tempPos = new PVector(random(vehicleRadius_w + bufferW, unit_w-vehicleRadius_w - bufferW), random(vehicleRadius_h + bufferW, unit_h-vehicleRadius_h- bufferH));
+    float sizeHalf_w = unit_w * 0.5;
+    float sizeHalf_h = unit_h * 0.5;
+    randomPos = new PVector(unitPos.x - sizeHalf_w + tempPos.x, unitPos.y - sizeHalf_h + tempPos.y);
+
+    basicPos = PVector.sub(randomPos, unitPos);
+
     int vehicleIndex = vehicles.size();
-    //println("vehicleIndex ", vehicleIndex);
     vehicle = new Vehicle(randomPos.x, randomPos.y, vehicleColorNum, inMotion, type, index, player, vehicleIndex);
     vehicles.add(vehicle);
   }
+  */
 
   //--------------------------------------------------------------
 
@@ -151,16 +200,16 @@ class Bg_Unit {
 
     Vec2 unitPosVecPixels = new Vec2(unitPos.x, unitPos.y);
 
-    if (vehicle.location.getState() != vehicle.location.vInDeadState) {
+    if (agent.v.location.getState() != agent.v.location.vInDeadState) {
 
-      vehicle.killBlob();
+      agent.v.killBlob();
 
-      vehicle.makeBlob(unitPosVecPixels);
+      agent.v.makeBlob(unitPosVecPixels);
 
-      vehicle.initialize();
+      agent.v.initialize();
     } else {
-      
-      vehicle.posVecPixels.set(unitPos.x, unitPos.y);
+
+      agent.v.posVecPixels.set(unitPos.x, unitPos.y);
     }
   }
 }

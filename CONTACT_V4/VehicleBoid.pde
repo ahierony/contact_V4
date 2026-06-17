@@ -17,9 +17,9 @@ class VehicleBoid {
   color blue;
   color col;
 
-  float player_threat_buffer = 600;
-  float player_threat_radius;
-  float player_arrive_radius;
+  //float player_threat_buffer = 600;
+  //float player_threat_radius;
+  //float player_arrive_radius;
 
   Vec2 posVecPixels;
   Vec2 boidPosition;
@@ -35,15 +35,15 @@ class VehicleBoid {
 
   boolean applyingImpulse;
 
-  float playerVehicleDistance;
+  //float playerVehicleDistance;
   float previousVelocityLength;
 
   Vehicle vehicle;
-  
+
   int vehicleIndex;
 
   VehicleBoid(float _x, float _y, float _r, String _type, int _categoryBits, int _maskBits, int vIndex) {
-    
+
     vehicleIndex = vIndex;
 
     radius = _r;
@@ -74,7 +74,7 @@ class VehicleBoid {
 
     applyingImpulse = false;
 
-    player_threat_radius = player_threat_buffer;
+    //player_threat_radius = player_threat_buffer;
   }
 
 
@@ -89,14 +89,14 @@ class VehicleBoid {
   // called from vehicleLocation > VInMovingState
   void isMoving() {
 
-    offset = box2d.getBodyPixelCoord(player.centerSphere.body);
+    //offset = box2d.getBodyPixelCoord(player.centerSphere.body);
 
     // player position in pixels
-    Vec2 playerPosVecPixels = box2d.getBodyPixelCoord(player.centerSphere.body);
+    //Vec2 playerPosVecPixels = box2d.getBodyPixelCoord(player.centerSphere.body);
 
-    playerPosVecPixels.subLocal(offset);
+    //playerPosVecPixels.subLocal(offset);
 
-    targetPosition = box2d.coordPixelsToWorld(playerPosVecPixels);
+    //targetPosition = box2d.coordPixelsToWorld(playerPosVecPixels);
 
     // CALCULATE BOID POSITION
 
@@ -111,29 +111,33 @@ class VehicleBoid {
 
     separate(vehicles);
 
-    playerVehicleDistance = dist(boidPosPixels.x, boidPosPixels.y, playerPosVecPixels.x, playerPosVecPixels.y);
+    //playerVehicleDistance = dist(boidPosPixels.x, boidPosPixels.y, playerPosVecPixels.x, playerPosVecPixels.y);
 
-    float playerOffset = radius * 5;
+    //float playerOffset = radius * 5;
 
+    /*
     if (player.location.getState() == player.location.pLocMovingState) {
+     
+     if (playerVehicleDistance > player.borderRadiusMin - playerOffset) {
+     status = "arrive";
+     arrive(targetPosition);
+     //col = blue;
+     } else if (playerVehicleDistance <= player_threat_radius) {
+     
+     status = "flee";
+     flee(targetPosition);
+     //col = red;
+     }
+     }
+     */
 
-      if (playerVehicleDistance > player.borderRadiusMin - playerOffset) {
-        status = "arrive";
-        arrive(targetPosition);
-        //col = blue;
-      } else if (playerVehicleDistance <= player_threat_radius) {
-
-        status = "flee";
-        flee(targetPosition);
-        //col = red;
-      }
-    }
-
+    /*
     if (playerVehicleDistance <= player.borderRadiusMax - playerOffset && playerVehicleDistance > player_threat_radius) { // happens in all player states
-      status = "wander";
-      wander();
-      //col = green;
-    }
+     status = "wander";
+     wander();
+     //col = green;
+     }
+     */
 
     /*
     if (playerVehicleDistance <= player_threat_radius) {
@@ -155,6 +159,9 @@ class VehicleBoid {
      //col = green;
      }
      */
+
+    status = "wander";
+    wander();
 
     previousStatus = status;
   }
@@ -214,7 +221,7 @@ class VehicleBoid {
 
     Vec2 velocity = body.getLinearVelocity();
     Vec2 circlepos = new Vec2(velocity.x, velocity.y);
-
+    
     circlepos.normalize();            // Normalize to get heading
     circlepos.mulLocal(wanderD);          // Multiply by distance
     circlepos.addLocal(boidPosition);               // Make it relative to boid's position
@@ -226,8 +233,11 @@ class VehicleBoid {
     Vec2 target = circlepos.add(circleOffSet);
 
     Vec2 desiredVelocity = target.sub(boidPosition);
-
+    
+   
     seek(desiredVelocity);
+    
+    
   }
 
 
@@ -340,7 +350,7 @@ class VehicleBoid {
       bd.type = BodyType.DYNAMIC;
     } else if (_type == "STATIC") {
       bd.type = BodyType.STATIC;
-       println("vehicleIndex ", vehicleIndex);
+      println("vehicleIndex ", vehicleIndex);
     }
 
     // Set its position
@@ -354,9 +364,9 @@ class VehicleBoid {
 
     // Define a fixture
     FixtureDef fd = new FixtureDef();
-    
+
     fd.filter.groupIndex = -vehicleIndex;
-    
+
     fd.shape = cs;
 
     fd.filter.categoryBits = _categoryBits;

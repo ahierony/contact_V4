@@ -28,21 +28,21 @@ class Data {
   void display() {
 
     speedSlider.update();
-    speedSlider.draw();
+    speedSlider.display();
     drainSlider.update();
-    drainSlider.draw();
+    drainSlider.display();
     refillSlider.update();
-    refillSlider.draw();
+    refillSlider.display();
     separationDistSlider.update();
-    separationDistSlider.draw();
+    separationDistSlider.display();
     separationForceSlider.update();
-    separationForceSlider.draw();
+    separationForceSlider.display();
     populationSlider.update();
-    populationSlider.draw();
+    populationSlider.display();
     sensingRadiusSlider.update();
-    sensingRadiusSlider.draw();
+    sensingRadiusSlider.display();
     regenRateSlider.update();
-    regenRateSlider.draw();
+    regenRateSlider.display();
 
     fill(0);
     noStroke();
@@ -56,20 +56,18 @@ class Data {
     text("Sensing Radius: " + int(sensingRadiusSlider.getPos()), 230, 270);
     text("Regen Rate: " + nf(regenRateSlider.getPos(), 1, 2), 230, 310);
     //text("Agents alive: " + agents.size(), 20, 350);
-    
+
     translate(width/2, height/2);
 
-    for (int i = 0; i < vehicles.size(); i++) {
-      Vehicle v = vehicles.get(i);
+    for (int i = 0; i < environments.size(); i++) {
+      Environment e = environments.get(i);
 
-      if (!v.inMotion) {
-        float healthRatio =  v.membrane.energy / v.membrane.maxEnergy;
-        fill(0);
-        noStroke();
-        textAlign(RIGHT);
-        text("Env " + (i+1) + " Energy: " + int(v.membrane.energy) + " / " + int(v.membrane.maxEnergy), width/2 - 20, -height/2 + 30 + (i * 40));
-        text("Env " + (i+1) + " Reproduction: " + nf(healthRatio * 100, 1, 1) + "%", width/2 - 20, -height/2 + 50 + (i * 40));
-      }
+      float healthRatio =  e.v.membrane.energy / e.v.membrane.maxEnergy;
+      fill(0);
+      noStroke();
+      textAlign(RIGHT);
+      text("Env " + (i+1) + " Energy: " + int(e.v.membrane.energy) + " / " + int(e.v.membrane.maxEnergy), width/2 - 20, -height/2 + 30 + (i * 40));
+      text("Env " + (i+1) + " Reproduction: " + nf(healthRatio * 100, 1, 1) + "%", width/2 - 20, -height/2 + 50 + (i * 40));
     }
   }
 

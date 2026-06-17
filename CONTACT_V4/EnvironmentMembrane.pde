@@ -44,20 +44,20 @@ class VehicleMembrane {
   void update(ArrayList<Vehicle> vehicles, float regenRate) {
     //if (burstTimer > 0) burstTimer--;
     //else birthBurst = false;
-    
+
     energy = min(energy + regenRate, maxEnergy);
-    
+
     //boolean parentStillInside = false;
-    
+
     /*
     for (Vehicle v : vehicles) {
-      if (a.hasGivenBirth && contains(a.position)) {
-        parentStillInside = true;
-        break;
-      }
-    }
-    if (!parentStillInside) coreOccupied = false;
-    */
+     if (a.hasGivenBirth && contains(a.position)) {
+     parentStillInside = true;
+     break;
+     }
+     }
+     if (!parentStillInside) coreOccupied = false;
+     */
   }
 
   void triggerBirthBurst() {
@@ -65,9 +65,10 @@ class VehicleMembrane {
     burstTimer = 120;
   }
 
-  void display(float sensingRadius) {
+  void display(float sensingRadius, color colorBreathing ) {
+    strokeWeight(3);
     noFill();
-    stroke(150, 180);
+    stroke(0, 97, 0);
     circle(position.x, position.y, sensingRadius * 2);
     println("energy ", energy);
     float healthRatio = energy / maxEnergy;
@@ -77,11 +78,12 @@ class VehicleMembrane {
     float resolution = 80;
 
     float hue = map(healthRatio, 0, 1, 360, 240);
-    colorMode(HSB, 360, 100, 100);
+    //colorMode(HSB, 360, 100, 100);
     //strokeWeight(0.8);
-    strokeWeight(3);
+    
     stroke(hue, 60, 75);
     //fill(hue, 50, 95, 60);
+    fill(colorBreathing);
     beginShape();
     for (float a = 0; a <= TWO_PI; a += TWO_PI / resolution) {
       float nVal = 1.0 + map(noise(cos(a) * nInt + noiseOffset, sin(a) * nInt + noiseOffset, noiseT), 0.0, 1.0, -nAmp, nAmp);
@@ -94,9 +96,9 @@ class VehicleMembrane {
 
     /*
     noStroke();
-     fill(hue, 70, 80);
-     colorMode(RGB, 255);
-     circle(position.x, position.y, (radius/4) * 2);
-     */
+    fill(hue, 70, 80);
+    colorMode(RGB, 255);
+    circle(position.x, position.y, (radius/4) * 2);
+    */
   }
 }

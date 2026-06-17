@@ -3,7 +3,10 @@ class Vehicle {
   ArrayList<VehicleSphere> spheres;
   ArrayList<Joint> joints;
   ArrayList<Joint> sideJoints;
-  ArrayList<Vehicle> vehicles;
+
+  //ArrayList<Vehicle> vehicles;
+  ArrayList<Agent> agents;
+  ArrayList<Environment> environments;
 
   VehicleZone zone;
   VehicleLocation location;
@@ -217,16 +220,20 @@ class Vehicle {
     if (inMotion) {
       zone.setState(zone.inMotionNoZoneState);
     } else {
-      zone.setState(zone.emptyState);
+      zone.setState(zone.fullState);
     }
   }
 
   //--------------------------------------------------------------
 
 
-  void run(ArrayList<Vehicle> vs) {
+  //void run(ArrayList<Vehicle> vs) {
+  void run(ArrayList<Agent> as, ArrayList<Environment> es) {
 
-    vehicles = vs;
+    agents = as;
+    environments = es;
+
+    //vehicles = vs;
 
     if (location.getState() != location.vInDeadState) {
 
@@ -280,14 +287,11 @@ class Vehicle {
 
           die();
         }
-      } else if(location.getState() == location.vInOtherVehicleZoneState){
-        
-        
+      } else if (location.getState() == location.vInOtherVehicleZoneState) {
+
+
         //e.energy -= 0.5;
         //e.energy = max(e.energy, 0);
-        
-        
-        
       }
 
       //println("vehicle lung state ", lung.getState());
@@ -355,11 +359,6 @@ class Vehicle {
           zone.setState(zone.fullState);
         }
       }
-      
-      
-      
-      
-      
     } // VEHICLE IS NOT IN MOTION
   }
 
@@ -513,15 +512,15 @@ class Vehicle {
 
     return force;
   }
-  
+
   // ********************************************************
   // MEMBRANE CODE
   // ********************************************************
-  
-  void alterMembraneEnergy(Vehicle v){
-    
-     v.membrane.energy -= 0.5;
-     v.membrane.energy = max(v.membrane.energy, 0);
+
+  void alterMembraneEnergy(Vehicle v) {
+
+    v.membrane.energy -= 5; //0.5;
+    v.membrane.energy = max(v.membrane.energy, 0);
   }
   // ********************************************************
   // PLAYER IS IN VEHICLE ZONE
@@ -747,22 +746,22 @@ class Vehicle {
 
     if (!inMotion) {
 
-      zone.display();
-      membrane.display(data.sensingRadiusSlider.getPos());
-      
+      //zone.display();
+      membrane.display(data.sensingRadiusSlider.getPos(), colorBreathing);
+
       /*
       if ( zone.getState() == zone.fullState) {
-
-        zone.display();
-        membrane.display(data.sensingRadiusSlider.getPos());
-      } else {
-
-        zone.display();
-      }
-      */
+       
+       zone.display();
+       membrane.display(data.sensingRadiusSlider.getPos());
+       } else {
+       
+       zone.display();
+       }
+       */
 
       displayBlob();
-    } else { 
+    } else {
 
       lung.display();
     }
