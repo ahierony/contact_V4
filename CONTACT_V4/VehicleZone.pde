@@ -15,7 +15,6 @@ class VehicleZone {
   VehicleZoneState fullState;
   VehicleZoneState inhaleState;
   VehicleZoneState exhaleState;
-  VehicleZoneState inMotionNoZoneState;
   VehicleZoneState collisionState;
 
   Vehicle vehicle;
@@ -51,10 +50,7 @@ class VehicleZone {
     fullState = new FullZoneState(vehicle);
     exhaleState = new ExhaleZoneState(vehicle);
     inhaleState = new InhaleZoneState(vehicle);
-    inMotionNoZoneState = new InMotionNoZoneState();
     collisionState = new CollisionState(vehicle);
-
-
 
     switchFromExhaleToInhale = true;
     switchFromInhaleToExhale = true;
@@ -412,7 +408,7 @@ class InhaleZoneState implements VehicleZoneState {
 
   boolean readyToSetState;
 
-  boolean zoneResize;
+  //boolean zoneResize;
 
   Vehicle vehicle;
 
@@ -420,7 +416,7 @@ class InhaleZoneState implements VehicleZoneState {
 
     readyToSetState = true;
 
-    zoneResize = true;
+    //zoneResize = true;
 
     vehicle = v;
   }
@@ -433,13 +429,16 @@ class InhaleZoneState implements VehicleZoneState {
     if (readyToSetState) {
 
       setReadyToSetState(false);
-
+       
+       /*
       if (zoneResize) {
         //checkDistanceZoneAgainstVehiclesDistanceZone();
       }
+      */
     }
   }
-
+  
+  /*
   void checkDistanceZoneAgainstVehiclesDistanceZone() {
 
     int offset = 10;
@@ -469,32 +468,8 @@ class InhaleZoneState implements VehicleZoneState {
 
     zoneResize = false;
   }
+  */
 
-
-  public boolean getReadyToSetState() {
-    return readyToSetState;
-  }
-
-  public void setReadyToSetState(boolean rtss) {
-    readyToSetState = rtss;
-  }
-}
-
-// ********************************************************
-
-class InMotionNoZoneState implements VehicleZoneState {
-
-  boolean readyToSetState;
-
-  InMotionNoZoneState() {
-
-    readyToSetState = true;
-  }
-
-  //--------------------------------------------------------------
-
-  void update() {
-  }
 
   public boolean getReadyToSetState() {
     return readyToSetState;

@@ -82,8 +82,6 @@ class Vehicle {
 
   Player player;
 
-  boolean inPlayerDistanceArea;
-  boolean inPlayerBreathingArea;
   boolean inOtherVehicleBreathingZone;
   boolean inOtherVehicleDistanceZone;
   boolean otherVehicleInDistanceZone;
@@ -149,7 +147,7 @@ class Vehicle {
     spheres = new ArrayList<VehicleSphere>();
     joints = new ArrayList<Joint>();
     sideJoints = new ArrayList<Joint>();
-    vehicles = new ArrayList<Vehicle>();
+    //vehicles = new ArrayList<Vehicle>();
 
     ellipseMode(RADIUS);
 
@@ -159,13 +157,14 @@ class Vehicle {
 
     blobRadius = radius + sphereRadius;
 
-    zone = new VehicleZone(this);
+    location = new VehicleLocation(this, player, _inMotion);
 
-    if (!inMotion) {
+    if (!inMotion) { // environment
+      zone = new VehicleZone(this);
       isReadyForCollision = true;
       zone.isBreathing = true;
       membrane = new VehicleMembrane(x, y, zone.radiusMax);
-    } else {
+    } else { // agent
       calibrateLungRadius = 0;
       lung = new VehicleLung(this);
       lung.previousRadius = lung.radiusMax;
@@ -192,10 +191,8 @@ class Vehicle {
 
     startedRipples = false;
 
-    location = new VehicleLocation(this, player, _inMotion);
 
-    inPlayerDistanceArea = false;
-    inPlayerBreathingArea = false;
+
     inOtherVehicleBreathingZone = false;
     inOtherVehicleDistanceZone = false;
     otherVehicleInDistanceZone = false;
@@ -218,11 +215,12 @@ class Vehicle {
   void initialize() {
 
     if (inMotion) {
-      zone.setState(zone.inMotionNoZoneState);
+      //zone.setState(zone.inMotionNoZoneState);
     } else {
       zone.setState(zone.fullState);
     }
   }
+
 
   //--------------------------------------------------------------
 
@@ -235,14 +233,19 @@ class Vehicle {
 
     //vehicles = vs;
 
-    if (location.getState() != location.vInDeadState) {
+    if (inMotion) {
+      if (location.getState() != location.vInDeadState) {
 
-      update();
+        update();
 
-      display();
+        display();
+      } else {
+
+        displayDeadVehicle();
+      }
     } else {
-
-      displayDeadVehicle();
+      update();
+      display();
     }
   }
 
@@ -261,17 +264,10 @@ class Vehicle {
       inOtherVehicleBreathingZone = false;
 
 
-      for (Vehicle v : vehicles) {
+      for (Environment e : environments) {
 
-        if (v != this) {
-
-          if (v.location.getState() == v.location.vInBreathingState) {
-
-            checkIfInOtherVehicleZone(v);
-          }
-        }
+        checkIfInOtherVehicleZone(e.v);
       }
-
 
       location.update();
 
@@ -294,23 +290,18 @@ class Vehicle {
         //e.energy = max(e.energy, 0);
       }
 
-      //println("vehicle lung state ", lung.getState());
-      //println("current M ", lung.breath.currentM);
 
       //checkRippleCount(); // vehicle stops moving and starts breathing // not in this version
     } else { // // VEHICLE IS NOT IN MOTION
 
 
-
       boolean otherVehicleAlreadyHasPlayerInDistanceZone = false;
 
-      for (int i = 0; i < vehicles.size(); i++) {
+      for (Environment e : environments) {
 
-        Vehicle v = vehicles.get(i);
+        if (e.v != this) {
 
-        if (v != this) {
-
-          if (v.playerInDistanceZone) {
+          if (e.v.playerInDistanceZone) {
 
             otherVehicleAlreadyHasPlayerInDistanceZone = true;
           }
@@ -344,7 +335,7 @@ class Vehicle {
 
       //if (zone.getState() == zone.fullState) {
 
-      membrane.update(vehicles, data.regenRateSlider.getPos());
+      membrane.update(environments, data.regenRateSlider.getPos());
       //}
 
 
@@ -368,7 +359,7 @@ class Vehicle {
 
     if (location.getState() == location.vInMovingState) {
 
-      if (!inOtherVehicleDistanceZone && !inPlayerDistanceArea) {
+      if (!inOtherVehicleDistanceZone) {
 
         return true;
       } else {
@@ -650,21 +641,15 @@ class Vehicle {
 
   void checkIfOtherVehicleIsInZoneRadius() {
 
-    for (Vehicle otherV : vehicles) {
+    for (Agent a : agents) {
 
-      if (otherV != this) {
+      if (isOtherVehicleInZone(a.v, zone.distanceRadius)) {
 
-        if (otherV.inMotion) {
+        distanceFinal = true;
 
-          if (isOtherVehicleInZone(otherV, zone.distanceRadius)) {
+        if (isOtherVehicleInZone(a.v, zone.radius)) {
 
-            distanceFinal = true;
-
-            if (isOtherVehicleInZone(otherV, zone.radius)) {
-
-              breathingFinal = true;
-            }
-          }
+          breathingFinal = true;
         }
       }
     }

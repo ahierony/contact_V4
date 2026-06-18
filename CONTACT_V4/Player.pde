@@ -384,41 +384,6 @@ class Player {
   }
 
 
-  // ********************************************************
-  // VEHICLE IN PLAYER AREA
-  // ********************************************************
-
-  void checkForVehicleInArea() {
-
-    vehicleInDistanceArea = false;
-    vehicleInBreathingArea = false;
-
-    for (int i = 0; i < vehicles.size(); i++) {
-
-      Vehicle v = vehicles.get(i);
-
-      if (v.inMotion) {
-
-        if (v.inPlayerDistanceArea) {
-
-          vehicleInDistanceArea = true;
-
-          if (v.inPlayerBreathingArea) {
-            vehicleInBreathingArea = true;
-
-            
-          }
-        }
-      }
-    }
-
-    if (!vehicleInDistanceArea) {
-      vehicleInBreathingArea = false;
-
-      
-    }
-  }
-
   //--------------------------------------------------------------
 
   void updateAccelBoth() {

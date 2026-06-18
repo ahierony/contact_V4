@@ -206,7 +206,7 @@ class Bg_Unit {
 
       agent.v.makeBlob(unitPosVecPixels);
 
-      agent.v.initialize();
+      //agent.v.initialize();
     } else {
 
       agent.v.posVecPixels.set(unitPos.x, unitPos.y);

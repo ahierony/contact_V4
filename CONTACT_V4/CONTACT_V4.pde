@@ -566,18 +566,6 @@ void draw() {
         e.run(agents, environments);
         
       }
-      
-     /*
-      for (Vehicle v : vehicles) {
-
-        if (!v.inMotion) {
-          v.run(vehicles);
-        } else {
-          v.run(vehicles);
-        }
-      }
-      */
-
 
       player.display();
 

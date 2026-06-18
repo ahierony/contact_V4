@@ -109,7 +109,7 @@ class VehicleBoid {
 
     boidPosition = box2d.coordPixelsToWorld(boidPosPixels);
 
-    separate(vehicles);
+    separate(agents);
 
     //playerVehicleDistance = dist(boidPosPixels.x, boidPosPixels.y, playerPosVecPixels.x, playerPosVecPixels.y);
 
@@ -168,7 +168,7 @@ class VehicleBoid {
 
   // Separation
   // Method checks for nearby boids and steers away
-  void separate (ArrayList<Vehicle> vehicles) {
+  void separate (ArrayList<Agent> agents) {
 
     float desiredseparation = box2d.scalarPixelsToWorld(300);
 
@@ -176,8 +176,8 @@ class VehicleBoid {
     int count = 0;
     // For every boid in the system, check if it's too close
     Vec2 locA = body.getWorldCenter();
-    for (Vehicle other : vehicles) {
-      Vec2 locB = other.centerBoid.body.getWorldCenter();
+    for (Agent other : agents) {
+      Vec2 locB = other.v.centerBoid.body.getWorldCenter();
       float d = dist(locA.x, locA.y, locB.x, locB.y);
       // If the distance is greater than 0 and less than an arbitrary amount (0 when you are yourself)
       if ((d > 0) && (d < desiredseparation)) {

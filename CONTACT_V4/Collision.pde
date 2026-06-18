@@ -33,18 +33,18 @@ class Collision {
 
         if (vehiclesAreTouching(e, a)) {
 
-          if ( a.v.zone.getState() != a.v.zone.collisionState) {
+          if ( e.v.zone.getState() != e.v.zone.collisionState) {
 
-            if (a.v.zone.collisionState.getReadyToSetState()) {
+            if (e.v.zone.collisionState.getReadyToSetState()) {
 
               manageBirth(e, a);
 
-              a.v.collided();
+              e.v.collided();
 
               println("collision!");
 
               //switchVehicleFromBreathingToMoving(v);
-              a.v.zone.setState(a.v.zone.collisionState);
+              e.v.zone.setState(e.v.zone.collisionState);
             }
           }
         }

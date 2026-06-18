@@ -11,9 +11,10 @@ class VehicleLocation {
   VehicleLocationState state;
 
   VehicleLocationState vInMovingState;
-  VehicleLocationState vInBreathingState;
   VehicleLocationState vInOtherVehicleZoneState;
   VehicleLocationState vInDeadState;
+  
+  VehicleLocationState vInBreathingState;
 
   Vehicle vehicle;
   Player player;
@@ -26,9 +27,12 @@ class VehicleLocation {
     player = p;
 
     vInMovingState = new VInMovingState(vehicle, player);
-    vInBreathingState = new VInBreathingState(vehicle);
     vInOtherVehicleZoneState = new VInOtherVehicleZoneState(vehicle);
     vInDeadState = new VInDeadState(vehicle);
+    
+    vInBreathingState = new VInBreathingState(vehicle);
+
+    setState(vInMovingState);
 
     if (_inMotion) {
       setState(vInMovingState);
@@ -62,19 +66,13 @@ class VehicleLocation {
 
   void resetStates() {
     if (getState() == vInMovingState) {
-      //
-      vInBreathingState.setReadyToSetState(true);
-      vInOtherVehicleZoneState.setReadyToSetState(true);
-      //
-    } else if (getState() == vInBreathingState) {
-      //
-      vInMovingState.setReadyToSetState(true);
+
       vInOtherVehicleZoneState.setReadyToSetState(true);
       //
     } else if (getState() == vInOtherVehicleZoneState) {
       //
       vInMovingState.setReadyToSetState(true);
-      vInOtherVehicleZoneState.setReadyToSetState(true);
+      //vInOtherVehicleZoneState.setReadyToSetState(true);
     }
   }
 
@@ -145,7 +143,6 @@ class VInMovingState implements VehicleLocationState {
 
     //addTrailRipples();
     setLungState();
-    
   }
 
   public boolean getReadyToSetState() {
@@ -166,6 +163,8 @@ class VInMovingState implements VehicleLocationState {
 
   void setLungState() {
 
+    println("vehicle.lung.breath.movement ", vehicle.lung.breath.movement);
+
     if (vehicle.lung.breath.movement == "empty") {
       vehicle.lung.setState(vehicle.lung.emptyState);
     }
@@ -174,6 +173,96 @@ class VInMovingState implements VehicleLocationState {
 
       vehicle.lung.setState(vehicle.lung.exhaleState);
     }
+  }
+}
+
+
+// ********************************************************
+// IN OTHER VEHICLE ZONE
+// ********************************************************
+
+
+class VInOtherVehicleZoneState implements VehicleLocationState {
+
+  boolean readyToSetState;
+
+  Vehicle vehicle;
+
+  VInOtherVehicleZoneState(Vehicle v) {
+
+    vehicle = v;
+
+    readyToSetState = true;
+  }
+
+  //--------------------------------------------------------------
+
+  void update() {
+
+
+    if (readyToSetState) {
+
+      setReadyToSetState(false);
+    }
+
+
+    setLungState();
+  }
+
+  void setLungState() {
+
+    if (vehicle.lung.breath.movement == "full") {
+      vehicle.lung.setState(vehicle.lung.fullState);
+    }
+
+    if (vehicle.lung.getState() != vehicle.lung.fullState) {
+
+      vehicle.lung.setState(vehicle.lung.inhaleState);
+    }
+  }
+
+  public boolean getReadyToSetState() {
+    return readyToSetState;
+  }
+
+  public void setReadyToSetState(boolean rtss) {
+    readyToSetState = rtss;
+  }
+}
+
+// ********************************************************
+
+class VInDeadState implements VehicleLocationState {
+
+  boolean readyToSetState;
+
+  Vehicle vehicle;
+
+  VInDeadState(Vehicle v) {
+
+    vehicle = v;
+
+    readyToSetState = true;
+  }
+
+  //--------------------------------------------------------------
+
+  void update() {
+
+    if (readyToSetState) {
+
+      setReadyToSetState(false);
+    }
+
+    vehicle.displayDeadVehicle();
+  }
+
+  public boolean getReadyToSetState() {
+    return readyToSetState;
+  }
+
+  public void setReadyToSetState(boolean rtss) {
+    readyToSetState = rtss;
   }
 }
 
@@ -225,27 +314,27 @@ class VInBreathingState implements VehicleLocationState {
         vehicle.breath.breathe();
         //println("start breathing");
       }
-
-
+      
+      /*
       if (vehicle.readyToUpdateDistanceZone) {
 
         if (vehicle.zone.getState() == vehicle.zone.emptyState) {
 
-          updateVehicleRadius();
+          //updateVehicleRadius();
         }
 
         vehicle.readyToUpdateDistanceZone = false;
       }
+      */
 
-
-      checkVehicleBreathingZoneAgainstOther();
+      //checkVehicleBreathingZoneAgainstOther();
     }
   }
 
   //--------------------------------------------------------------
-
+  /*
   void checkVehicleBreathingZoneAgainstOther() {
-
+    
     Vec2 vehiclePos = box2d.getBodyPixelCoord(vehicle.centerBoid.body);
 
     for (int i = 0; i < vehicles.size(); i++) {
@@ -259,57 +348,61 @@ class VInBreathingState implements VehicleLocationState {
         float offset = 100.0f;
 
         float d = dist(vehiclePos.x, vehiclePos.y, otherVehiclePos.x, otherVehiclePos.y);
-
+        
         //println("d ", d);
         //println("vehicle.zone.radius + v.zone.radius + offset ", vehicle.zone.radius + v.zone.radius + offset);
-
+        
         if (d < (vehicle.zone.radius + v.zone.radius) + offset) {
-
+          
           //println("bigger");
 
           vehicle.otherBreathingVehicleComingClose = true;
           v.otherBreathingVehicleComingClose = true;
-        }
+          
+        } 
       }
     }
   }
+  */
 
   //--------------------------------------------------------------
 
 
-
+  /*
   void updateVehicleRadius() {
-
-    vehicleZoneTempRadius = vehicle.zone.originalRadiusMax;
-
-    //Vec2 playerPosPix = box2d.getBodyPixelCoord(player.centerSphere.body);
-    Vec2 vehiclePosPix = box2d.getBodyPixelCoord(vehicle.centerBoid.body);
-
-
-
-    for (int i = 0; i < vehicles.size(); i++) {
-
-      Vehicle v = vehicles.get(i);
-
-      if (!v.inMotion && vehicle != v) {
-
-        Vec2 otherVehiclePosPix = box2d.getBodyPixelCoord(v.centerBoid.body);
-
-        vehicleZoneTempRadius = checkVehicleZoneAgainstDistance(vehiclePosPix, otherVehiclePosPix, v.zone.distanceRadius);
-      }
-    }
-
-
-    //vehicle.zone.distanceRadius = vehicleZoneTempRadius;
-
-
-    if (vehicleZoneTempRadius > vehicle.zone.radiusMin) {
-      vehicle.zone.distanceRadius = vehicleZoneTempRadius;
-    } else {
-      vehicle.zone.distanceRadius = vehicle.zone.radiusMin;
-    }
-  }
-
+   
+   vehicleZoneTempRadius = vehicle.zone.originalRadiusMax;
+   
+   Vec2 playerPosPix = box2d.getBodyPixelCoord(player.centerSphere.body);
+   Vec2 vehiclePosPix = box2d.getBodyPixelCoord(vehicle.centerBoid.body);
+   
+   if (player.location.getState() == player.location.pLocBreathingState) {
+   checkVehicleZoneAgainstDistance(vehiclePosPix, playerPosPix, player.area.distanceRadius);
+   }
+   
+   for (int i = 0; i < vehicles.size(); i++) {
+   
+   Vehicle v = vehicles.get(i);
+   
+   if (!v.inMotion && vehicle != v) {
+   
+   Vec2 otherVehiclePosPix = box2d.getBodyPixelCoord(v.centerBoid.body);
+   
+   vehicleZoneTempRadius = checkVehicleZoneAgainstDistance(vehiclePosPix, otherVehiclePosPix, v.zone.distanceRadius);
+   }
+   }
+   
+   
+   //vehicle.zone.distanceRadius = vehicleZoneTempRadius;
+   
+   
+   if (vehicleZoneTempRadius > vehicle.zone.radiusMin) {
+   vehicle.zone.distanceRadius = vehicleZoneTempRadius;
+   } else {
+   vehicle.zone.distanceRadius = vehicle.zone.radiusMin;
+   }
+   }
+   */
 
 
   /*
@@ -329,112 +422,22 @@ class VInBreathingState implements VehicleLocationState {
    return false;
    }
    }
+   
+   float checkVehicleZoneAgainstDistance(Vec2 vehiclePosPix, Vec2 otherPosPix, float otherRadius) {
+   
+   float offset = 10.0f;
+   
+   float d_pix = dist(vehiclePosPix.x, vehiclePosPix.y, otherPosPix.x, otherPosPix.y);
+   
+   if (d_pix < otherRadius + vehicleZoneTempRadius + offset) {
+   
+   vehicleZoneTempRadius = d_pix - otherRadius - offset;
+   }
+   
+   return vehicleZoneTempRadius;
+   }
    */
 
-  float checkVehicleZoneAgainstDistance(Vec2 vehiclePosPix, Vec2 otherPosPix, float otherRadius) {
-
-    float offset = 10.0f;
-
-    float d_pix = dist(vehiclePosPix.x, vehiclePosPix.y, otherPosPix.x, otherPosPix.y);
-
-    if (d_pix < otherRadius + vehicleZoneTempRadius + offset) {
-
-      vehicleZoneTempRadius = d_pix - otherRadius - offset;
-    }
-
-    return vehicleZoneTempRadius;
-  }
-
-
-
-  public boolean getReadyToSetState() {
-    return readyToSetState;
-  }
-
-  public void setReadyToSetState(boolean rtss) {
-    readyToSetState = rtss;
-  }
-}
-
-// ********************************************************
-// IN OTHER VEHICLE ZONE
-// ********************************************************
-
-
-class VInOtherVehicleZoneState implements VehicleLocationState {
-
-  boolean readyToSetState;
-
-  Vehicle vehicle;
-
-  VInOtherVehicleZoneState(Vehicle v) {
-
-    vehicle = v;
-
-    readyToSetState = true;
-  }
-
-  //--------------------------------------------------------------
-
-  void update() {
-
-
-    if (readyToSetState) {
-
-      setReadyToSetState(false);
-    }
-    
-
-    setLungState();
-  }
-
-  void setLungState() {
-
-    if (vehicle.lung.breath.movement == "full") {
-      vehicle.lung.setState(vehicle.lung.fullState);
-    }
-
-    if (vehicle.lung.getState() != vehicle.lung.fullState) {
-
-      vehicle.lung.setState(vehicle.lung.inhaleState);
-    }
-  }
-
-  public boolean getReadyToSetState() {
-    return readyToSetState;
-  }
-
-  public void setReadyToSetState(boolean rtss) {
-    readyToSetState = rtss;
-  }
-}
-
-// ********************************************************
-
-class VInDeadState implements VehicleLocationState {
-
-  boolean readyToSetState;
-
-  Vehicle vehicle;
-
-  VInDeadState(Vehicle v) {
-
-    vehicle = v;
-
-    readyToSetState = true;
-  }
-
-  //--------------------------------------------------------------
-
-  void update() {
-
-    if (readyToSetState) {
-
-      setReadyToSetState(false);
-    }
-    
-    vehicle.displayDeadVehicle();
-  }
 
   public boolean getReadyToSetState() {
     return readyToSetState;

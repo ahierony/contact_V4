@@ -41,7 +41,7 @@ class VehicleMembrane {
    }
    */
 
-  void update(ArrayList<Vehicle> vehicles, float regenRate) {
+  void update(ArrayList<Environment> environments, float regenRate) {
     //if (burstTimer > 0) burstTimer--;
     //else birthBurst = false;
 

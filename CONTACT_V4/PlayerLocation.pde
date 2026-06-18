@@ -19,7 +19,7 @@ class PlayerLocation {
   Vehicle currentVehicle;
 
   boolean isHit;
-  
+
   boolean playerInLungRefillZone;
 
 
@@ -70,11 +70,12 @@ class PlayerLocation {
       pLocVehicleZoneState.setReadyToSetState(true);
       //
     } /*else if (getState() == pLocBreathingState) {
-      //
-      pLocMovingState.setReadyToSetState(true);
-      pLocVehicleZoneState.setReadyToSetState(true);
-      //
-    } */else if (getState() == pLocVehicleZoneState) {
+     //
+     pLocMovingState.setReadyToSetState(true);
+     pLocVehicleZoneState.setReadyToSetState(true);
+     //
+     } */
+    else if (getState() == pLocVehicleZoneState) {
       //
       pLocMovingState.setReadyToSetState(true);
       //pLocBreathingState.setReadyToSetState(true);
@@ -87,6 +88,18 @@ class PlayerLocation {
     boolean inVehicleDistanceZone = false;
     boolean inVehicleBreathingZone = false;
 
+    for (Environment e : environments) {
+
+      if (e.v.playerInDistanceZone) {
+        inVehicleDistanceZone = true;
+        if (e.v.playerInBreathingZone) {
+          inVehicleBreathingZone = true;
+          currentVehicle = e.v;
+        }
+      }
+    }
+
+    /*
     for (Vehicle v : vehicles) {
       if (v.playerInDistanceZone) {
         inVehicleDistanceZone = true;
@@ -96,6 +109,8 @@ class PlayerLocation {
         }
       }
     }
+    */
+    
     // ******************
     // IN SPACE MOVING
     // ******************
@@ -114,8 +129,6 @@ class PlayerLocation {
           {
 
             setState(pLocVehicleZoneState);
-
-            
           }
         }
       } else {
@@ -137,31 +150,32 @@ class PlayerLocation {
       // IN SPACE BREATHING
       // ******************
     } /*else if (getState() == pLocBreathingState) {
-
-      // check to see if player is picking up speed and transition to moving
-      if (player.lung.getState() != player.lung.emptyState && player.lockedEye == "both") {
-
-        if (pLocMovingState.getReadyToSetState()) {
-          player.jointSphere.body.setType(BodyType.DYNAMIC);
-          setState(pLocMovingState);
-          player.area.setState(player.area.notBreathingState);
-        }
-      }
-
-
-      if (inVehicleBreathingZone) {
-
-        if (pLocVehicleZoneState.getReadyToSetState()) {
-          {
-            player.jointSphere.body.setType(BodyType.DYNAMIC);
-            setState(pLocVehicleZoneState);
-          }
-        }
-      }
-      // ******************
-      // IN VEHICLE ZONE
-      // ******************
-    }*/ else if (getState() == pLocVehicleZoneState) {
+     
+     // check to see if player is picking up speed and transition to moving
+     if (player.lung.getState() != player.lung.emptyState && player.lockedEye == "both") {
+     
+     if (pLocMovingState.getReadyToSetState()) {
+     player.jointSphere.body.setType(BodyType.DYNAMIC);
+     setState(pLocMovingState);
+     player.area.setState(player.area.notBreathingState);
+     }
+     }
+     
+     
+     if (inVehicleBreathingZone) {
+     
+     if (pLocVehicleZoneState.getReadyToSetState()) {
+     {
+     player.jointSphere.body.setType(BodyType.DYNAMIC);
+     setState(pLocVehicleZoneState);
+     }
+     }
+     }
+     // ******************
+     // IN VEHICLE ZONE
+     // ******************
+     }*/
+    else if (getState() == pLocVehicleZoneState) {
 
       // check to see if player is out of vehicle zone and moving
 
@@ -170,8 +184,6 @@ class PlayerLocation {
         if (player.lung.getState() == player.lung.fullState) {
 
           setState(pLocMovingState);
-
-          
         }
       } else {
 
@@ -180,8 +192,6 @@ class PlayerLocation {
           if (pLocMovingState.getReadyToSetState()) {
 
             setState(pLocMovingState);
-
-            
           }
         }
       }
@@ -285,7 +295,7 @@ class PLocVehicleZoneState implements PlayerLocationState {
 
       setReadyToSetState(false);
     }
-    
+
     if (player.lung.getState() != player.lung.emptyState) {
       player.lung.setState(player.lung.holdState);
     }
@@ -295,7 +305,7 @@ class PLocVehicleZoneState implements PlayerLocationState {
       //player.location.isHit = true;
     }
 
-    if(player.location.playerInLungRefillZone){
+    if (player.location.playerInLungRefillZone) {
       setLungState();
     }
 
