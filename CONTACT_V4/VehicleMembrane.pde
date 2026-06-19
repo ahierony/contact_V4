@@ -25,39 +25,20 @@ class VehicleMembrane {
     return PVector.dist(position, agentPos) < sensingRadius;
   }
 
-  /*
-  void updatedCore(ArrayList<Agent> agents, float regenRate){
-   if (burstTimer > 0) burstTimer--;
-   else birthBurst = false;
-   energy = min(energy + regenRate, maxEnergy);
-   boolean parentStillInside = false;
-   for (Agent a : agents){
-   if (a.hasGivenBirth && contains(a.position)){
-   parentStillInside = true;
-   break;
-   }
-   }
-   if (!parentStillInside) coreOccupied = false;
-   }
-   */
-
-  void update(ArrayList<Environment> environments, float regenRate) {
-    //if (burstTimer > 0) burstTimer--;
-    //else birthBurst = false;
-
-    energy = min(energy + regenRate, maxEnergy);
-
-    //boolean parentStillInside = false;
-
-    /*
-    for (Vehicle v : vehicles) {
-     if (a.hasGivenBirth && contains(a.position)) {
-     parentStillInside = true;
-     break;
-     }
-     }
-     if (!parentStillInside) coreOccupied = false;
-     */
+  void update(ArrayList<Agent> agents, float regenRate) {
+    if (burstTimer > 0) burstTimer--;
+    else birthBurst = false; // burst event expires after burstTimer frames
+    energy = min(energy + regenRate, maxEnergy); // energy regeneration each frame
+    // coreOccupied stays true as long as the reproducing parent is still inside
+    // once parent leaves, slot opens for next reproduction
+    boolean parentStillInside = false;
+    for (Agent a : agents) {
+      if (a.hasGivenBirth && contains(a.position)) {
+        parentStillInside = true;
+        break;
+      }
+    }
+    if (!parentStillInside) coreOccupied = false;
   }
 
   void triggerBirthBurst() {
@@ -80,7 +61,7 @@ class VehicleMembrane {
     float hue = map(healthRatio, 0, 1, 360, 240);
     //colorMode(HSB, 360, 100, 100);
     //strokeWeight(0.8);
-    
+
     stroke(hue, 60, 75);
     //fill(hue, 50, 95, 60);
     fill(colorBreathing);
@@ -96,9 +77,9 @@ class VehicleMembrane {
 
     /*
     noStroke();
-    fill(hue, 70, 80);
-    colorMode(RGB, 255);
-    circle(position.x, position.y, (radius/4) * 2);
-    */
+     fill(hue, 70, 80);
+     colorMode(RGB, 255);
+     circle(position.x, position.y, (radius/4) * 2);
+     */
   }
 }

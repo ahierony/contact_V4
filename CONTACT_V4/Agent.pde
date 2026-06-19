@@ -1,23 +1,7 @@
-class Agent{
-  
+class Agent {
+
   Vehicle v;
-  
-  
-  Agent(float x, float y, int _colorAngle, boolean _inMotion, String type_, int unitNum_, Player p, int vIndex){
-    
-    v = new Vehicle(x, y, _colorAngle, _inMotion, type_, unitNum_, p, vIndex);
-    
-  }
-  
-  void run(ArrayList<Agent> agents, ArrayList<Environment> environments){
-    
-    v.run(agents, environments);
-    
-    
-  }
-  
-  
-  /*
+
   float air; // determines lung capacity
   float health = 100; // reduces on reproduction
   float maxHealth = 100;
@@ -36,40 +20,64 @@ class Agent{
   Environment driftingFrom = null;
   int kickTimer = 0;
   PVector kickDir = new PVector(0, 0); // normalized direction of current jump
-  float kickDecay = 0; 
+  float kickDecay = 0;
   int tadpoleSuppression = 0; // frames when kicking for jump is off
   Environment trackedEnv = null; // locked in env to seek
 
-  Agent(float x, float y){
+
+  Agent(float x, float y, int _colorAngle, boolean _inMotion, String type_, int unitNum_, Player p, int vIndex) {
+    
+    position = new PVector(x, y);
+    xoff = random(1000);
+    yoff = random(1000);
+    velocity = PVector.random2D();
+    air = maxAir;
+
+    v = new Vehicle(x, y, _colorAngle, _inMotion, type_, unitNum_, p, vIndex);
+  }
+
+  void run(ArrayList<Agent> agents, ArrayList<Environment> environments) {
+
+    v.run(agents, environments);
+  }
+
+  /*
+  Agent(float x, float y) {
     position = new PVector(x, y);
     xoff = random(1000);
     yoff = random(1000);
     velocity = PVector.random2D();
     air = maxAir;
   }
-
-  boolean dead(){
+  */
+  
+  //--------------------------------------------------------------
+  /*
+  boolean dead() {
     return air <= 0 || health <= 0;
   }
+  */
 
-  void update(float drainRate, ArrayList<Agent> agents, ArrayList<Environment> environments, float sepDist, float sepForce, float sensingRadius){
+  //--------------------------------------------------------------
+
+  void update(float drainRate, ArrayList<Agent> agents, ArrayList<Environment> environments, float sepDist, float sepForce, float sensingRadius) {
     if (reproductionCooldown > 0) reproductionCooldown--;
     if (burstSeekSuppression > 0) burstSeekSuppression--;
     if (tadpoleSuppression > 0) tadpoleSuppression--;
 
     boolean insideAnyEnv = false;
-    for (Environment e : environments){
-      if (e.contains(position)) insideAnyEnv = true;
+    for (Environment e : environments) {
+      if (e.v.membrane.contains(position)) insideAnyEnv = true;
     }
 
-    if (tadpoleSuppression == 0){
+    if (tadpoleSuppression == 0) {
       kickTimer--;
 
       // schedule new jump every 50 to 100 frames
-      if (kickTimer <= 0){
+      if (kickTimer <= 0) {
         kickTimer = (int)random(50, 100);
 
-        
+
         PVector forward = velocity.copy();
         if (forward.mag() < 0.1) forward = PVector.random2D();
         forward.normalize();
@@ -80,13 +88,12 @@ class Agent{
 
       // gradual thrust for jump with exponentual decay
       // frame 1 big push, frame 2 smaller, frame 3 smaller, trails to zero
-      if (kickDecay > 0){
+      if (kickDecay > 0) {
         float thisFrame = min(kickDecay, kickDecay * 0.18); // 18% of remaining thrust each turn
         velocity.add(PVector.mult(kickDir, thisFrame));
         kickDecay -= thisFrame;
         if (kickDecay < 0.5) kickDecay = 0;
       }
-
     } else {
       // kick is ignored post-birth during the env burst
       // Perlin noise for smooth wandering
@@ -98,49 +105,49 @@ class Agent{
     }
 
     // once drifting agent is far enough from the dying env, stop drifting
-    if (driftingOut && driftingFrom != null){
-      float distFromDead = PVector.dist(position, driftingFrom.position);
-      if (distFromDead > sensingRadius * 1.5){ // 1.5* radius for clean margin
+    if (driftingOut && driftingFrom != null) {
+      float distFromDead = PVector.dist(position, driftingFrom.v.membrane.position);
+      if (distFromDead > sensingRadius * 1.5) { // 1.5* radius for clean margin
         driftingOut = false;
         driftingFrom = null;
       }
     }
 
     // only seek an environment when air is below 70%
-    if (air < maxAir * 0.7 && burstSeekSuppression == 0 && !driftingOut){
+    if (air < maxAir * 0.7 && burstSeekSuppression == 0 && !driftingOut) {
       Environment nearest = nearestInRange(environments, sensingRadius);
-      if (nearest != null){
-        PVector toEnv = PVector.sub(nearest.position, position);
+      if (nearest != null) {
+        PVector toEnv = PVector.sub(nearest.v.membrane.position, position);
         float distToEnv = toEnv.mag();
-        float nearestHealth = nearest.energy / nearest.maxEnergy;
+        float nearestHealth = nearest.v.membrane.energy / nearest.v.membrane.maxEnergy;
 
-        if (distToEnv < nearest.radius * 0.7){
-          // to avoid getting stuck at the core 
-          if (reproductionCooldown > 0 && velocity.mag() < 0.5){
-            PVector nudge = PVector.sub(position, nearest.position);
+        if (distToEnv < nearest.v.membrane.radius * 0.7) {
+          // to avoid getting stuck at the core
+          if (reproductionCooldown > 0 && velocity.mag() < 0.5) {
+            PVector nudge = PVector.sub(position, nearest.v.membrane.position);
             if (nudge.mag() < 10) nudge = PVector.random2D(); // to close to the centre pick random direction
             nudge.setMag(1.2);
             velocity.add(nudge);
           }
           // healthy agent in a dying environment drifts to search for healthier env
           float agentHealthRatio = health / maxHealth;
-          if (agentHealthRatio > 0.6 && nearestHealth < 0.4){
+          if (agentHealthRatio > 0.6 && nearestHealth < 0.4) {
             driftingOut = true;
             driftingFrom = nearest;
           }
           // slow down an aim for the boundary during seeking
-        } else if (distToEnv < nearest.radius * 1.1){
-          toEnv.setMag(nearest.radius * 0.9); // just inside edge
+        } else if (distToEnv < nearest.v.membrane.radius * 1.1) {
+          toEnv.setMag(nearest.v.membrane.radius * 0.9); // just inside edge
           PVector target = PVector.add(position, toEnv);
           PVector seekForce = PVector.sub(target, position);
           float urgency = map(air, 0, maxAir * 0.5, 1.5, 0.0); // more desperate for air, stronger pull
-          float proximity = map(distToEnv, nearest.radius * 0.7, nearest.radius * 1.1, 0.3, 1.0); // weaker seek force if inside the env already
+          float proximity = map(distToEnv, nearest.v.membrane.radius * 0.7, nearest.v.membrane.radius * 1.1, 0.3, 1.0); // weaker seek force if inside the env already
           float seekMag = insideAnyEnv ? 2.5 : 7.0;
           seekForce.setMag(seekMag * proximity);
           seekForce.mult(urgency);
           velocity.add(seekForce);
         } else {
-          toEnv.setMag(nearest.radius * 0.9);
+          toEnv.setMag(nearest.v.membrane.radius * 0.9);
           PVector target = PVector.add(position, toEnv);
           PVector seekForce = PVector.sub(target, position);
           float urgency = map(air, 0, maxAir * 0.5, 1.5, 0.0);
@@ -152,20 +159,20 @@ class Agent{
       }
     }
     // push agent away from dying env if it decided to leave
-    if (driftingOut && driftingFrom != null){
-      PVector driftOut = PVector.sub(position, driftingFrom.position); // vector pointing away from env
+    if (driftingOut && driftingFrom != null) {
+      PVector driftOut = PVector.sub(position, driftingFrom.v.membrane.position); // vector pointing away from env
       driftOut.normalize();
-      float driftStrength = map(driftingFrom.energy / driftingFrom.maxEnergy, 0, 0.4, 2.5, 0.0); // stops pushing at 40% health
+      float driftStrength = map(driftingFrom.v.membrane.energy / driftingFrom.v.membrane.maxEnergy, 0, 0.4, 2.5, 0.0); // stops pushing at 40% health
       driftOut.setMag(driftStrength);
       velocity.add(driftOut);
     }
     // when birth happens all agents get pushed outside the env with a burst
-    for (Environment e : environments){
-      float distFromCenter = PVector.dist(position, e.position);
-      if (e.birthBurst && !bursted && distFromCenter < e.radius){
-        PVector repel = PVector.sub(position, e.position);
+    for (Environment e : environments) {
+      float distFromCenter = PVector.dist(position, e.v.membrane.position);
+      if (e.v.membrane.birthBurst && !bursted && distFromCenter < e.v.membrane.radius) {
+        PVector repel = PVector.sub(position, e.v.membrane.position);
         repel.normalize();
-        float kickStrength = map(distFromCenter, 0, e.radius, 200, 150);
+        float kickStrength = map(distFromCenter, 0, e.v.membrane.radius, 200, 150);
         repel.setMag(kickStrength);
         velocity.add(repel);
         bursted = true;
@@ -173,7 +180,7 @@ class Agent{
         tadpoleSuppression = 60; // brief wander after birth to avoid sudden conflicts of pull and push
         kickDecay = 0;
       }
-      if (!e.birthBurst) bursted = false;
+      if (!e.v.membrane.birthBurst) bursted = false;
     }
 
     // inside environments agents move slower, more viscous
@@ -196,25 +203,27 @@ class Agent{
 
     // reset reproduction attempt flag once agent leaves core
     boolean inAnyCore = false;
-    for (Environment e : environments){
-      if (e.containsCore(position)) inAnyCore = true;
+    for (Environment e : environments) {
+      if (e.v.membrane.containsCore(position)) inAnyCore = true;
     }
     if (!inAnyCore) triedReproduction = false;
 
     // clear birth tracking once agent has left the environment
-    if (hasGivenBirth && birthEnvironment != null && !birthEnvironment.contains(position)){
+    if (hasGivenBirth && birthEnvironment != null && !birthEnvironment.v.membrane.contains(position)) {
       hasGivenBirth = false;
       birthEnvironment = null;
     }
-  }
+  } // update
+  
+  //--------------------------------------------------------------
 
-   // push agents away from neighbors with desiredSeparation distance
-  PVector seperate(ArrayList<Agent> agents, float desiredSeparation, float maxSepForce){
+  // push agents away from neighbors with desiredSeparation distance
+  PVector seperate(ArrayList<Agent> agents, float desiredSeparation, float maxSepForce) {
     PVector sum = new PVector(0, 0);
     int count = 0;
-    for (Agent other: agents){
+    for (Agent other : agents) {
       float d = PVector.dist(position, other.position);
-      if (other != this && d < desiredSeparation){
+      if (other != this && d < desiredSeparation) {
         PVector diff = PVector.sub(position, other.position);
         float overlap = desiredSeparation - d;
         diff.normalize();
@@ -223,23 +232,25 @@ class Agent{
         count++;
       }
     }
-    if (count > 0){
+    if (count > 0) {
       sum.div(count);
       sum.limit(0.8);
     }
     return sum;
   }
+  
+  //--------------------------------------------------------------
 
-  Environment nearestInRange(ArrayList<Environment> environments, float sensingRadius){
-    if (trackedEnv != null){
-      float d = PVector.dist(position, trackedEnv.position);
+  Environment nearestInRange(ArrayList<Environment> environments, float sensingRadius) {
+    if (trackedEnv != null) {
+      float d = PVector.dist(position, trackedEnv.v.membrane.position);
       if (d > sensingRadius * 1.12) trackedEnv = null; // agent must travel further out before switching from seeking force
     }
-    if (trackedEnv == null){
-      for (Environment e : environments){
-        float d = PVector.dist(position, e.position);
-        if (d < sensingRadius * 0.95){
-          if (trackedEnv == null || e.energy > trackedEnv.energy){ // prefer healthier env
+    if (trackedEnv == null) {
+      for (Environment e : environments) {
+        float d = PVector.dist(position, e.v.membrane.position);
+        if (d < sensingRadius * 0.95) {
+          if (trackedEnv == null || e.v.membrane.energy > trackedEnv.v.membrane.energy) { // prefer healthier env
             trackedEnv = e;
           }
         }
@@ -247,26 +258,32 @@ class Agent{
     }
     return trackedEnv;
   }
+  
+  //--------------------------------------------------------------
 
-// Parent pays 20 to reproduce
-// child spawns nearby with health scaled to env it was born in
-// born in poor environment results in starting with bad health
-  Agent reproduce(Environment e){
+  // Parent pays 20 to reproduce
+  // child spawns nearby with health scaled to env it was born in
+  // born in poor environment results in starting with bad health
+  /*
+  Agent reproduce(Environment e) {
     health -= 20;
     health = max(health, 0);
     float offsetX = random(-30, 30);
     float offsetY = random(-30, 30);
     Agent child = new Agent(position.x + offsetX, position.y + offsetY);
-    float envHealth = e.energy / e.maxEnergy;
+    float envHealth = e.v.membrane.energy / e.v.membrane.maxEnergy;
     child.air = map(envHealth, 0, 1, 20, 100);
     child.reproductionCooldown = 300;
     child.health = health;
     child.tadpoleSuppression = 360;
     return child;
   }
+  */
+  
+  //--------------------------------------------------------------
 
-// agents wrap at canvas edges, so we draw a ghost copy on the opposite side
-  void draw(){
+  // agents wrap at canvas edges, so we draw a ghost copy on the opposite side
+  void draw() {
     drawAt(position.x, position.y);
     float ghostX = position.x;
     float ghostY = position.y;
@@ -274,15 +291,17 @@ class Agent{
     if (position.x < -width/2 + 60) ghostX = position.x + width;
     if (position.y > height/2 - 60)  ghostY = position.y - height;
     if (position.y < -height/2 + 60) ghostY = position.y + height;
-    if (ghostX != position.x || ghostY != position.y){
+    if (ghostX != position.x || ghostY != position.y) {
       drawAt(ghostX, ghostY);
     }
   }
+  
+  //--------------------------------------------------------------
 
-// COLORS
-// Outer membrane: Hue shifts from green to orange as health deteriorates
-// Inner lung: hue shifts from blue to red, empty red, blue full
-  void drawAt(float x, float y){
+  // COLORS
+  // Outer membrane: Hue shifts from green to orange as health deteriorates
+  // Inner lung: hue shifts from blue to red, empty red, blue full
+  void drawAt(float x, float y) {
     colorMode(HSB, 360, 100, 100);
 
     float memHue = map(health, 0, maxHealth, 25, 135); // orange at low health green at full
@@ -293,7 +312,7 @@ class Agent{
     fill(memHue, memSat, memBri, 190);
     circle(x, y, 100);
 
-    float lungSize = map(air, 0, maxAir, 4, 60); // shrinks as air disappears 
+    float lungSize = map(air, 0, maxAir, 4, 60); // shrinks as air disappears
     float lungHue = map(air, 0, maxAir, 355, 210);
     float lungSat = map(air, 0, maxAir, 72, 72);
     float lungBri = map(air, 0, maxAir, 88, 70);
@@ -303,5 +322,4 @@ class Agent{
 
     colorMode(RGB, 255);
   }
-  */
 }

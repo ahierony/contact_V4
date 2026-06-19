@@ -335,7 +335,7 @@ class Vehicle {
 
       //if (zone.getState() == zone.fullState) {
 
-      membrane.update(environments, data.regenRateSlider.getPos());
+      membrane.update(agents, data.regenRateSlider.getPos());
       //}
 
 

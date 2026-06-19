@@ -82,21 +82,12 @@ class VehicleBoid {
   void update() {
 
     posVecPixels = box2d.getBodyPixelCoord(body);
-    //player_arrive_radius = borderRadius - 20;
+   
   }
 
 
   // called from vehicleLocation > VInMovingState
   void isMoving() {
-
-    //offset = box2d.getBodyPixelCoord(player.centerSphere.body);
-
-    // player position in pixels
-    //Vec2 playerPosVecPixels = box2d.getBodyPixelCoord(player.centerSphere.body);
-
-    //playerPosVecPixels.subLocal(offset);
-
-    //targetPosition = box2d.coordPixelsToWorld(playerPosVecPixels);
 
     // CALCULATE BOID POSITION
 
@@ -111,54 +102,6 @@ class VehicleBoid {
 
     separate(agents);
 
-    //playerVehicleDistance = dist(boidPosPixels.x, boidPosPixels.y, playerPosVecPixels.x, playerPosVecPixels.y);
-
-    //float playerOffset = radius * 5;
-
-    /*
-    if (player.location.getState() == player.location.pLocMovingState) {
-     
-     if (playerVehicleDistance > player.borderRadiusMin - playerOffset) {
-     status = "arrive";
-     arrive(targetPosition);
-     //col = blue;
-     } else if (playerVehicleDistance <= player_threat_radius) {
-     
-     status = "flee";
-     flee(targetPosition);
-     //col = red;
-     }
-     }
-     */
-
-    /*
-    if (playerVehicleDistance <= player.borderRadiusMax - playerOffset && playerVehicleDistance > player_threat_radius) { // happens in all player states
-     status = "wander";
-     wander();
-     //col = green;
-     }
-     */
-
-    /*
-    if (playerVehicleDistance <= player_threat_radius) {
-     
-     if (player.location.getState() != player.location.pLocBreathingState) {
-     
-     status = "flee";
-     flee(targetPosition);
-     //col = red;
-     }
-     } else if (playerVehicleDistance > borderRadiusMax - (radius * 5)) { // REVISE
-     
-     status = "arrive";
-     arrive(targetPosition);
-     //col = blue;
-     } else if (playerVehicleDistance <= player_arrive_radius - (radius * 2) && playerVehicleDistance > player_threat_radius) {
-     status = "wander";
-     wander();
-     //col = green;
-     }
-     */
 
     status = "wander";
     wander();
