@@ -13,32 +13,38 @@ class VehicleLocation {
   VehicleLocationState vInMovingState;
   VehicleLocationState vInOtherVehicleZoneState;
   VehicleLocationState vInDeadState;
-  
+
   VehicleLocationState vInBreathingState;
 
-  Vehicle vehicle;
   Player player;
+  Agent agent;
+  Environment environment;
 
   //--------------------------------------------------------------
 
-  VehicleLocation(Vehicle v, Player p, boolean _inMotion) {
+  VehicleLocation(Player p, Agent a) {
 
-    vehicle = v;
     player = p;
+    agent = a;
 
-    vInMovingState = new VInMovingState(vehicle, player);
-    vInOtherVehicleZoneState = new VInOtherVehicleZoneState(vehicle);
-    vInDeadState = new VInDeadState(vehicle);
-    
-    vInBreathingState = new VInBreathingState(vehicle);
+    vInMovingState = new VInMovingState(agent, player);
+    vInOtherVehicleZoneState = new VInOtherVehicleZoneState(agent);
+    vInDeadState = new VInDeadState(agent);
 
     setState(vInMovingState);
+  }
 
-    if (_inMotion) {
-      setState(vInMovingState);
-    } else {
-      setState(vInBreathingState);
-    }
+
+  //--------------------------------------------------------------
+
+  VehicleLocation(Player p, Environment e) {
+
+    player = p;
+    environment = e;
+
+    vInBreathingState = new VInBreathingState(environment);
+
+    setState(vInBreathingState);
   }
 
   //--------------------------------------------------------------
@@ -86,7 +92,7 @@ class VehicleLocation {
       // MOVING
       // ******************
 
-      if (vehicle.inOtherVehicleBreathingZone) { // vehicle is moving and is entering another vehicle's zone
+      if (agent.v.inOtherVehicleBreathingZone) { // vehicle is moving and is entering another vehicle's zone
 
         if (vInOtherVehicleZoneState.getReadyToSetState()) {
 
@@ -99,7 +105,7 @@ class VehicleLocation {
       // IN OTHER VEHICLE ZONE
       // ******************
 
-      if (!vehicle.inOtherVehicleBreathingZone) {
+      if (!agent.v.inOtherVehicleBreathingZone) {
 
         if (vInMovingState.getReadyToSetState()) {
 
@@ -119,12 +125,12 @@ class VInMovingState implements VehicleLocationState {
 
   boolean readyToSetState;
 
-  Vehicle vehicle;
+  Agent agent;
   Player player;
 
-  VInMovingState(Vehicle v, Player p) {
+  VInMovingState(Agent a, Player p) {
 
-    vehicle = v;
+    agent = a;
     player = p;
 
     readyToSetState = true;
@@ -139,7 +145,7 @@ class VInMovingState implements VehicleLocationState {
       setReadyToSetState(false);
     }
 
-    //vehicle.centerBoid.isMoving();
+    agent.v.centerBoid.isMoving();
 
     //addTrailRipples();
     setLungState();
@@ -163,15 +169,12 @@ class VInMovingState implements VehicleLocationState {
 
   void setLungState() {
 
-    println("vehicle.lung.breath.movement ", vehicle.lung.breath.movement);
+    //if (vehicle.lung.breath.movement == "empty") {
+    if (agent.air <= 0) agent.v.lung.setState(agent.v.lung.emptyState);
 
-    if (vehicle.lung.breath.movement == "empty") {
-      vehicle.lung.setState(vehicle.lung.emptyState);
-    }
+    if (agent.v.lung.getState() != agent.v.lung.emptyState) {
 
-    if (vehicle.lung.getState() != vehicle.lung.emptyState) {
-
-      vehicle.lung.setState(vehicle.lung.exhaleState);
+      agent.v.lung.setState(agent.v.lung.exhaleState);
     }
   }
 }
@@ -186,11 +189,11 @@ class VInOtherVehicleZoneState implements VehicleLocationState {
 
   boolean readyToSetState;
 
-  Vehicle vehicle;
+  Agent agent;
 
-  VInOtherVehicleZoneState(Vehicle v) {
+  VInOtherVehicleZoneState(Agent a) {
 
-    vehicle = v;
+    agent = a;
 
     readyToSetState = true;
   }
@@ -211,13 +214,13 @@ class VInOtherVehicleZoneState implements VehicleLocationState {
 
   void setLungState() {
 
-    if (vehicle.lung.breath.movement == "full") {
-      vehicle.lung.setState(vehicle.lung.fullState);
+    if (agent.v.lung.breath.movement == "full") {
+      agent.v.lung.setState(agent.v.lung.fullState);
     }
 
-    if (vehicle.lung.getState() != vehicle.lung.fullState) {
+    if (agent.v.lung.getState() != agent.v.lung.fullState) {
 
-      vehicle.lung.setState(vehicle.lung.inhaleState);
+      agent.v.lung.setState(agent.v.lung.inhaleState);
     }
   }
 
@@ -236,11 +239,11 @@ class VInDeadState implements VehicleLocationState {
 
   boolean readyToSetState;
 
-  Vehicle vehicle;
+  Agent agent;
 
-  VInDeadState(Vehicle v) {
+  VInDeadState(Agent a) {
 
-    vehicle = v;
+    agent = a;
 
     readyToSetState = true;
   }
@@ -254,7 +257,7 @@ class VInDeadState implements VehicleLocationState {
       setReadyToSetState(false);
     }
 
-    vehicle.displayDeadVehicle();
+    agent.v.displayDeadVehicle();
   }
 
   public boolean getReadyToSetState() {
@@ -272,16 +275,16 @@ class VInBreathingState implements VehicleLocationState {
 
   boolean readyToSetState;
 
-  Vehicle vehicle;
+  Environment environment;
 
   Timer timer;
   int randomTime;
 
   float vehicleZoneTempRadius;
 
-  VInBreathingState(Vehicle v) {
+  VInBreathingState(Environment e) {
 
-    vehicle = v;
+    environment = e;
 
     readyToSetState = true;
 
@@ -305,27 +308,27 @@ class VInBreathingState implements VehicleLocationState {
       }
     } else {
 
-      if (vehicle.isPlayerInZone(player, vehicle.zone.radius)) { // player is in breathing zone
+      if (environment.v.isPlayerInZone(player, environment.v.zone.radius)) { // player is in breathing zone
 
-        vehicle.applyZoneForceOnPlayer(player);
+        environment.v.applyZoneForceOnPlayer(player);
       }
 
-      if (vehicle.zone.isBreathing) {
-        vehicle.breath.breathe();
+      if (environment.v.zone.isBreathing) {
+        environment.v.breath.breathe();
         //println("start breathing");
       }
-      
+
       /*
       if (vehicle.readyToUpdateDistanceZone) {
-
-        if (vehicle.zone.getState() == vehicle.zone.emptyState) {
-
-          //updateVehicleRadius();
-        }
-
-        vehicle.readyToUpdateDistanceZone = false;
-      }
-      */
+       
+       if (vehicle.zone.getState() == vehicle.zone.emptyState) {
+       
+       //updateVehicleRadius();
+       }
+       
+       vehicle.readyToUpdateDistanceZone = false;
+       }
+       */
 
       //checkVehicleBreathingZoneAgainstOther();
     }
@@ -334,36 +337,36 @@ class VInBreathingState implements VehicleLocationState {
   //--------------------------------------------------------------
   /*
   void checkVehicleBreathingZoneAgainstOther() {
-    
-    Vec2 vehiclePos = box2d.getBodyPixelCoord(vehicle.centerBoid.body);
-
-    for (int i = 0; i < vehicles.size(); i++) {
-
-      Vehicle v = vehicles.get(i);
-
-      if (!v.inMotion && vehicle != v && v.location.getState() != v.location.vInDeadState) {
-
-        Vec2 otherVehiclePos = box2d.getBodyPixelCoord(v.centerBoid.body);
-
-        float offset = 100.0f;
-
-        float d = dist(vehiclePos.x, vehiclePos.y, otherVehiclePos.x, otherVehiclePos.y);
-        
-        //println("d ", d);
-        //println("vehicle.zone.radius + v.zone.radius + offset ", vehicle.zone.radius + v.zone.radius + offset);
-        
-        if (d < (vehicle.zone.radius + v.zone.radius) + offset) {
-          
-          //println("bigger");
-
-          vehicle.otherBreathingVehicleComingClose = true;
-          v.otherBreathingVehicleComingClose = true;
-          
-        } 
-      }
-    }
-  }
-  */
+   
+   Vec2 vehiclePos = box2d.getBodyPixelCoord(vehicle.centerBoid.body);
+   
+   for (int i = 0; i < vehicles.size(); i++) {
+   
+   Vehicle v = vehicles.get(i);
+   
+   if (!v.inMotion && vehicle != v && v.location.getState() != v.location.vInDeadState) {
+   
+   Vec2 otherVehiclePos = box2d.getBodyPixelCoord(v.centerBoid.body);
+   
+   float offset = 100.0f;
+   
+   float d = dist(vehiclePos.x, vehiclePos.y, otherVehiclePos.x, otherVehiclePos.y);
+   
+   //println("d ", d);
+   //println("vehicle.zone.radius + v.zone.radius + offset ", vehicle.zone.radius + v.zone.radius + offset);
+   
+   if (d < (vehicle.zone.radius + v.zone.radius) + offset) {
+   
+   //println("bigger");
+   
+   vehicle.otherBreathingVehicleComingClose = true;
+   v.otherBreathingVehicleComingClose = true;
+   
+   }
+   }
+   }
+   }
+   */
 
   //--------------------------------------------------------------
 

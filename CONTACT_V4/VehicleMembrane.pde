@@ -51,7 +51,6 @@ class VehicleMembrane {
     noFill();
     stroke(0, 97, 0);
     circle(position.x, position.y, sensingRadius * 2);
-    println("energy ", energy);
     float healthRatio = energy / maxEnergy;
     // membrane wobbles more as health drops
     float nAmp = map(healthRatio, 0, 1, 0.15, 0.0);

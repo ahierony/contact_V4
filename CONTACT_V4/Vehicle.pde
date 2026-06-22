@@ -108,7 +108,7 @@ class Vehicle {
   //--------------------------------------------------------------
 
   // Constructor
-  Vehicle(float x, float y, int _colorAngle, boolean _inMotion, String type_, int unitNum_, Player p, int vIndex) {
+  Vehicle(float x, float y, int _colorAngle, boolean _inMotion, String type_, int unitNum_, Player p, int vIndex, Environment environment) {
 
     vI = vIndex;
 
@@ -133,9 +133,9 @@ class Vehicle {
     saturation = 100;
 
     colorElement = color(colorWheelAngle, saturation, brightness);
-    if (!inMotion) {
-      colorBreathing = color(colorWheelAngle, saturation, brightness, 100);
-    }
+
+    colorBreathing = color(colorWheelAngle, saturation, brightness, 100);
+
     colorTrail = color(colorWheelAngle, saturation, brightness);
     colorWithinDistance = darkGrey;
 
@@ -157,18 +157,106 @@ class Vehicle {
 
     blobRadius = radius + sphereRadius;
 
-    location = new VehicleLocation(this, player, _inMotion);
+    location = new VehicleLocation(player, environment);
 
-    if (!inMotion) { // environment
-      zone = new VehicleZone(this);
-      isReadyForCollision = true;
-      zone.isBreathing = true;
-      membrane = new VehicleMembrane(x, y, zone.radiusMax);
-    } else { // agent
-      calibrateLungRadius = 0;
-      lung = new VehicleLung(this);
-      lung.previousRadius = lung.radiusMax;
-    }
+    zone = new VehicleZone(this);
+    isReadyForCollision = true;
+    zone.isBreathing = true;
+    membrane = new VehicleMembrane(x, y, zone.radiusMax);
+
+    playerInBreathingZone = false;
+    playerInDistanceZone = false;
+
+    touchedPlayer = false;
+    vehicleTouchedPlayer = false;
+
+    touchedVehicle = false;
+
+    originFadeValue = 255.0;
+    fadeValue = originFadeValue;
+    fadeSpeed = 1; //5; // 0.5;
+
+    breathingOffset = 10;
+
+    initialZoneGrowth = false;
+    zoneAgainstZones = true;
+
+    vPos = box2d.getBodyPixelCoord(centerBoid.body);
+
+    startedRipples = false;
+
+    inOtherVehicleBreathingZone = false;
+    inOtherVehicleDistanceZone = false;
+    otherVehicleInDistanceZone = false;
+    otherVehicleInBreathingZone = false;
+
+    otherBreathingVehicleComingClose = false;
+
+    baseSwitchPlayer = 30;
+    baseSwitchVehicle = 360; // 90;
+    colorAngleSwitchPlayer = baseSwitchPlayer; // 50; //45;
+    colorAngleSwitchVehicle = baseSwitchVehicle; //90; //5; //7; //15; //7;
+
+    repellOther = false;
+
+    initialize();
+  }
+
+  //--------------------------------------------------------------
+
+  // Constructor
+  Vehicle(float x, float y, int _colorAngle, boolean _inMotion, String type_, int unitNum_, Player p, int vIndex, Agent agent) {
+
+    vI = vIndex;
+
+    unitNum = unitNum_;
+
+    inMotion = _inMotion;
+
+    readyToUpdateDistanceZone = true;
+
+    player = p;
+
+    // the random color of the element: val between 0-360
+    colorWheelAngle = _colorAngle;
+
+    bodyType = type_;
+
+    // Add the box to the box2d world
+    posVecPixels = new Vec2(x, y);
+    pos = new PVector(x, y);
+
+    brightness = 100;
+    saturation = 100;
+
+    colorElement = color(colorWheelAngle, saturation, brightness);
+
+    colorTrail = color(colorWheelAngle, saturation, brightness);
+    colorWithinDistance = darkGrey;
+
+    unitHalfSize = unit_w * 0.5;
+
+    // Create the empty ArrayLists
+    //spheres = new ArrayList<Sphere>();
+    //spheres = new VehicleSphere[0];
+    spheres = new ArrayList<VehicleSphere>();
+    joints = new ArrayList<Joint>();
+    sideJoints = new ArrayList<Joint>();
+    //vehicles = new ArrayList<Vehicle>();
+
+    ellipseMode(RADIUS);
+
+    breath = new Breath("vehicle");
+
+    makeBlob(posVecPixels);
+
+    blobRadius = radius + sphereRadius;
+
+    location = new VehicleLocation(player, agent);
+
+    calibrateLungRadius = 0;
+    lung = new VehicleLung(agent);
+    lung.previousRadius = lung.radiusMax;
 
     playerInBreathingZone = false;
     playerInDistanceZone = false;
@@ -748,6 +836,8 @@ class Vehicle {
       displayBlob();
     } else {
 
+      displayBlob();
+      
       lung.display();
     }
 

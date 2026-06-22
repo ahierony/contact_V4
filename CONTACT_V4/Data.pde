@@ -10,6 +10,8 @@ class Data {
   DataScrollbar populationSlider;
   DataScrollbar sensingRadiusSlider;
   DataScrollbar regenRateSlider;
+  
+  
 
   Data() {
 
@@ -20,10 +22,11 @@ class Data {
     separationDistSlider = new DataScrollbar(20, 140, 200, 50, 300, 110);
     separationForceSlider = new DataScrollbar(20, 180, 200, 0.5, 10, 5);
     populationSlider = new DataScrollbar(20, 220, 200, 5, 100, 20);
-    sensingRadiusSlider = new DataScrollbar(20, 260, 200, 100, 1200, 800);
+    sensingRadiusSlider = new DataScrollbar(20, 260, 200, 100, 1500, 800);
     regenRateSlider = new DataScrollbar(20, 300, 200, 0.0, 5.0, 0.5);
     loadData();
   }
+  
 
   void display() {
 
@@ -44,16 +47,21 @@ class Data {
     regenRateSlider.update();
     regenRateSlider.display();
 
-    fill(0);
+    fill(126);
     noStroke();
     textAlign(LEFT);
+    
     text("Speed: " + nf(speedSlider.getPos(), 1, 1), 230, 30);
+    fill(0);
     text("Air Drain: " + nf(drainSlider.getPos(), 1, 2), 230, 70);
+    fill(126);
     text("Air Refill: " + nf(refillSlider.getPos(), 1, 1), 230, 110);
     text("Sep Distance: " + int(separationDistSlider.getPos()), 230, 150);
     text("Sep Force: " + nf(separationForceSlider.getPos(), 1, 1), 230, 190);
     text("Population: " + (int)populationSlider.getPos(), 230, 230);
+    fill(0);
     text("Sensing Radius: " + int(sensingRadiusSlider.getPos()), 230, 270);
+    fill(126);
     text("Regen Rate: " + nf(regenRateSlider.getPos(), 1, 2), 230, 310);
     //text("Agents alive: " + agents.size(), 20, 350);
 

@@ -102,7 +102,6 @@ class VehicleBoid {
 
     separate(agents);
 
-
     status = "wander";
     wander();
 

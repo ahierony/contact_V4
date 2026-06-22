@@ -5,7 +5,14 @@ TODO LIST
 
 @@ player contact with environment: 
 
-- vehicle static and vehicle dynamic need collision contactlistner
+- connect sliders to vehicle
+- connect air (lung) variable to vehicle
+- connect sensing radius area to vehicle
+
+
+
+
+- vehicle static and vehicle dynamic need collision contactlistner // done
 - when player makes contact, controls disabled in membrane
 - new born vehicle need to be rejected from environment
 - figure out why vehicle is behind zone??

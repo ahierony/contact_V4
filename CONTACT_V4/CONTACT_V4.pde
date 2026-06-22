@@ -194,6 +194,8 @@ Timer screenGrabTimer;
 boolean screengrab;
 
 
+
+
 // TRAIL
 BgTrailBox bgTrailBox;
 
@@ -555,16 +557,15 @@ void draw() {
       //collision.checkPlayerAgainstVehicleRipples();
       collision.checkVehicleAgainstVehicle();
 
-      for(Agent a : agents){
-        
+      for (Agent a : agents) {
+
         a.run(agents, environments);
-        
+        a.update(data.drainSlider.getPos(), agents, environments, data.separationDistSlider.getPos(), data.separationForceSlider.getPos(), data.sensingRadiusSlider.getPos());
       }
-      
-      for(Environment e : environments){
-        
+
+      for (Environment e : environments) {
+
         e.run(agents, environments);
-        
       }
 
       player.display();
@@ -679,7 +680,7 @@ void draw() {
     }
   }
 
-  data.display();
+  if (scrollbar) data.display();
 } // draw
 
 
@@ -835,6 +836,10 @@ void keyPressed() {
   case ' ':
     println("dataSaved");
     data.saveData();
+    break;
+  case '-':
+    println("dataSaved");
+    scrollbar = !scrollbar;
     break;
   }
 }

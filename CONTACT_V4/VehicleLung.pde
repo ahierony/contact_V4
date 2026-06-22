@@ -17,7 +17,8 @@ class VehicleLung {
   VehicleLungState holdState;
   VehicleLungState fullState;
 
-  Vehicle vehicle;
+  //Agent agent;
+  Agent agent;
 
   VehicleLungBreathe breath;
 
@@ -41,12 +42,13 @@ class VehicleLung {
 
   int colorAngle;
 
-  VehicleLung(Vehicle v) {
+  VehicleLung(Agent a) {
 
     startInhale = false;
     startExhale = false;
 
-    vehicle = v;
+    //agent = a;
+    agent = a;
 
     radiusMin  = 32;
     radiusMax  = 105;
@@ -58,11 +60,11 @@ class VehicleLung {
 
     breath = new VehicleLungBreathe();
 
-    inhaleState = new InhaleStateVehicle(vehicle);
-    holdState = new HoldStateVehicle(vehicle);
-    exhaleState = new ExhaleStateVehicle(vehicle);
-    emptyState = new EmptyStateVehicle(vehicle);
-    fullState = new FullStateVehicle(vehicle);
+    inhaleState = new InhaleStateVehicle(agent);
+    holdState = new HoldStateVehicle(agent);
+    exhaleState = new ExhaleStateVehicle(agent);
+    emptyState = new EmptyStateVehicle(agent);
+    fullState = new FullStateVehicle(agent);
 
 
     setState(fullState);
@@ -118,38 +120,38 @@ class VehicleLung {
   /*
   void updateColorAngle() {
    
-   colorAngle = vehicle.colorWheelAngle;
+   colorAngle = agent.v.colorWheelAngle;
    
-   colorAngle = vehicle.colorWheelAngle;
+   colorAngle = agent.v.colorWheelAngle;
    colorAngle += 180;
    colorAngle %= 360;
    
-   vehicle.colorWheelAngle = colorAngle;
+   agent.v.colorWheelAngle = colorAngle;
    }
    */
   //--------------------------------------------------------------
 
   void display() {
 
-    Vec2 pos = box2d.getBodyPixelCoord(vehicle.centerBoid.body);
+    Vec2 pos = box2d.getBodyPixelCoord(agent.v.centerBoid.body);
 
     // Get its angle of rotation
-    //float a = vehicle.centerBoid.body.getAngle();
+    //float a = agent.v.centerBoid.body.getAngle();
     pushMatrix();
     translate(pos.x, pos.y);
 
     ellipseMode(RADIUS);
 
-    colorAngle = vehicle.colorWheelAngle;
+    colorAngle = agent.v.colorWheelAngle;
 
     /*
     if (getState() == exhaleState) {
      
-     colorAngle = vehicle.colorWheelAngle;
+     colorAngle = agent.v.colorWheelAngle;
      colorAngle += 180;
      colorAngle %= 360;
      
-     vehicle.colorWheelAngle = colorAngle;
+     agent.v.colorWheelAngle = colorAngle;
      }
      */
 
@@ -159,7 +161,7 @@ class VehicleLung {
     circle(0, 0, radiusMax-15 );
 
 
-    stroke(colorAngle, vehicle.saturation, vehicle.brightness);
+    stroke(colorAngle, agent.v.saturation, agent.v.brightness);
 
     if (getState() == emptyState) {
 
@@ -168,10 +170,10 @@ class VehicleLung {
     } else {
 
 
-      fill(colorAngle, vehicle.saturation, vehicle.brightness);
+      fill(colorAngle, agent.v.saturation, agent.v.brightness);
     }
 
-    circle(0, 0, radius);
+    circle(0, 0, agent.lungSize);
 
     popMatrix();
 
@@ -192,13 +194,13 @@ class ExhaleStateVehicle implements VehicleLungState {
   boolean readyToSetState;
   //boolean updateExhale;
 
-  Vehicle vehicle;
+  Agent agent;
 
 
-  ExhaleStateVehicle(Vehicle v) {
+  ExhaleStateVehicle(Agent a) {
 
     readyToSetState = true;
-    vehicle = v;
+    agent = a;
     //updateExhale = false;
   }
 
@@ -206,18 +208,18 @@ class ExhaleStateVehicle implements VehicleLungState {
 
   void update() {
 
-    //if (!vehicle.lung.startExhale) {
+    //if (!agent.v.lung.startExhale) {
     if(readyToSetState) {
-      vehicle.lung.breath.setExhale();
-      //vehicle.lung.startExhale  = true;
+      agent.v.lung.breath.setExhale();
+      //agent.v.lung.startExhale  = true;
       readyToSetState = false;
       //updateExhale = true;
     }
 
     //if (updateExhale) {
 
-    vehicle.lung.breath.breathe();
-    vehicle.lung.radius = map(vehicle.lung.breath.radius, vehicle.lung.breath.radiusMin, vehicle.lung.breath.radiusMax, vehicle.lung.radiusMin, vehicle.lung.radiusMax);
+    agent.v.lung.breath.breathe();
+    agent.v.lung.radius = map(agent.v.lung.breath.radius, agent.v.lung.breath.radiusMin, agent.v.lung.breath.radiusMax, agent.v.lung.radiusMin, agent.v.lung.radiusMax);
     // }
   }
 
@@ -237,13 +239,13 @@ class InhaleStateVehicle implements VehicleLungState {
   boolean readyToSetState;
   //boolean updateInhale;
 
-  Vehicle vehicle;
+  Agent agent;
 
 
-  InhaleStateVehicle(Vehicle v) {
+  InhaleStateVehicle(Agent a) {
 
     readyToSetState = true;
-    vehicle = v;
+    agent = a;
     //updateInhale = false;
   }
 
@@ -251,18 +253,18 @@ class InhaleStateVehicle implements VehicleLungState {
 
   void update() {
 
-    //if (!vehicle.lung.startInhale) {
+    //if (!agent.v.lung.startInhale) {
     if(readyToSetState) {
-      vehicle.lung.breath.setInhale();
-      //vehicle.lung.startInhale  = true;
+      agent.v.lung.breath.setInhale();
+      //agent.v.lung.startInhale  = true;
       readyToSetState = false;
       // updateInhale = true;
     }
 
     //if (updateInhale) {
 
-    vehicle.lung.breath.breathe();
-    vehicle.lung.radius = map(vehicle.lung.breath.radius, vehicle.lung.breath.radiusMin, vehicle.lung.breath.radiusMax, vehicle.lung.radiusMin, vehicle.lung.radiusMax);
+    agent.v.lung.breath.breathe();
+    agent.v.lung.radius = map(agent.v.lung.breath.radius, agent.v.lung.breath.radiusMin, agent.v.lung.breath.radiusMax, agent.v.lung.radiusMin, agent.v.lung.radiusMax);
     // }
   }
 
@@ -280,14 +282,14 @@ class InhaleStateVehicle implements VehicleLungState {
 
 class FullStateVehicle implements VehicleLungState {
 
-  Vehicle vehicle;
+  Agent agent;
 
   boolean readyToSetState;
 
 
-  FullStateVehicle(Vehicle v) {
+  FullStateVehicle(Agent a) {
 
-    vehicle = v;
+    agent = a;
   }
 
 
@@ -296,7 +298,7 @@ class FullStateVehicle implements VehicleLungState {
 
   void update() {
 
-    vehicle.lung.breath.movement = "full";
+    agent.v.lung.breath.movement = "full";
   }
 
   public boolean getReadyToSetState() {
@@ -312,14 +314,14 @@ class FullStateVehicle implements VehicleLungState {
 
 class EmptyStateVehicle implements VehicleLungState {
 
-  Vehicle vehicle;
+  Agent agent;
 
   boolean readyToSetState;
 
 
-  EmptyStateVehicle(Vehicle v) {
+  EmptyStateVehicle(Agent a) {
 
-    vehicle = v;
+    agent = a;
   }
 
   //--------------------------------------------------------------
@@ -329,12 +331,12 @@ class EmptyStateVehicle implements VehicleLungState {
     if (readyToSetState) {
       readyToSetState = false;
 
-      vehicle.lung.breath.setEmpty();
-      vehicle.lung.radius = map(vehicle.lung.breath.radius, vehicle.lung.breath.radiusMin, vehicle.lung.breath.radiusMax, vehicle.lung.radiusMin, vehicle.lung.radiusMax);
+      agent.v.lung.breath.setEmpty();
+      agent.v.lung.radius = map(agent.v.lung.breath.radius, agent.v.lung.breath.radiusMin, agent.v.lung.breath.radiusMax, agent.v.lung.radiusMin, agent.v.lung.radiusMax);
 
       /*
-      if (vehicle.jointSphere.body.getType() == BodyType.DYNAMIC) {
-       vehicle.jointSphere.body.setType(BodyType.STATIC);
+      if (agent.v.jointSphere.body.getType() == BodyType.DYNAMIC) {
+       agent.v.jointSphere.body.setType(BodyType.STATIC);
        }
        */
     }
@@ -354,23 +356,23 @@ class EmptyStateVehicle implements VehicleLungState {
 
 class HoldStateVehicle implements VehicleLungState {
 
-  Vehicle vehicle;
+  Agent agent;
 
   boolean readyToSetState;
 
-  HoldStateVehicle(Vehicle v) {
+  HoldStateVehicle(Agent a) {
 
-    vehicle = v;
+    agent = a;
   }
 
   //--------------------------------------------------------------
 
   void update() {
 
-    vehicle.lung.startExhale = false;
-    vehicle.lung.startInhale = false;
+    agent.v.lung.startExhale = false;
+    agent.v.lung.startInhale = false;
 
-    vehicle.lung.breath.movement = "hold";
+    agent.v.lung.breath.movement = "hold";
   }
 
   public boolean getReadyToSetState() {
