@@ -102,6 +102,8 @@ class Vehicle {
 
   int vI;
 
+  Vec2 deadPosition;
+
   //AUDIO
   //boolean vehicleBreathingAudioIsPlaying;
 
@@ -320,7 +322,7 @@ class Vehicle {
     environments = es;
 
     //vehicles = vs;
-
+    
     if (inMotion) {
       if (location.getState() != location.vInDeadState) {
 
@@ -336,6 +338,7 @@ class Vehicle {
       display();
     }
   }
+
 
 
   // ********************************************************
@@ -363,20 +366,21 @@ class Vehicle {
 
       centerBoid.update();
 
-
+      /*
       if (location.getState() == location.vInMovingState) {
-
-        if (lung.getState() == lung.emptyState) {
-
-
-          die();
-        }
-      } else if (location.getState() == location.vInOtherVehicleZoneState) {
-
-
-        //e.energy -= 0.5;
-        //e.energy = max(e.energy, 0);
-      }
+       
+       if (lung.getState() == lung.emptyState) {
+       
+       
+       die();
+       }
+       } else if (location.getState() == location.vInOtherVehicleZoneState) {
+       
+       
+       //e.energy -= 0.5;
+       //e.energy = max(e.energy, 0);
+       }
+       */
 
 
       //checkRippleCount(); // vehicle stops moving and starts breathing // not in this version
@@ -776,21 +780,21 @@ class Vehicle {
   // ********************************************************
   // DELETE VEHICLE
   // ********************************************************
+  /*
+  void die() {
+   
+   killBlob();
+   location.setState(location.vInDeadState);
+   }
+   */
 
   void die() {
 
-    //Vehicle v = vehicles.get(vNum);
-
-    killBlob();
+    deadPosition = box2d.getBodyPixelCoord(centerBoid.body);
     location.setState(location.vInDeadState);
 
-    /*
-    if (vehicle.jointSphere.body.getType() == BodyType.DYNAMIC) {
-     vehicle.jointSphere.body.setType(BodyType.STATIC);
-     }
-     */
-
-    //vehicles.remove(vNum);
+    println("deadposition.x ", deadPosition.x);
+    killBlob();
   }
 
   void killBlob() {
@@ -807,6 +811,8 @@ class Vehicle {
      }
      */
   }
+
+
 
 
 
@@ -837,7 +843,7 @@ class Vehicle {
     } else {
 
       displayBlob();
-      
+
       lung.display();
     }
 
@@ -933,30 +939,19 @@ class Vehicle {
 
     pushMatrix();
 
-    Vec2 pos = box2d.getBodyPixelCoord(centerBoid.body);
+    //Vec2 pos = box2d.getBodyPixelCoord(centerBoid.body);
 
-    translate(pos.x, pos.y);
+    translate(deadPosition.x, deadPosition.y);
 
     //if (showDistance) {
     // outer circle for checking distance
 
     strokeWeight(10);
     stroke(darkGrey);
-    //fill(vehicle.darkGrey);
-    //noFill();
 
-    //circle(0, 0, zone.distanceRadius);
-    //}
-
-    //noFill();
-    //circle(0, 0, zone.radius);
-    // repel / attract zone (breathing)
-
-    //strokeWeight(1);
-    //stroke(colorBreathing);
     stroke(darkGrey);
 
-    //fill(vehicle.colorBreathing); // TEST
+
     noFill();
     //fill(0, 255, 0);
     circle(0, 0, radius);
@@ -964,6 +959,7 @@ class Vehicle {
     popMatrix();
     strokeWeight(1);
   }
+
 
   // ********************************************************
   // CREATION

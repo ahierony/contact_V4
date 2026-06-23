@@ -25,6 +25,8 @@ class Agent {
   int tadpoleSuppression = 0; // frames when kicking for jump is off
   Environment trackedEnv = null; // locked in env to seek
 
+  //
+
 
   Agent(float x, float y, int _colorAngle, boolean _inMotion, String type_, int unitNum_, Player p, int vIndex) {
 
@@ -232,6 +234,18 @@ class Agent {
      }
      */
   } // update
+
+  //--------------------------------------------------------------
+
+  boolean dead() {
+    
+    return air <= 0 || health <= 0;
+  }
+
+
+
+
+
   /*
   //--------------------------------------------------------------
    

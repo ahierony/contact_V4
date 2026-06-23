@@ -240,6 +240,7 @@ class VInDeadState implements VehicleLocationState {
   boolean readyToSetState;
 
   Agent agent;
+  float x, y;
 
   VInDeadState(Agent a) {
 
@@ -257,7 +258,6 @@ class VInDeadState implements VehicleLocationState {
       setReadyToSetState(false);
     }
 
-    agent.v.displayDeadVehicle();
   }
 
   public boolean getReadyToSetState() {
@@ -267,6 +267,8 @@ class VInDeadState implements VehicleLocationState {
   public void setReadyToSetState(boolean rtss) {
     readyToSetState = rtss;
   }
+
+  
 }
 
 // ********************************************************

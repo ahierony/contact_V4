@@ -221,7 +221,7 @@ void setup() {
 
   //*********************************************************************
   //gamePadIsOn = false;
-  inputControls = InputControls.JOYSTICKS; //KEYBOARD; //JOYSTICKS;
+  inputControls = InputControls.KEYBOARD; //KEYBOARD; //JOYSTICKS;
   //protoSticks = false;
   debugMode = false;
   screengrab = false;
@@ -561,6 +561,12 @@ void draw() {
 
         a.run(agents, environments);
         a.update(data.drainSlider.getPos(), agents, environments, data.separationDistSlider.getPos(), data.separationForceSlider.getPos(), data.sensingRadiusSlider.getPos());
+
+        if (a.dead()) {
+          if (a.v.location.getState() == a.v.location.vInMovingState) {
+            a.v.die();
+          }
+        }
       }
 
       for (Environment e : environments) {
@@ -777,7 +783,7 @@ void keyPressed() {
 
       worldScale -= scaleValue;
     } else if (worldScale <= minScale) {
-      println("worldScale ", worldScale);
+      //println("worldScale ", worldScale);
 
       worldScale -= .01;
     }
