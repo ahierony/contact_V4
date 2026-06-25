@@ -254,13 +254,13 @@ void setup() {
   colorMode(HSB, 360, 100, 100);
 
   int rowLength;
-  unitSize = 600; // 1200 is contact v3 size //750; // 600 x 5 // 1000 x 3  > to create more density but preserve smaller frame
+  unitSize = 900; //600; // 1200 is contact v3 size //750; // 600 x 5 // 1000 x 3  > to create more density but preserve smaller frame
 
   if (debugMode) {
     rowLength = 3;
     setUnitSize(rowLength * unitSize, rowLength * unitSize, rowLength, 0.5); // float _unitSize, int _unitRow, float _worldScale (0.5)
   } else {
-    rowLength = 3;
+    rowLength = 5;
     setUnitSize(rowLength * unitSize, rowLength * unitSize, rowLength, 0.2); // float _unitSize, int _unitRow, float _worldScale (0.5)
   }
 
@@ -693,6 +693,8 @@ void draw() {
 
   // TRAIL RECORDING ENDS
   //if (player.lung.getState() == player.lung.emptyState) {
+    
+    /*
   if (player.lung.breath.movement == "empty" || collision.agentsRemaining == 0) {
 
     if (fadeAnimationIsOver()) {
@@ -700,6 +702,7 @@ void draw() {
       recordSVG = true;
     }
   }
+  */
 
   if (scrollbar) data.display();
 } // draw

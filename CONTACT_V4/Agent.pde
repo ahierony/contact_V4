@@ -113,9 +113,9 @@ class Agent {
     for (Environment e : environments) {
 
       if (e.v.membrane.containsSensing(position, sensingRadius)) {
-        println("inside");
+        //println("inside");
       } else {
-        println("outisde");
+        //println("outside");
       }
     }
 
@@ -271,8 +271,8 @@ class Agent {
 
     if (trackedEnv != null) {
 
-      println("position.x ", position.x);
-      println("trackedEnv.v.pos ", trackedEnv.v.pos);
+      //println("position.x ", position.x);
+      //println("trackedEnv.v.pos ", trackedEnv.v.pos);
 
       float d = PVector.dist(position, trackedEnv.v.pos);
       if (d > sensingRadius * 1.12) trackedEnv = null; // agent must travel further out before switching from seeking force
@@ -282,8 +282,8 @@ class Agent {
         Vec2 envoPos = box2d.getBodyPixelCoord(e.v.centerBoid.body);
         PVector envoPPos = new PVector(envoPos.x, envoPos.y);
         float d = PVector.dist(position, envoPPos);
-        println("d ", d);
-        println("sensingRadius ", sensingRadius);
+        //println("d ", d);
+        //println("sensingRadius ", sensingRadius);
         if (d < sensingRadius * 0.95) {
           if (trackedEnv == null || e.v.membrane.energy > trackedEnv.v.membrane.energy) { // prefer healthier env
             trackedEnv = e;

@@ -28,21 +28,39 @@ class Bg_Unit {
   //PlayerTrail trailRight;
 
   // Constructor
-  Bg_Unit(float tempX, float tempY, boolean _containsVehicle, int _index) {
+  //Bg_Unit(float tempX, float tempY, boolean _containsVehicle, int _index) {
+  Bg_Unit(float tempX, float tempY, boolean _containsAgent, boolean _containsEnvironment, int _index) {
 
     pos = new PVector(tempX, tempY);
     posStatic = new PVector(tempX, tempY);
 
     index = _index;
 
-    containsVehicle = _containsVehicle;
+    //containsVehicle = _containsVehicle;
+
+    if (_containsAgent) {
+      containsAgent = true;
+      containsVehicle = true;
+      createAgent();
+    }
+
+    if (_containsEnvironment) {
+      containsEnvironment = true;
+      containsVehicle = true;
+      createEnvironment();
+    }
+
+    /*
 
     if (containsVehicle) {
 
       if (index%2 == 0) {
 
-        containsAgent = true;
-        createAgent();
+        containsEnvironment = true;
+        createEnvironment();
+
+        //containsAgent = true;
+        //createAgent();
 
         //createVehicle(true, "DYNAMIC"); // true
       } else {
@@ -51,7 +69,10 @@ class Bg_Unit {
         createEnvironment();
         //createVehicle(false, "STATIC"); // false
       }
+     
     }
+    
+     */
 
     overlap = false;
 
@@ -136,6 +157,8 @@ class Bg_Unit {
     float sizeHalf_h = unit_h * 0.5;
     randomPos = new PVector(unitPos.x - sizeHalf_w + tempPos.x, unitPos.y - sizeHalf_h + tempPos.y);
 
+    //PVector centerPos = new PVector(unitPos.x - sizeHalf_w, unitPos.y - sizeHalf_h);
+
     basicPos = PVector.sub(randomPos, unitPos);
 
     int agentIndex = agents.size();
@@ -161,6 +184,8 @@ class Bg_Unit {
     float sizeHalf_h = unit_h * 0.5;
     randomPos = new PVector(unitPos.x - sizeHalf_w + tempPos.x, unitPos.y - sizeHalf_h + tempPos.y);
 
+    //PVector centerPos = new PVector(unitPos.x, unitPos.y);
+
     basicPos = PVector.sub(randomPos, unitPos);
 
     int environmentIndex = environments.size();
@@ -172,6 +197,8 @@ class Bg_Unit {
   //--------------------------------------------------------------
 
   void wrapVehicle() {
+    
+    println("wrap ");
 
     if (containsAgent) {
       agent.v.killBlob();
