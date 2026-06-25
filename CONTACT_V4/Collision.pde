@@ -37,7 +37,7 @@ class Collision {
 
             if (e.v.zone.collisionState.getReadyToSetState()) {
 
-              manageBirth(e, a);
+              //manageBirth(e, a);
 
               e.v.collided();
 

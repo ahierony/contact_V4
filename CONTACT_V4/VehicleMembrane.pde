@@ -45,6 +45,11 @@ class VehicleMembrane {
     birthBurst = true;
     burstTimer = 120;
   }
+  
+  void updatePosition(float x, float y){
+    
+    position.set(x, y);
+  }
 
   void display(float sensingRadius, color colorBreathing ) {
     strokeWeight(3);

@@ -322,7 +322,7 @@ class Vehicle {
     environments = es;
 
     //vehicles = vs;
-    
+
     if (inMotion) {
       if (location.getState() != location.vInDeadState) {
 
@@ -365,6 +365,10 @@ class Vehicle {
       lung.update();
 
       centerBoid.update();
+
+
+      wrap();
+
 
       /*
       if (location.getState() == location.vInMovingState) {
@@ -443,6 +447,34 @@ class Vehicle {
         }
       }
     } // VEHICLE IS NOT IN MOTION
+  }
+
+  //--------------------------------------------------------------
+
+  void wrap() {
+
+    Vec2 wrapPos = box2d.getBodyPixelCoord(centerBoid.body);
+    Vec2 pPos = box2d.getBodyPixelCoord(player.centerSphere.body);
+
+    if (wrapPos.x < pPos.x - player.worldLimits.rect_w/2 ||
+      wrapPos.x > pPos.x + player.worldLimits.rect_w/2||
+      wrapPos.y < pPos.y - player.worldLimits.rect_h/2||
+      wrapPos.y > pPos.y + player.worldLimits.rect_h/2) {
+
+      killBlob();
+
+      PVector unitPos = new PVector(wrapPos.x, wrapPos.y);
+      PVector playerPos = new PVector(pPos.x, pPos.y);
+
+      if (wrapPos.x < pPos.x - player.worldLimits.rect_w/2) unitPos.x = pPos.x + player.worldLimits.rect_w/2;
+      if (wrapPos.x > pPos.x + player.worldLimits.rect_w/2) unitPos.x = pPos.x - player.worldLimits.rect_w/2;
+      if (wrapPos.y < pPos.y - player.worldLimits.rect_h/2) unitPos.y = pPos.y + player.worldLimits.rect_h/2;
+      if (wrapPos.y > pPos.y + player.worldLimits.rect_h/2) unitPos.y = pPos.y - player.worldLimits.rect_h/2;
+
+      Vec2 unitPosVecPixels = new Vec2(unitPos.x, unitPos.y);
+      makeBlob(unitPosVecPixels);
+    }
+
   }
 
   //--------------------------------------------------------------
@@ -562,12 +594,12 @@ class Vehicle {
     }
 
     if (angleDiff > angleSwitch) {
-      println("go away");
+      //println("go away");
       outcomingForceDirection = -1;
 
       gravity = map(angleDiff, angleSwitch, 180, 0, gravityVal);
     } else {
-      println("come closer");
+      //println("come closer");
       outcomingForceDirection = 1;
 
       gravity = map(angleDiff, 0, angleSwitch, gravityVal, 0);

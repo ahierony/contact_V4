@@ -194,7 +194,7 @@ Timer screenGrabTimer;
 boolean screengrab;
 
 
-
+//PlayerWorldLimits playerWorldLimits;
 
 // TRAIL
 BgTrailBox bgTrailBox;
@@ -221,7 +221,7 @@ void setup() {
 
   //*********************************************************************
   //gamePadIsOn = false;
-  inputControls = InputControls.KEYBOARD; //KEYBOARD; //JOYSTICKS;
+  inputControls = InputControls.JOYSTICKS; //KEYBOARD; //JOYSTICKS;
   //protoSticks = false;
   debugMode = false;
   screengrab = false;
@@ -292,6 +292,8 @@ void setup() {
   collision = new Collision();
 
   bgTrailBox = new BgTrailBox(unitTotal, unit_w, unit_h);
+  
+  //playerWorldLimits = new PlayerWorldLimits(unitTotal, unit_w, unit_h);
 
   setBackgroundTimer();
 
@@ -411,6 +413,7 @@ void resetContact() {
 
   bg = null;
   bgTrailBox = null;
+  //playerWorldLimits = null;
 
   fadeAnimationCounter = 0;
 
@@ -432,6 +435,7 @@ void resetContact() {
   collision = new Collision();
 
   bgTrailBox = new BgTrailBox(unitTotal, unit_w, unit_h);
+  //playerWorldLimits = new PlayerWorldLimits(unitTotal, unit_w, unit_h);
 
   setBackgroundTimer();
 }
@@ -521,6 +525,7 @@ void draw() {
     mainTheta = left_theta;
 
     bgTrailBox.update(vel, mainTheta);
+    //playerWorldLimits.update(vel, mainTheta);
 
     if (player.lung.isBreathing) {
 
@@ -560,8 +565,9 @@ void draw() {
       for (Agent a : agents) {
 
         a.run(agents, environments);
-        a.update(data.drainSlider.getPos(), agents, environments, data.separationDistSlider.getPos(), data.separationForceSlider.getPos(), data.sensingRadiusSlider.getPos());
-
+        if (a.v.location.getState() == a.v.location.vInMovingState) {
+          a.update(data.drainSlider.getPos(), agents, environments, data.separationDistSlider.getPos(), data.separationForceSlider.getPos(), data.sensingRadiusSlider.getPos());
+        }
         if (a.dead()) {
           if (a.v.location.getState() == a.v.location.vInMovingState) {
             a.v.die();
@@ -591,6 +597,15 @@ void draw() {
           //noCursor();
         }
       }
+
+      pushMatrix();
+
+      translate(width/2, height/2);
+
+      //bgTrailBox.display(worldScale);
+      //playerWorldLimits.display(worldScale);
+
+      popMatrix();
     } else {
 
       //if (recordSVG) {

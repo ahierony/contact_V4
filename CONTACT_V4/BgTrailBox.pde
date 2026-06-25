@@ -67,7 +67,7 @@ class BgTrailBox {
     colorMode(RGB);
     stroke(255);
     fill(0);
-    strokeWeight(2);
+    strokeWeight(5);
 
     pushMatrix();
 
@@ -98,7 +98,7 @@ class BgTrailBox {
   void update(PVector vel, float mainTheta) {
 
     pos.add(vel);
-
+   
     Vec2 leftEyePos = box2d.getBodyPixelCoord(player.leftEye.eyeOuterb2d.body);
     Vec2 rightEyePos = box2d.getBodyPixelCoord(player.rightEye.eyeOuterb2d.body);
 

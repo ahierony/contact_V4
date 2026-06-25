@@ -120,6 +120,8 @@ class Player {
   int right_minRangeY = 0;
   int right_maxRangeY = 1023;
   
+  PlayerWorldLimits worldLimits;
+  
   // ********************************************************
   // CONSTRUCTOR
   // ********************************************************
@@ -199,6 +201,8 @@ class Player {
     trailRight = new PlayerTrail(pPos.x, pPos.y);
 
     engagedInImpulse = false;
+    
+    worldLimits = new PlayerWorldLimits(unitTotal, unit_w, unit_h);
     //
   } // constructor
 
@@ -502,6 +506,8 @@ class Player {
   // ********************************************************
 
   void display() {
+    
+    worldLimits.display();
 
     //updateColor();
 

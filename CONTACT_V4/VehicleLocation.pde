@@ -145,7 +145,7 @@ class VInMovingState implements VehicleLocationState {
       setReadyToSetState(false);
     }
 
-    agent.v.centerBoid.isMoving();
+    //agent.v.centerBoid.isMoving();
 
     //addTrailRipples();
     setLungState();

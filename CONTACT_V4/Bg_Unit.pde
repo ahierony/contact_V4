@@ -21,6 +21,9 @@ class Bg_Unit {
   PVector randomPos;
   PVector basicPos;
 
+  boolean containsAgent = false;
+  boolean containsEnvironment = false;
+
   //PlayerTrail trailLeft;
   //PlayerTrail trailRight;
 
@@ -38,10 +41,13 @@ class Bg_Unit {
 
       if (index%2 == 0) {
 
+        containsAgent = true;
         createAgent();
+
         //createVehicle(true, "DYNAMIC"); // true
       } else {
 
+        containsEnvironment = true;
         createEnvironment();
         //createVehicle(false, "STATIC"); // false
       }
@@ -161,37 +167,17 @@ class Bg_Unit {
     environment = new Environment(randomPos.x, randomPos.y, vehicleColorNum, false, "STATIC", index, player, environmentIndex);
     environments.add(environment);
   }
-  
-  /*
-  void createVehicle(boolean inMotion, String type) {
 
-    float vehicleRadius_w = ((unit_w*.3)*0.5)*0.7;
-    float vehicleRadius_h = ((unit_h*.3)*0.5)*0.7;
-    int vehicleColorNum = int(random(0, 360)); // 0, 45, 90, 135, 180, 225, 270, 315
-
-    PVector unitPos = new PVector(pos.x, pos.y);
-
-    PVector offset = new PVector(playerCenterSpherePosVecPixels.x, playerCenterSpherePosVecPixels.y);
-    unitPos.add(offset);
-
-    float bufferW = unit_w * 0.1;
-    float bufferH = unit_h * 0.1;
-    PVector tempPos = new PVector(random(vehicleRadius_w + bufferW, unit_w-vehicleRadius_w - bufferW), random(vehicleRadius_h + bufferW, unit_h-vehicleRadius_h- bufferH));
-    float sizeHalf_w = unit_w * 0.5;
-    float sizeHalf_h = unit_h * 0.5;
-    randomPos = new PVector(unitPos.x - sizeHalf_w + tempPos.x, unitPos.y - sizeHalf_h + tempPos.y);
-
-    basicPos = PVector.sub(randomPos, unitPos);
-
-    int vehicleIndex = vehicles.size();
-    vehicle = new Vehicle(randomPos.x, randomPos.y, vehicleColorNum, inMotion, type, index, player, vehicleIndex);
-    vehicles.add(vehicle);
-  }
-  */
 
   //--------------------------------------------------------------
 
   void wrapVehicle() {
+
+    if (containsAgent) {
+      agent.v.killBlob();
+    } else if (containsEnvironment) {
+      environment.v.killBlob();
+    }
 
     PVector unitPos = new PVector(pos.x, pos.y);
     PVector offset = new PVector(playerCenterSpherePosVecPixels.x, playerCenterSpherePosVecPixels.y);
@@ -200,16 +186,11 @@ class Bg_Unit {
 
     Vec2 unitPosVecPixels = new Vec2(unitPos.x, unitPos.y);
 
-    if (agent.v.location.getState() != agent.v.location.vInDeadState) {
-
-      agent.v.killBlob();
-
+    if (containsAgent) {
       agent.v.makeBlob(unitPosVecPixels);
-
-      //agent.v.initialize();
-    } else {
-
-      agent.v.posVecPixels.set(unitPos.x, unitPos.y);
+    } else if (containsEnvironment) {
+      environment.v.makeBlob(unitPosVecPixels);
+      environment.v.membrane.updatePosition(unitPos.x, unitPos.y);
     }
   }
 }

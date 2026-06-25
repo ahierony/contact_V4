@@ -82,8 +82,8 @@ class VehicleBoid {
   void update() {
 
     posVecPixels = box2d.getBodyPixelCoord(body);
-   
   }
+  
 
 
   // called from vehicleLocation > VInMovingState
@@ -163,7 +163,7 @@ class VehicleBoid {
 
     Vec2 velocity = body.getLinearVelocity();
     Vec2 circlepos = new Vec2(velocity.x, velocity.y);
-    
+
     circlepos.normalize();            // Normalize to get heading
     circlepos.mulLocal(wanderD);          // Multiply by distance
     circlepos.addLocal(boidPosition);               // Make it relative to boid's position
@@ -175,11 +175,9 @@ class VehicleBoid {
     Vec2 target = circlepos.add(circleOffSet);
 
     Vec2 desiredVelocity = target.sub(boidPosition);
-    
-   
+
+
     seek(desiredVelocity);
-    
-    
   }
 
 
@@ -195,6 +193,19 @@ class VehicleBoid {
     float speed = random(30000, 50000);
 
     Vec2 boidSpeed = new Vec2(steer.x, steer.y);
+    boidSpeed.normalize();
+    boidSpeed.mulLocal(speed);
+
+    body.applyLinearImpulse( boidSpeed, body.getPosition(), true);
+  }
+
+  void applyImpulseAnu(PVector velocityAnu) {
+
+    applyingImpulse = true;
+
+    float speed = random(30000, 50000);
+
+    Vec2 boidSpeed = new Vec2(velocityAnu.x, velocityAnu.y);
     boidSpeed.normalize();
     boidSpeed.mulLocal(speed);
 

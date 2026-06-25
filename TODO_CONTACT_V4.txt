@@ -5,11 +5,17 @@ TODO LIST
 
 @@ player contact with environment: 
 
+- sensing radius becomes a state > make sure it gets detected
+- figure out wrapping in contact 2
+- setup 8 random environments for sounds
+
+
+
 - connect sliders to vehicle
 - connect air (lung) variable to vehicle
 - connect sensing radius area to vehicle
 
-
+- fix screen wrapping of wandering agents
 
 
 - vehicle static and vehicle dynamic need collision contactlistner // done
