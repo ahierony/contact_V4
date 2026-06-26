@@ -1,9 +1,13 @@
 class Collision {
 
   int agentsRemaining;
+  
+  PApplet app;
 
 
-  Collision() {
+  Collision(PApplet p) {
+    
+    app = p;
 
     agentsRemaining = agents.size();
   }
@@ -134,8 +138,8 @@ class Collision {
 
             vehicleWasTouched = true;
 
-            if (playSoundContactV1) {
-              p_touch_v_audio.play();
+            if (playSoundContactV4) {
+              //p_touch_v_audio.play();
             }
 
             //killVehicle(vNum);

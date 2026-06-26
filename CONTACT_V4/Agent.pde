@@ -25,8 +25,6 @@ class Agent {
   int tadpoleSuppression = 0; // frames when kicking for jump is off
   Environment trackedEnv = null; // locked in env to seek
 
-  //
-
 
   Agent(float x, float y, int _colorAngle, boolean _inMotion, String type_, int unitNum_, Player p, int vIndex) {
 
@@ -74,13 +72,20 @@ class Agent {
       if (kickTimer <= 0) {
         kickTimer = (int)random(50, 100);
 
-
         PVector forward = velocity.copy();
         if (forward.mag() < 0.1) forward = PVector.random2D();
         forward.normalize();
         forward.rotate(random(-0.5, 0.5));
         kickDir = PVector.mult(forward, 1.0);
         kickDecay = random(20, 60);
+
+        //SOUND
+        if (playSoundContactV4) {
+          int randNum = int(random(5));
+
+          SoundFile agentSound = agentSounds[randNum];
+          agentSound.play(1);
+        }
       }
 
       // gradual thrust for jump with exponentual decay
@@ -361,8 +366,6 @@ class Agent {
    colorMode(RGB, 255);
    }
    */
-
-
 
   //--------------------------------------------------------------
 }

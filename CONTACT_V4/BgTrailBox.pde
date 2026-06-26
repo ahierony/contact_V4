@@ -17,7 +17,7 @@ class BgTrailBox {
   float trailBox_wrapLimit_w;
   float trailBox_wrapLimit_h;
 
-
+  //--------------------------------------------------------------
 
   BgTrailBox(int _unitTotal, float unit_w, float unit_h) {
 
@@ -52,10 +52,9 @@ class BgTrailBox {
 
     trailBox_wrapLimit_w = bg.wrapLimit_w;
     trailBox_wrapLimit_h = bg.wrapLimit_h;
-    
-    println("trailBox_wrapLimit_w ", trailBox_wrapLimit_w);
   }
 
+  //--------------------------------------------------------------
 
   void display(float worldScale) {
 
@@ -93,12 +92,12 @@ class BgTrailBox {
     colorMode(HSB, 360, 100, 100);
   }
 
-
+  //--------------------------------------------------------------
 
   void update(PVector vel, float mainTheta) {
 
     pos.add(vel);
-   
+
     Vec2 leftEyePos = box2d.getBodyPixelCoord(player.leftEye.eyeOuterb2d.body);
     Vec2 rightEyePos = box2d.getBodyPixelCoord(player.rightEye.eyeOuterb2d.body);
 
@@ -139,6 +138,8 @@ class BgTrailBox {
     updateTrail(leftEyesPosPVec, rightEyePosPVec, mainTheta);
   }
 
+  //--------------------------------------------------------------
+
   void updateTrail(PVector _leftEyePos, PVector _rightEyePos, float mainTheta) {
 
     trailLeft.update(_leftEyePos.x, _leftEyePos.y, player.getLinearVelocity(), mainTheta);
@@ -146,11 +147,11 @@ class BgTrailBox {
   }
   /*
   void increaseStrokeWeight() {
-
-    offsets.add(Integer.valueOf(trailLeft.marks.size()));
-    offsetNum++;
-    offsetStrokeWeight += strokeWeightIncrease;
-    strokeWeights.add(Integer.valueOf(offsetStrokeWeight));
-  }
-  */
+   
+   offsets.add(Integer.valueOf(trailLeft.marks.size()));
+   offsetNum++;
+   offsetStrokeWeight += strokeWeightIncrease;
+   strokeWeights.add(Integer.valueOf(offsetStrokeWeight));
+   }
+   */
 }

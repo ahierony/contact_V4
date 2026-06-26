@@ -154,24 +154,34 @@ boolean isSwitchingSides = false;
 
 Collision collision;
 
+int stages;
+int currentStage;
+
 //*********************************************************************
 // AUDIO
 //*********************************************************************
 
-// contact v1 sound
+// contact v4 sound
 
 import processing.sound.*;
+boolean playSoundContactV4;
 
-boolean playSoundContactV1;
+SoundFile[] agentSounds;
+SoundFile[] worldSounds;
+SoundFile[] eventSounds;
 
+SoundFile currentWorldSound;
+
+/*
 SoundFile eye_push;
-
-SoundFile[] backgroundSounds;
-boolean switchBackgroundSound;
-SoundFile currentBackgroundSound;
-
-SoundFile p_enter_v_zone_audio;
-SoundFile p_touch_v_audio;
+ 
+ SoundFile[] backgroundSounds;
+ boolean switchBackgroundSound;
+ SoundFile currentBackgroundSound;
+ 
+ SoundFile p_enter_v_zone_audio;
+ SoundFile p_touch_v_audio;
+ */
 
 //
 
@@ -226,7 +236,7 @@ void setup() {
   debugMode = false;
   screengrab = false;
   showDistance = false;
-  playSoundContactV1 = false;
+  playSoundContactV4 = true;
   //playSound = false; // enables sound // current sound until Woohun updates
   //audioIsPlaying = false; // new sound by woohun not ready yet
   //*********************************************************************
@@ -238,29 +248,34 @@ void setup() {
 
   frameRate(30);
 
+  stages = 5;
+  currentStage = 2;
+
   //*************** OSCP5 SOUND ***************************************
 
   //oscP5 = new OscP5(this, 12000);
   //myRemoteLocation = new NetAddress("127.0.0.1", 12000);
 
   //*******************************************************************
-  // contact v1 sounds
+  // contact v4 sounds
 
-  if (playSoundContactV1)
+  if (playSoundContactV4)
     setupSounds();
 
   //*******************************************************************
 
+
+
   colorMode(HSB, 360, 100, 100);
 
   int rowLength;
-  unitSize = 900; //600; // 1200 is contact v3 size //750; // 600 x 5 // 1000 x 3  > to create more density but preserve smaller frame
+  unitSize = 600; // 900; //600; // 1200 is contact v3 size //750; // 600 x 5 // 1000 x 3  > to create more density but preserve smaller frame
 
   if (debugMode) {
     rowLength = 3;
     setUnitSize(rowLength * unitSize, rowLength * unitSize, rowLength, 0.5); // float _unitSize, int _unitRow, float _worldScale (0.5)
   } else {
-    rowLength = 5;
+    rowLength = 3; //5;
     setUnitSize(rowLength * unitSize, rowLength * unitSize, rowLength, 0.2); // float _unitSize, int _unitRow, float _worldScale (0.5)
   }
 
@@ -287,12 +302,12 @@ void setup() {
   environments = new ArrayList<Environment>();
   agents = new ArrayList<Agent>();
   //vehicles = new ArrayList<Vehicle>();
-  bg = new Bg(unitTotal);
+  bg = new Bg(unitTotal, this);
 
-  collision = new Collision();
+  collision = new Collision(this);
 
   bgTrailBox = new BgTrailBox(unitTotal, unit_w, unit_h);
-  
+
   //playerWorldLimits = new PlayerWorldLimits(unitTotal, unit_w, unit_h);
 
   setBackgroundTimer();
@@ -315,46 +330,83 @@ void setup() {
 
 //--------------------------------------------------------------
 
-// contact v1 sounds
+// contact v4 sounds
 
 void setupSounds() {
+  /*
+  SoundFile[] agentSounds;
+   SoundFile[][] environmentsBaseSounds;
+   SoundFile[][] environmentsMuffledSounds;
+   SoundFile[] worldSounds;
+   SoundFile[] eventSounds;
+   */
 
+  worldSounds = new SoundFile[stages];
+
+  worldSounds[0] = new SoundFile(this, "../../MUSIC/World/world_A.mp3");
+  worldSounds[1] = new SoundFile(this, "../../MUSIC/World/world_B.mp3");
+  worldSounds[2] = new SoundFile(this, "../../MUSIC/World/world_C.mp3");
+  worldSounds[3] = new SoundFile(this, "../../MUSIC/World/world_D.mp3");
+  worldSounds[4] = new SoundFile(this, "../../MUSIC/World/world_E.mp3");
+
+  currentWorldSound = worldSounds[currentStage];
+
+  agentSounds = new SoundFile[5];
+
+  agentSounds[0] = new SoundFile(this, "../../MUSIC/Agent_Sounds/agent_A.mp3");
+  agentSounds[1] = new SoundFile(this, "../../MUSIC/Agent_Sounds/agent_B.mp3");
+  agentSounds[2] = new SoundFile(this, "../../MUSIC/Agent_Sounds/agent_C.mp3");
+  agentSounds[3] = new SoundFile(this, "../../MUSIC/Agent_Sounds/agent_D.mp3");
+  agentSounds[4] = new SoundFile(this, "../../MUSIC/Agent_Sounds/agent_E.mp3");
+
+  currentWorldSound.amp(0.5);
+  //currentWorldSound.play();
+  //currentWorldSound.loop();
+
+
+  //worldSounds = new SoundFile[stages];
+
+
+
+
+  /*
   backgroundSounds = new SoundFile[9];
-
-  for (int i=0; i < backgroundSounds.length; i++) {
-    backgroundSounds[i] = new SoundFile(this, "../../SOUNDS/background" + i + ".mp3");
-  }
-
-  int randomBackgroundSound = int(random(0, backgroundSounds.length));
-  //println("randomBackgroundSound ", randomBackgroundSound);
-  currentBackgroundSound = backgroundSounds[randomBackgroundSound];
-  currentBackgroundSound.amp(0.5);
-  currentBackgroundSound.play();
-  switchBackgroundSound = true;
-
-  p_touch_v_audio = new SoundFile(this, "../../SOUNDS/p_touch_v.mp3");
-  p_touch_v_audio.amp(1.0);
-
-  //p_enter_v_zone_audio.amp(1.0);
-  //p_enter_v_zone_audio = new SoundFile(this, "../../SOUNDS/p_enter_v_zone.mp3");
+   
+   for (int i=0; i < backgroundSounds.length; i++) {
+   backgroundSounds[i] = new SoundFile(this, "../../SOUNDS/background" + i + ".mp3");
+   }
+   
+   int randomBackgroundSound = int(random(0, backgroundSounds.length));
+   //println("randomBackgroundSound ", randomBackgroundSound);
+   currentBackgroundSound = backgroundSounds[randomBackgroundSound];
+   currentBackgroundSound.amp(0.5);
+   currentBackgroundSound.play();
+   switchBackgroundSound = true;
+   
+   p_touch_v_audio = new SoundFile(this, "../../SOUNDS/p_touch_v.mp3");
+   p_touch_v_audio.amp(1.0);
+   */
 }
 
 //--------------------------------------------------------------
 
 void updateSounds() {
 
-  if (!currentBackgroundSound.isPlaying()) {
+  /*
 
-    if (switchBackgroundSound) {
-
-      int randomBackgroundSound = int(random(0, backgroundSounds.length));
-      currentBackgroundSound = backgroundSounds[randomBackgroundSound];
-      switchBackgroundSound = false;
-      currentBackgroundSound.play();
-    }
-  } else {
-    switchBackgroundSound = true;
-  }
+   if (!currentBackgroundSound.isPlaying()) {
+   
+   if (switchBackgroundSound) {
+   
+   int randomBackgroundSound = int(random(0, backgroundSounds.length));
+   currentBackgroundSound = backgroundSounds[randomBackgroundSound];
+   switchBackgroundSound = false;
+   currentBackgroundSound.play();
+   }
+   } else {
+   switchBackgroundSound = true;
+   }
+   */
 }
 
 //--------------------------------------------------------------
@@ -431,8 +483,8 @@ void resetContact() {
   environments = new ArrayList<Environment>();
   agents = new ArrayList<Agent>();
   //vehicles = new ArrayList<Vehicle>();
-  bg = new Bg(unitTotal);
-  collision = new Collision();
+  bg = new Bg(unitTotal, this);
+  collision = new Collision(this);
 
   bgTrailBox = new BgTrailBox(unitTotal, unit_w, unit_h);
   //playerWorldLimits = new PlayerWorldLimits(unitTotal, unit_w, unit_h);
@@ -453,7 +505,7 @@ void draw() {
    }
    */
 
-  if (playSoundContactV1)
+  if (playSoundContactV4)
     updateSounds();
 
   if (recordSVG) {
@@ -693,16 +745,16 @@ void draw() {
 
   // TRAIL RECORDING ENDS
   //if (player.lung.getState() == player.lung.emptyState) {
-    
-    /*
+
+  /*
   if (player.lung.breath.movement == "empty" || collision.agentsRemaining == 0) {
-
-    if (fadeAnimationIsOver()) {
-
-      recordSVG = true;
-    }
-  }
-  */
+   
+   if (fadeAnimationIsOver()) {
+   
+   recordSVG = true;
+   }
+   }
+   */
 
   if (scrollbar) data.display();
 } // draw

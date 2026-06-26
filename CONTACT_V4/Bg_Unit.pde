@@ -1,5 +1,7 @@
 
 class Bg_Unit {
+  
+  PApplet app;
 
   PVector pos;
   PVector posStatic;
@@ -29,7 +31,7 @@ class Bg_Unit {
 
   // Constructor
   //Bg_Unit(float tempX, float tempY, boolean _containsVehicle, int _index) {
-  Bg_Unit(float tempX, float tempY, boolean _containsAgent, boolean _containsEnvironment, int _index) {
+  Bg_Unit(float tempX, float tempY, boolean _containsAgent, boolean _containsEnvironment, int _index, PApplet app) {
 
     pos = new PVector(tempX, tempY);
     posStatic = new PVector(tempX, tempY);
@@ -47,7 +49,7 @@ class Bg_Unit {
     if (_containsEnvironment) {
       containsEnvironment = true;
       containsVehicle = true;
-      createEnvironment();
+      createEnvironment(app);
     }
 
     /*
@@ -166,7 +168,7 @@ class Bg_Unit {
     agents.add(agent);
   }
 
-  void createEnvironment() {
+  void createEnvironment(PApplet app) {
 
     float vehicleRadius_w = ((unit_w*.3)*0.5)*0.7;
     float vehicleRadius_h = ((unit_h*.3)*0.5)*0.7;
@@ -189,7 +191,7 @@ class Bg_Unit {
     basicPos = PVector.sub(randomPos, unitPos);
 
     int environmentIndex = environments.size();
-    environment = new Environment(randomPos.x, randomPos.y, vehicleColorNum, false, "STATIC", index, player, environmentIndex);
+    environment = new Environment(randomPos.x, randomPos.y, vehicleColorNum, false, "STATIC", index, player, environmentIndex, app);
     environments.add(environment);
   }
 

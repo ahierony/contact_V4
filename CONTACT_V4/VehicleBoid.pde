@@ -83,7 +83,7 @@ class VehicleBoid {
 
     posVecPixels = box2d.getBodyPixelCoord(body);
   }
-  
+
 
 
   // called from vehicleLocation > VInMovingState
@@ -303,7 +303,6 @@ class VehicleBoid {
       bd.type = BodyType.DYNAMIC;
     } else if (_type == "STATIC") {
       bd.type = BodyType.STATIC;
-      println("vehicleIndex ", vehicleIndex);
     }
 
     // Set its position

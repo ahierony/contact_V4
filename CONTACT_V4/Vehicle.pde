@@ -100,7 +100,7 @@ class Vehicle {
 
   boolean repellOther;
 
-  int vI;
+  int index;
 
   Vec2 deadPosition;
 
@@ -112,7 +112,7 @@ class Vehicle {
   // Constructor
   Vehicle(float x, float y, int _colorAngle, boolean _inMotion, String type_, int unitNum_, Player p, int vIndex, Environment environment) {
 
-    vI = vIndex;
+    index = vIndex;
 
     unitNum = unitNum_;
 
@@ -209,7 +209,7 @@ class Vehicle {
   // Constructor
   Vehicle(float x, float y, int _colorAngle, boolean _inMotion, String type_, int unitNum_, Player p, int vIndex, Agent agent) {
 
-    vI = vIndex;
+    index = vIndex;
 
     unitNum = unitNum_;
 
@@ -1007,7 +1007,7 @@ class Vehicle {
     sphereRadius = 35; //25;
     centerBoidRadius = 35;
 
-    centerBoid = new VehicleBoid(posVecPixels_.x, posVecPixels_.y, centerBoidRadius, bodyType, CATEGORY_VEHICLE, MASK_VEHICLE, vI+1);
+    centerBoid = new VehicleBoid(posVecPixels_.x, posVecPixels_.y, centerBoidRadius, bodyType, CATEGORY_VEHICLE, MASK_VEHICLE, index+1);
     // make body
 
 
@@ -1019,7 +1019,7 @@ class Vehicle {
       float x = posVecPixels_.x + radius * sin(t);
       float y = posVecPixels_.y + radius * cos(t);
 
-      spheres.add(new VehicleSphere(x, y, sphereRadius, "DYNAMIC", CATEGORY_VEHICLE, MASK_VEHICLE, vI+1));
+      spheres.add(new VehicleSphere(x, y, sphereRadius, "DYNAMIC", CATEGORY_VEHICLE, MASK_VEHICLE, index+1));
 
       cvjd.addBody(spheres.get(i).body);
 

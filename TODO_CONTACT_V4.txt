@@ -6,8 +6,8 @@ TODO LIST
 @@ player contact with environment: 
 
 - sensing radius becomes a state > make sure it gets detected
-- figure out wrapping in contact 2
-- setup 8 random environments for sounds
+- vehicle / player detection (separate)
+- setup 8 random environments for sounds // done
 
 
 
