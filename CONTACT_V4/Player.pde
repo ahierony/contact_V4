@@ -94,8 +94,9 @@ class Player {
 
   boolean readyToUpdateDistanceArea;
 
-  float borderRadiusMin;
-  float borderRadiusMax;
+  //float borderRadiusMin;
+  //float borderRadiusMax;
+  float sensingRadius;
 
   //Track data
   boolean checkForVehiclesMovingInOutofPlayerArea;
@@ -119,9 +120,9 @@ class Player {
   int right_maxRangeX = 1023;
   int right_minRangeY = 0;
   int right_maxRangeY = 1023;
-  
+
   PlayerWorldLimits worldLimits;
-  
+
   // ********************************************************
   // CONSTRUCTOR
   // ********************************************************
@@ -132,8 +133,14 @@ class Player {
     unitHalf_h = unit_h * 0.5;
     readyToUpdateDistanceArea = true;
 
-    borderRadiusMin = (unit_w*unitRowMax)*0.4;
-    borderRadiusMax = (unit_w*unitRowMin) * 0.6;
+    //borderRadiusMin = (unit_w*unitRowMax)*0.4;
+    //borderRadiusMax = (unit_w*unitRowMin) * 0.6;
+
+    if (fullScale) {
+      sensingRadius = (unit_w*unitRowMax)*0.1;
+    } else {
+      sensingRadius = (unit_w*unitRowMax)*0.3;
+    }
 
     // Create the empty ArrayLists
     //spheres = new PlayerSphere[0];
@@ -201,7 +208,7 @@ class Player {
     trailRight = new PlayerTrail(pPos.x, pPos.y);
 
     engagedInImpulse = false;
-    
+
     worldLimits = new PlayerWorldLimits(unitTotal, unit_w, unit_h);
     //
   } // constructor
@@ -210,7 +217,7 @@ class Player {
   // UPDATE
   // ********************************************************
 
-  void update(float _theta) {  
+  void update(float _theta) {
 
     playerTheta = _theta;
 
@@ -258,8 +265,7 @@ class Player {
     motion.update();
 
 
-   // updateTrail();
-    
+    // updateTrail();
   } // update()
 
   // ********************************************************
@@ -286,21 +292,21 @@ class Player {
   // ********************************************************
   /*
   void updateTrail() {
-    /*
+  /*
    Vec2 centerPos;
-     centerPos = box2d.getBodyPixelCoord(centerSphere.body);
-     trail.update(centerPos.x, centerPos.y, colorWheelAngle, 155);
-     */
-     /*
+   centerPos = box2d.getBodyPixelCoord(centerSphere.body);
+   trail.update(centerPos.x, centerPos.y, colorWheelAngle, 155);
+   */
+  /*
     Vec2 leftPos;
-    leftPos = box2d.getBodyPixelCoord(leftEye.eyeOuterb2d.body);
-    trailLeft.update(leftPos.x, leftPos.y, getLinearVelocity());
+   leftPos = box2d.getBodyPixelCoord(leftEye.eyeOuterb2d.body);
+   trailLeft.update(leftPos.x, leftPos.y, getLinearVelocity());
+   
+   Vec2 rightPos;
+   rightPos = box2d.getBodyPixelCoord(rightEye.eyeOuterb2d.body);
+   trailRight.update(rightPos.x, rightPos.y, getLinearVelocity());
+   }*/
 
-    Vec2 rightPos;
-    rightPos = box2d.getBodyPixelCoord(rightEye.eyeOuterb2d.body);
-    trailRight.update(rightPos.x, rightPos.y, getLinearVelocity());
-  }*/
-  
 
 
   //--------------------------------------------------------------
@@ -506,16 +512,15 @@ class Player {
   // ********************************************************
 
   void display() {
-    
+
     worldLimits.display();
 
     //updateColor();
 
-   // trailLeft.display();
-   // trailRight.display();
+    // trailLeft.display();
+    // trailRight.display();
 
-    if (debugMode)
-      displayBorderRadius();
+    displaySensingRadius();
 
     displayBlob();
 
@@ -528,9 +533,18 @@ class Player {
     displayEyes();
   }
 
+
   //--------------------------------------------------------------
 
-  void displayBorderRadius() {
+  void displaySensingRadius() {
+
+    /*
+    strokeWeight(3);
+     noFill();
+     stroke(0, 97, 0);
+     circle(position.x, position.y, sensingRadius * 2);
+     
+     */
 
     Vec2 pos = box2d.getBodyPixelCoord(player.centerSphere.body);
 
@@ -542,8 +556,9 @@ class Player {
     strokeWeight(2);
     stroke(0);
     //stroke(200);
-    circle(0, 0, borderRadiusMin);
-    circle(0, 0, borderRadiusMax);
+    circle(0, 0, sensingRadius);
+    //circle(0, 0, borderRadiusMin);
+    //circle(0, 0, borderRadiusMax);
 
     popMatrix();
   }

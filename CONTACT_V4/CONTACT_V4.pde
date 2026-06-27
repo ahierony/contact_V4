@@ -203,6 +203,7 @@ int backgroundBrightness;
 Timer screenGrabTimer;
 boolean screengrab;
 
+boolean fullScale;
 
 //PlayerWorldLimits playerWorldLimits;
 
@@ -231,12 +232,13 @@ void setup() {
 
   //*********************************************************************
   //gamePadIsOn = false;
-  inputControls = InputControls.JOYSTICKS; //KEYBOARD; //JOYSTICKS;
+  inputControls = InputControls.KEYBOARD; //KEYBOARD; //JOYSTICKS;
   //protoSticks = false;
   debugMode = false;
   screengrab = false;
   showDistance = false;
   playSoundContactV4 = true;
+  fullScale = false;
   //playSound = false; // enables sound // current sound until Woohun updates
   //audioIsPlaying = false; // new sound by woohun not ready yet
   //*********************************************************************
@@ -269,13 +271,20 @@ void setup() {
   colorMode(HSB, 360, 100, 100);
 
   int rowLength;
-  unitSize = 600; // 900; //600; // 1200 is contact v3 size //750; // 600 x 5 // 1000 x 3  > to create more density but preserve smaller frame
-
+  if (fullScale) {
+    unitSize = 900; // 900; //600; // 1200 is contact v3 size //750; // 600 x 5 // 1000 x 3  > to create more density but preserve smaller frame
+  } else {
+    unitSize = 600;
+  }
   if (debugMode) {
     rowLength = 3;
     setUnitSize(rowLength * unitSize, rowLength * unitSize, rowLength, 0.5); // float _unitSize, int _unitRow, float _worldScale (0.5)
   } else {
-    rowLength = 3; //5;
+    if (fullScale) {
+      rowLength = 5; //5;
+    } else {
+      rowLength = 3;
+    }
     setUnitSize(rowLength * unitSize, rowLength * unitSize, rowLength, 0.2); // float _unitSize, int _unitRow, float _worldScale (0.5)
   }
 

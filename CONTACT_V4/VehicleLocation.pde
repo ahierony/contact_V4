@@ -144,6 +144,8 @@ class VInMovingState implements VehicleLocationState {
 
       setReadyToSetState(false);
     }
+    
+    agent.v.checkIfInPlayerArea();
 
     //agent.v.centerBoid.isMoving();
 

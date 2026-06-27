@@ -80,7 +80,7 @@ class Agent {
         kickDecay = random(20, 60);
 
         //SOUND
-        if (playSoundContactV4) {
+        if (playSoundContactV4 && v.inPlayerSensingRadius) {
           int randNum = int(random(5));
 
           SoundFile agentSound = agentSounds[randNum];

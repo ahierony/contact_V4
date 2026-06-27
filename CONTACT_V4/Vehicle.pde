@@ -87,6 +87,8 @@ class Vehicle {
   boolean otherVehicleInDistanceZone;
   boolean otherVehicleInBreathingZone;
   boolean otherBreathingVehicleComingClose;
+  
+  boolean inPlayerSensingRadius;
 
   boolean isReadyForCollision;
   boolean readyToUpdateDistanceZone;
@@ -474,7 +476,6 @@ class Vehicle {
       Vec2 unitPosVecPixels = new Vec2(unitPos.x, unitPos.y);
       makeBlob(unitPosVecPixels);
     }
-
   }
 
   //--------------------------------------------------------------
@@ -736,6 +737,79 @@ class Vehicle {
       return false;
     }
   }
+
+  // ********************************************************
+  // VEHICLE IN PLAYER SENSING RADIUS
+  // ********************************************************
+
+  void checkIfInPlayerArea() {
+    
+    inPlayerSensingRadius = false;
+    //inPlayerDistanceArea = false;
+    //inPlayerBreathingArea = false;
+    
+    if (isInPlayerArea(player.sensingRadius)) {
+      
+      inPlayerSensingRadius = true;
+    } else {
+      inPlayerSensingRadius = false;
+    }
+    
+    /*
+    if (!touchedPlayer) {
+
+      if (isInPlayerArea(player.area.distanceRadius)) {
+
+        inPlayerDistanceArea = true;
+
+        if (isInPlayerArea(player.area.radius)) {
+
+          inPlayerBreathingArea = true;
+        } else {
+
+          inPlayerBreathingArea = false;
+        }
+      } else {
+
+        inPlayerDistanceArea = false;
+      }
+
+      if (!inPlayerDistanceArea) {
+        inPlayerBreathingArea = false;
+      }
+    } else { // touched player
+
+      touchedPlayer = false;
+
+      inPlayerDistanceArea = false;
+      inPlayerBreathingArea = false;
+
+      //player.area.setState(player.area.notBreathingState);
+      //player.location.setState(player.location.pLocMovingState
+    }
+    */
+  }
+
+
+  //--------------------------------------------------------------
+
+  boolean isInPlayerArea(float radius) {
+
+    Vec2 vehiclePosPix = box2d.getBodyPixelCoord(centerBoid.body);
+
+    Vec2 playerPosPix = box2d.getBodyPixelCoord(player.centerSphere.body);
+
+    float d_pix = dist(vehiclePosPix.x, vehiclePosPix.y, playerPosPix.x, playerPosPix.y);
+
+    if (d_pix < radius + blobRadius) {
+
+      return true;
+    } else {
+
+      return false;
+    }
+  }
+
 
   // ********************************************************
   // OTHER VEHICLE IS ZONE

@@ -36,7 +36,11 @@ class VehicleZone {
     vehicle = v;
 
     //radiusMax = vehicle.unitHalfSize;
-    radiusMax = unit_w * 0.3; //unit_w * 0.35;
+    if(fullScale){
+      radiusMax = unit_w * 0.3; //unit_w * 0.35;
+    } else {
+      radiusMax = unit_w * 0.7;
+    }
     //radiusMax = bgTrailBox.rectSize * 0.5;
     //println("radiusMax ", radiusMax);
     radiusMin = vehicle.blobRadius+5;
