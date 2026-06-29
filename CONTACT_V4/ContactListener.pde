@@ -117,7 +117,7 @@ class CustomListener implements ContactListener {
         vs2.wasTouched = false; // vehicle was touched
       }
       
-      println("vehicle was touched by vehicle");
+      //println("vehicle was touched by vehicle");
       
     } 
   }

@@ -193,13 +193,15 @@ boolean debugMode;
 boolean protoSticks;
 boolean showDistance;
 
+/*
 int backgroundColorNum;
-color backgroundColor;
-Timer backgroundTimer;
-int backgroundCount;
-int backgroundCountBeginning;
-int  backgroundSaturation;
-int backgroundBrightness;
+ color backgroundColor;
+ Timer backgroundTimer;
+ int backgroundCount;
+ int backgroundCountBeginning;
+ int  backgroundSaturation;
+ int backgroundBrightness;
+ */
 
 // SCREEN GRAD FOR DOCUMENTATION
 
@@ -269,8 +271,6 @@ void setup() {
 
   //*******************************************************************
 
-
-
   colorMode(HSB, 360, 100, 100);
 
   int rowLength;
@@ -291,21 +291,10 @@ void setup() {
     setUnitSize(rowLength * unitSize, rowLength * unitSize, rowLength, 0.2); // float _unitSize, int _unitRow, float _worldScale (0.5)
   }
 
-  // unitSize > rowLength * unitSize = unit_w/unit_h  > rect_w = sqrt(_unitTotal) * unit_w
-  // 600      > 5 * 600                               >   5 * 3000
-
   if (inputControls == InputControls.JOYSTICKS) setupDeviceMode();
   setupb2d();
 
   unitTotal = int(pow(rowLength, 2));
-
-  /*
-  println("rowLength ", rowLength);
-   println("unitTotal ", unitTotal);
-   
-   println("unit_w ", unit_w);
-   println("unit_h ", unit_h);
-   */
 
   // Make a new player
   playerCenterSpherePosVecPixels = new Vec2(0, 0);
@@ -320,11 +309,7 @@ void setup() {
 
   bgTrailBox = new BgTrailBox(unitTotal, unit_w, unit_h);
 
-  //playerWorldLimits = new PlayerWorldLimits(unitTotal, unit_w, unit_h);
-
-  setBackgroundTimer();
-
-  //println("vehicles.size() ", vehicles.size());
+  //setBackgroundTimer();
 
   rightEyeLeft = false;
   rightEyeRight = false;
@@ -336,7 +321,7 @@ void setup() {
   leftEyeDown = false;
 
   fadeAnimationCounter = 0;
-    
+
   config = new SimConfig();
   data = new Data();
 } // setup
@@ -450,16 +435,18 @@ void setupb2d() {
 }
 
 //--------------------------------------------------------------
+/*
 void setBackgroundTimer() {
-
-  backgroundCountBeginning = 0;
-  backgroundCount = backgroundCountBeginning;
-  backgroundSaturation = 75;
-  backgroundBrightness = 75;
-  backgroundColor = color(backgroundCount, backgroundSaturation, backgroundBrightness);
-  backgroundTimer = new Timer(2000);
-  backgroundTimer.start();
-}
+ 
+ backgroundCountBeginning = 0;
+ backgroundCount = backgroundCountBeginning;
+ backgroundSaturation = 75;
+ backgroundBrightness = 75;
+ backgroundColor = color(backgroundCount, backgroundSaturation, backgroundBrightness);
+ backgroundTimer = new Timer(2000);
+ backgroundTimer.start();
+ }
+ */
 //--------------------------------------------------------------
 void resetContact() {
 
@@ -502,7 +489,7 @@ void resetContact() {
   bgTrailBox = new BgTrailBox(unitTotal, unit_w, unit_h);
   //playerWorldLimits = new PlayerWorldLimits(unitTotal, unit_w, unit_h);
 
-  setBackgroundTimer();
+  //setBackgroundTimer();
 }
 //--------------------------------------------------------------
 void draw() {
@@ -540,17 +527,19 @@ void draw() {
 
   if (updateDeviceMode()) {
 
+    /*
     if (backgroundTimer.isFinished()) {
-
-      backgroundTimer.start();
-      if (backgroundCount <= 360) {
-        backgroundCount++;
-      } else {
-        backgroundCount = 0;
-      }
-
-      backgroundColor = color(backgroundCount, backgroundSaturation, backgroundBrightness);
-    }
+     
+     backgroundTimer.start();
+     if (backgroundCount <= 360) {
+     backgroundCount++;
+     } else {
+     backgroundCount = 0;
+     }
+     
+     backgroundColor = color(backgroundCount, backgroundSaturation, backgroundBrightness);
+     }
+     */
 
     // ************************************************
     // calculate background velocity
@@ -606,8 +595,11 @@ void draw() {
 
     // DISPLAY
 
-    background(backgroundColor);
+    //background(backgroundColor);
     //background(0, 0, 19);
+
+    float avgHealth = avgEnvironmentHealth();
+    drawBackground(avgHealth);
 
     if (!recordSVG) {
 
@@ -1229,9 +1221,9 @@ void updateConfig() {
 // ADDED HELPERS
 
 // add up all environment ratios and average them out
-float avgEnvironmentHealth(){
+float avgEnvironmentHealth() {
   float total = 0;
-  for (Environment e: environments) {
+  for (Environment e : environments) {
     total += e.energy / e.maxEnergy;
   }
   return total / environments.size();
@@ -1240,35 +1232,37 @@ float avgEnvironmentHealth(){
 //--------------------------------------------------------------
 
 // draws background color based on average environment health
-void drawBackground(float avgHealth){
+void drawBackground(float avgHealth) {
   colorMode(HSB, 360, 100, 100);
   float hue;
   int stage;
-  
-  if (avgHealth > 0.90){
+
+  if (avgHealth > 0.90) {
     hue = 210; // Blue
     stage = 1;
-  } else if (avgHealth > 0.70){
+  } else if (avgHealth > 0.70) {
     float t = map(avgHealth, 0.70, 0.90, 0.0, 1.0);
     hue = lerp(150, 210, t); // Blue to bluish-green to green
     stage = 2;
-  } else if (avgHealth > 0.50){
+  } else if (avgHealth > 0.50) {
     float t = map(avgHealth, 0.50, 0.70, 0.0, 1.0);
     hue = lerp(45, 150, t); // Green to yellow to yellowish orange
     stage = 3;
-  } else if (avgHealth > 0.21){
+  } else if (avgHealth > 0.21) {
     float t = map(avgHealth, 0.21, 0.50, 0.0, 1.0);
     hue = lerp(0, 45, t); // Orange to red
     stage = 4;
   } else {
     float t = map(avgHealth, 0.12, 0.21, 0.0, 1.0);
-    hue = lerp(270, 360, t); // Red to violet to bluish-violet
+    hue = lerp(350, 360, t); // Red to violet to bluish-violet
     stage = 5;
   }
-  
+
+  println("hue ", hue);
+
   background(hue, 65, 70);
   colorMode(RGB, 255);
-  
+
   fill(0, 150);
   noStroke();
   textAlign(LEFT);
@@ -1279,13 +1273,13 @@ void drawBackground(float avgHealth){
 //--------------------------------------------------------------
 /*
 // updates each environment's core logic and draws it
-void updateEnvironments(){
-  for (Environment e: environments){
-    e.updatedCore(agents, config.regenRate);
-    e.draw(config.sensingRadius);
-  }
-}
-*/
+ void updateEnvironments(){
+ for (Environment e: environments){
+ e.updatedCore(agents, config.regenRate);
+ e.draw(config.sensingRadius);
+ }
+ }
+ */
 
 //--------------------------------------------------------------
 
