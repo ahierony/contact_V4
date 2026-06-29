@@ -7,6 +7,9 @@ class Vehicle {
   //ArrayList<Vehicle> vehicles;
   ArrayList<Agent> agents;
   ArrayList<Environment> environments;
+  
+  Agent thisAgent;
+  Environment thisEnvironment;
 
   VehicleZone zone;
   VehicleLocation location;
@@ -88,7 +91,8 @@ class Vehicle {
   boolean otherVehicleInBreathingZone;
   boolean otherBreathingVehicleComingClose;
   
-  boolean inPlayerSensingRadius;
+  boolean inPlayerMaxRadius;
+  boolean inPlayerMinRadius;
 
   boolean isReadyForCollision;
   boolean readyToUpdateDistanceZone;
@@ -98,7 +102,7 @@ class Vehicle {
   boolean distanceFinal;
   boolean breathingFinal;
 
-  VehicleMembrane membrane;
+  //VehicleMembrane membrane;
 
   boolean repellOther;
 
@@ -112,9 +116,11 @@ class Vehicle {
   //--------------------------------------------------------------
 
   // Constructor
-  Vehicle(float x, float y, int _colorAngle, boolean _inMotion, String type_, int unitNum_, Player p, int vIndex, Environment environment) {
+  Vehicle(float x, float y, int _colorAngle, boolean _inMotion, String type_, int unitNum_, Player p, int vIndex, Environment thisE) {
 
     index = vIndex;
+    
+    thisEnvironment = thisE;
 
     unitNum = unitNum_;
 
@@ -161,12 +167,12 @@ class Vehicle {
 
     blobRadius = radius + sphereRadius;
 
-    location = new VehicleLocation(player, environment);
+    location = new VehicleLocation(player, thisEnvironment);
 
     zone = new VehicleZone(this);
     isReadyForCollision = true;
     zone.isBreathing = true;
-    membrane = new VehicleMembrane(x, y, zone.radiusMax);
+    //membrane = new VehicleMembrane(x, y, zone.radiusMax);
 
     playerInBreathingZone = false;
     playerInDistanceZone = false;
@@ -209,9 +215,11 @@ class Vehicle {
   //--------------------------------------------------------------
 
   // Constructor
-  Vehicle(float x, float y, int _colorAngle, boolean _inMotion, String type_, int unitNum_, Player p, int vIndex, Agent agent) {
+  Vehicle(float x, float y, int _colorAngle, boolean _inMotion, String type_, int unitNum_, Player p, int vIndex, Agent thisA) {
 
     index = vIndex;
+    
+    thisAgent = thisA;
 
     unitNum = unitNum_;
 
@@ -256,10 +264,10 @@ class Vehicle {
 
     blobRadius = radius + sphereRadius;
 
-    location = new VehicleLocation(player, agent);
+    location = new VehicleLocation(player, thisAgent);
 
     calibrateLungRadius = 0;
-    lung = new VehicleLung(agent);
+    lung = new VehicleLung(thisAgent);
     lung.previousRadius = lung.radiusMax;
 
     playerInBreathingZone = false;
@@ -433,7 +441,7 @@ class Vehicle {
 
       //if (zone.getState() == zone.fullState) {
 
-      membrane.update(agents, data.regenRateSlider.getPos());
+      //thisEnvironment.update(agents, data.regenRateSlider.getPos());
       //}
 
 
@@ -630,13 +638,13 @@ class Vehicle {
   }
 
   // ********************************************************
-  // MEMBRANE CODE
+  // ENVIRONMENT CODE
   // ********************************************************
 
-  void alterMembraneEnergy(Vehicle v) {
+  void alterEnvironmentEnergy(Vehicle v) {
 
-    v.membrane.energy -= 5; //0.5;
-    v.membrane.energy = max(v.membrane.energy, 0);
+    v.thisEnvironment.energy -= 5; //0.5;
+    v.thisEnvironment.energy = max(v.thisEnvironment.energy, 0);
   }
   // ********************************************************
   // PLAYER IS IN VEHICLE ZONE
@@ -714,7 +722,7 @@ class Vehicle {
         inOtherVehicleBreathingZone = true;
         applyZoneForceOnVehicle(otherV); // apply succion/repel gravity between vehicle breathing and vehicle moving
         // membrane
-        alterMembraneEnergy(otherV);
+        alterEnvironmentEnergy(otherV);
       }
     }
   }
@@ -741,55 +749,37 @@ class Vehicle {
   // ********************************************************
   // VEHICLE IN PLAYER SENSING RADIUS
   // ********************************************************
-
-  void checkIfInPlayerArea() {
+  
+  boolean checkIfInPlayerArea(float r) {
     
-    inPlayerSensingRadius = false;
+    if (isInPlayerArea(r)) {
+      
+      return true;
+    } else {
+      return false;
+    }
+    
+  }
+
+
+  //--------------------------------------------------------------
+/*
+  boolean checkIfInPlayerMaxArea() {
+    
+    inPlayerMaxRadius = false;
     //inPlayerDistanceArea = false;
     //inPlayerBreathingArea = false;
     
-    if (isInPlayerArea(player.sensingRadius)) {
+    if (isInPlayerArea(player.sensingMaxRadius)) {
       
-      inPlayerSensingRadius = true;
+      inPlayerMaxRadius = true;
     } else {
-      inPlayerSensingRadius = false;
+      inPlayerMaxRadius = false;
     }
     
-    /*
-    if (!touchedPlayer) {
-
-      if (isInPlayerArea(player.area.distanceRadius)) {
-
-        inPlayerDistanceArea = true;
-
-        if (isInPlayerArea(player.area.radius)) {
-
-          inPlayerBreathingArea = true;
-        } else {
-
-          inPlayerBreathingArea = false;
-        }
-      } else {
-
-        inPlayerDistanceArea = false;
-      }
-
-      if (!inPlayerDistanceArea) {
-        inPlayerBreathingArea = false;
-      }
-    } else { // touched player
-
-      touchedPlayer = false;
-
-      inPlayerDistanceArea = false;
-      inPlayerBreathingArea = false;
-
-      //player.area.setState(player.area.notBreathingState);
-      //player.location.setState(player.location.pLocMovingState
-    }
-    */
+    return inPlayerMaxRadius;
   }
-
+*/
 
   //--------------------------------------------------------------
 
@@ -932,7 +922,7 @@ class Vehicle {
     if (!inMotion) {
 
       //zone.display();
-      membrane.display(data.sensingRadiusSlider.getPos(), colorBreathing);
+      thisEnvironment.display(data.sensingRadiusSlider.getPos(), colorBreathing);
 
       /*
       if ( zone.getState() == zone.fullState) {

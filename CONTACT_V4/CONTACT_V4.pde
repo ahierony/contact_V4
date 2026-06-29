@@ -60,6 +60,8 @@ int incoming_rightJoystick_yAxis;
 Serial port;
 Player player;
 
+SimConfig config;
+
 // ********************** keyboard control ****************************************************
 /*
 boolean right_isUp, right_isDown, right_isLeft, right_isRight;
@@ -68,30 +70,31 @@ boolean right_isUp, right_isDown, right_isLeft, right_isRight;
  */
 
 // ********************** sensor control ****************************************************
-
+/*
 // * GAMEPAD
-import org.gamecontrolplus.gui.*;
-import org.gamecontrolplus.*;
-import net.java.games.input.*;
-// * GAMEPAD
-
-// use gamepad as input device
-//boolean gamePadIsOn;
-
-ControlIO control;
-Configuration config;
-ControlDevice gpad;
-
-float leftStickXpos = 0.0;
-float leftStickYpos = 0.0;
-float rightStickXpos = 0.0;
-float rightStickYpos = 0.0;
+ import org.gamecontrolplus.gui.*;
+ import org.gamecontrolplus.*;
+ import net.java.games.input.*;
+ // * GAMEPAD
+ 
+ // use gamepad as input device
+ //boolean gamePadIsOn;
+ 
+ ControlIO control;
+ Configuration config;
+ ControlDevice gpad;
+ 
+ float leftStickXpos = 0.0;
+ float leftStickYpos = 0.0;
+ float rightStickXpos = 0.0;
+ float rightStickYpos = 0.0;
+ 
+ // * GAMEPAD
+ */
 
 float scaleValue = 0.1;
 float minScale = 0.2;
 float maxScale = 0.7;
-
-// * GAMEPAD
 
 // KEYBOARD CONTROL
 boolean rightEyeLeft;
@@ -212,7 +215,7 @@ BgTrailBox bgTrailBox;
 
 enum InputControls
 {
-  KEYBOARD, JOYSTICKS, GAMEPAD;
+  KEYBOARD, JOYSTICKS; //, GAMEPAD;
 };
 
 InputControls inputControls;
@@ -237,7 +240,7 @@ void setup() {
   debugMode = false;
   screengrab = false;
   showDistance = false;
-  playSoundContactV4 = true;
+  playSoundContactV4 = false;
   fullScale = false;
   //playSound = false; // enables sound // current sound until Woohun updates
   //audioIsPlaying = false; // new sound by woohun not ready yet
@@ -291,7 +294,7 @@ void setup() {
   // unitSize > rowLength * unitSize = unit_w/unit_h  > rect_w = sqrt(_unitTotal) * unit_w
   // 600      > 5 * 600                               >   5 * 3000
 
-  setupDeviceMode();
+  if (inputControls == InputControls.JOYSTICKS) setupDeviceMode();
   setupb2d();
 
   unitTotal = int(pow(rowLength, 2));
@@ -333,7 +336,8 @@ void setup() {
   leftEyeDown = false;
 
   fadeAnimationCounter = 0;
-
+    
+  config = new SimConfig();
   data = new Data();
 } // setup
 
@@ -503,6 +507,8 @@ void resetContact() {
 //--------------------------------------------------------------
 void draw() {
 
+  updateConfig();
+
   // TRAIL RECORDING STARTS
   /*
   if (player.lung.getState() == player.lung.emptyState) {
@@ -627,7 +633,9 @@ void draw() {
 
         a.run(agents, environments);
         if (a.v.location.getState() == a.v.location.vInMovingState) {
-          a.update(data.drainSlider.getPos(), agents, environments, data.separationDistSlider.getPos(), data.separationForceSlider.getPos(), data.sensingRadiusSlider.getPos());
+          a.maxSpeed = config.maxSpeed;
+          a.update(config, agents, environments);
+          //a.update(data.drainSlider.getPos(), agents, environments, data.separationDistSlider.getPos(), data.separationForceSlider.getPos(), data.sensingRadiusSlider.getPos());
         }
         if (a.dead()) {
           if (a.v.location.getState() == a.v.location.vInMovingState) {
@@ -1051,54 +1059,54 @@ void serialEvent(Serial port)
 }
 
 //--------------------------------------------------------------
-
+// GAMEPAD
+/*
 public void getUserInput() {
-
-  leftStickXpos = gpad.getSlider("LeftStickX").getValue();
-  leftStickYpos = gpad.getSlider("LeftStickY").getValue();
-
-  rightStickXpos = gpad.getSlider("RightStickX").getValue();
-  rightStickYpos = gpad.getSlider("RightStickY").getValue();
-}
-
+ 
+ leftStickXpos = gpad.getSlider("LeftStickX").getValue();
+ leftStickYpos = gpad.getSlider("LeftStickY").getValue();
+ 
+ rightStickXpos = gpad.getSlider("RightStickX").getValue();
+ rightStickYpos = gpad.getSlider("RightStickY").getValue();
+ }
+ */
 //--------------------------------------------------------------
 
 void setupDeviceMode() {
 
-  switch (inputControls) {
+  //switch (inputControls) {
 
-  case JOYSTICKS:
+  //case JOYSTICKS:
 
-    newData = false;
+  newData = false;
 
-    // Serial port setup.
-    printArray(Serial.list());
+  // Serial port setup.
+  printArray(Serial.list());
 
-    port = new Serial(this, Serial.list()[2], 9600);
+  port = new Serial(this, Serial.list()[2], 9600);
 
-    port.bufferUntil('\n');
+  port.bufferUntil('\n');
 
-    break;
-
+  //break;
+  /*
   case GAMEPAD:
+   
+   // * GAMEPAD
+   control = ControlIO.getInstance(this);
+   // Find a gamepad that matches the configuration file. To match with any
+   // connected device remove the call to filter.
+   //gpad = control.filter(GCP.GAMEPAD).getMatchedDevice("xbox_gamepad_two_sticks");
+   gpad = control.filter(GCP.GAMEPAD).getMatchedDevice("PS4 controller");
+   if (gpad == null) {
+   println("No suitable device configured");
+   System.exit(-1); // End the program NOW!
+   }
+   
+   break;
+   */
 
-    // * GAMEPAD
-    control = ControlIO.getInstance(this);
-    // Find a gamepad that matches the configuration file. To match with any
-    // connected device remove the call to filter.
-    //gpad = control.filter(GCP.GAMEPAD).getMatchedDevice("xbox_gamepad_two_sticks");
-    gpad = control.filter(GCP.GAMEPAD).getMatchedDevice("PS4 controller");
-    if (gpad == null) {
-      println("No suitable device configured");
-      System.exit(-1); // End the program NOW!
-    }
-
-    break;
-
-  case KEYBOARD:
-
-    break;
-  }
+  //break;
+  //}
 }
 
 
@@ -1125,15 +1133,15 @@ boolean updateDeviceMode() {
 
       return false;
     }
-
+    /*
   case GAMEPAD:
-
-    getUserInput(); // Poll the input device
-
-    player.updateInputGamePad(leftStickXpos, leftStickYpos, rightStickXpos, rightStickYpos);
-
-    return true;
-
+     
+     getUserInput(); // Poll the input device
+     
+     player.updateInputGamePad(leftStickXpos, leftStickYpos, rightStickXpos, rightStickYpos);
+     
+     return true;
+     */
   case KEYBOARD:
 
     return true;
@@ -1205,4 +1213,91 @@ void drawCorner() {
 void mousePressed() {
 
   //recordSVG = true;
+}
+
+// pulls current slider values into the config object each frame
+void updateConfig() {
+  config.maxSpeed = data.speedSlider.getPos();
+  config.drainRate = data.drainSlider.getPos();
+  config.refillRate = data.refillSlider.getPos();
+  config.sepDist = data.separationDistSlider.getPos();
+  config.sepForce = data.separationForceSlider.getPos();
+  config.sensingRadius = data.sensingRadiusSlider.getPos();
+  config.regenRate = data.regenRateSlider.getPos();
+  
+  println("config.maxSpeed ", config.maxSpeed);
+}
+
+// ADDED HELPERS
+
+// add up all environment ratios and average them out
+float avgEnvironmentHealth(){
+  float total = 0;
+  for (Environment e: environments) {
+    total += e.energy / e.maxEnergy;
+  }
+  return total / environments.size();
+}
+
+//--------------------------------------------------------------
+
+// draws background color based on average environment health
+void drawBackground(float avgHealth){
+  colorMode(HSB, 360, 100, 100);
+  float hue;
+  int stage;
+  
+  if (avgHealth > 0.90){
+    hue = 210; // Blue
+    stage = 1;
+  } else if (avgHealth > 0.70){
+    float t = map(avgHealth, 0.70, 0.90, 0.0, 1.0);
+    hue = lerp(150, 210, t); // Blue to bluish-green to green
+    stage = 2;
+  } else if (avgHealth > 0.50){
+    float t = map(avgHealth, 0.50, 0.70, 0.0, 1.0);
+    hue = lerp(45, 150, t); // Green to yellow to yellowish orange
+    stage = 3;
+  } else if (avgHealth > 0.21){
+    float t = map(avgHealth, 0.21, 0.50, 0.0, 1.0);
+    hue = lerp(0, 45, t); // Orange to red
+    stage = 4;
+  } else {
+    float t = map(avgHealth, 0.12, 0.21, 0.0, 1.0);
+    hue = lerp(270, 360, t); // Red to violet to bluish-violet
+    stage = 5;
+  }
+  
+  background(hue, 65, 70);
+  colorMode(RGB, 255);
+  
+  fill(0, 150);
+  noStroke();
+  textAlign(LEFT);
+  textSize(13);
+  text("BG Stage: " + stage + "  AvgHealth: " + nf(avgHealth, 1, 2), 20, 380);
+}
+
+//--------------------------------------------------------------
+/*
+// updates each environment's core logic and draws it
+void updateEnvironments(){
+  for (Environment e: environments){
+    e.updatedCore(agents, config.regenRate);
+    e.draw(config.sensingRadius);
+  }
+}
+*/
+
+//--------------------------------------------------------------
+
+// holds all simulation parameters in one place instead of passing them around individually
+class SimConfig {
+  float drainRate; // how fast agents lose air
+  float refillRate; // how fast agents refill air inside an env
+  float sepDist; // how close agents get before pushing apart
+  float sepForce; // strength of that push
+  float sensingRadius; // how far agents can detect environments
+  float regenRate; // how fast environments recover energy
+  float maxSpeed; // max agent speed
 }

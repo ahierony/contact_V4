@@ -10,8 +10,8 @@ class Data {
   DataScrollbar populationSlider;
   DataScrollbar sensingRadiusSlider;
   DataScrollbar regenRateSlider;
-  
-  
+
+
 
   Data() {
 
@@ -26,10 +26,9 @@ class Data {
     regenRateSlider = new DataScrollbar(20, 300, 200, 0.0, 5.0, 0.5);
     loadData();
   }
-  
 
-  void display() {
-
+  // updates slider positions from mouse input and draws them with their labels
+  void updateAndDrawSliders() {
     speedSlider.update();
     speedSlider.display();
     drainSlider.update();
@@ -47,36 +46,94 @@ class Data {
     regenRateSlider.update();
     regenRateSlider.display();
 
-    fill(126);
+    fill(0);
     noStroke();
     textAlign(LEFT);
-    
     text("Speed: " + nf(speedSlider.getPos(), 1, 1), 230, 30);
-    fill(0);
     text("Air Drain: " + nf(drainSlider.getPos(), 1, 2), 230, 70);
-    fill(126);
     text("Air Refill: " + nf(refillSlider.getPos(), 1, 1), 230, 110);
     text("Sep Distance: " + int(separationDistSlider.getPos()), 230, 150);
     text("Sep Force: " + nf(separationForceSlider.getPos(), 1, 1), 230, 190);
     text("Population: " + (int)populationSlider.getPos(), 230, 230);
-    fill(0);
     text("Sensing Radius: " + int(sensingRadiusSlider.getPos()), 230, 270);
-    fill(126);
     text("Regen Rate: " + nf(regenRateSlider.getPos(), 1, 2), 230, 310);
-    //text("Agents alive: " + agents.size(), 20, 350);
+    text("Agents alive: " + agents.size(), 20, 350);
+  }
 
+  // draws the environment stats text in the top right corner
+  void drawEnvStats() {
+    
+    translate(width/2, height/2);
+    
+    for (int i = 0; i < environments.size(); i++) {
+      Environment e = environments.get(i);
+      float healthRatio = e.energy / e.maxEnergy;
+      fill(0);
+      noStroke();
+      textAlign(RIGHT);
+      text("Env " + (i+1) + " Energy: " + int(e.energy) + " / " + int(e.maxEnergy), width/2 - 20, -height/2 + 30 + (i * 60));
+      text("Env " + (i+1) + " Reproduction: " + nf(healthRatio * 100, 1, 1) + "%", width/2 - 20, -height/2 + 50 + (i * 60));
+      text("Env " + (i+1) + " Stage: " + e.getStageName(), width/2 - 20, -height/2 + 70 + (i * 60));
+    }
+  }
+
+
+  void display() {
+
+    updateAndDrawSliders();
+    drawEnvStats();
+
+    /*
+    speedSlider.update();
+     speedSlider.display();
+     drainSlider.update();
+     drainSlider.display();
+     refillSlider.update();
+     refillSlider.display();
+     separationDistSlider.update();
+     separationDistSlider.display();
+     separationForceSlider.update();
+     separationForceSlider.display();
+     populationSlider.update();
+     populationSlider.display();
+     sensingRadiusSlider.update();
+     sensingRadiusSlider.display();
+     regenRateSlider.update();
+     regenRateSlider.display();
+     
+     fill(126);
+     noStroke();
+     textAlign(LEFT);
+     
+     text("Speed: " + nf(speedSlider.getPos(), 1, 1), 230, 30);
+     fill(0);
+     text("Air Drain: " + nf(drainSlider.getPos(), 1, 2), 230, 70);
+     fill(126);
+     text("Air Refill: " + nf(refillSlider.getPos(), 1, 1), 230, 110);
+     text("Sep Distance: " + int(separationDistSlider.getPos()), 230, 150);
+     text("Sep Force: " + nf(separationForceSlider.getPos(), 1, 1), 230, 190);
+     text("Population: " + (int)populationSlider.getPos(), 230, 230);
+     fill(0);
+     text("Sensing Radius: " + int(sensingRadiusSlider.getPos()), 230, 270);
+     fill(126);
+     text("Regen Rate: " + nf(regenRateSlider.getPos(), 1, 2), 230, 310);
+     //text("Agents alive: " + agents.size(), 20, 350);
+     */
+    
+    /*
     translate(width/2, height/2);
 
     for (int i = 0; i < environments.size(); i++) {
       Environment e = environments.get(i);
 
-      float healthRatio =  e.v.membrane.energy / e.v.membrane.maxEnergy;
+      float healthRatio =  e.energy / e.maxEnergy;
       fill(0);
       noStroke();
       textAlign(RIGHT);
-      text("Env " + (i+1) + " Energy: " + int(e.v.membrane.energy) + " / " + int(e.v.membrane.maxEnergy), width/2 - 20, -height/2 + 30 + (i * 40));
+      text("Env " + (i+1) + " Energy: " + int(e.energy) + " / " + int(e.maxEnergy), width/2 - 20, -height/2 + 30 + (i * 40));
       text("Env " + (i+1) + " Reproduction: " + nf(healthRatio * 100, 1, 1) + "%", width/2 - 20, -height/2 + 50 + (i * 40));
     }
+    */
   }
 
   void loadData() {

@@ -144,13 +144,29 @@ class VInMovingState implements VehicleLocationState {
 
       setReadyToSetState(false);
     }
+
+    if(agent.v.checkIfInPlayerArea(player.sensingMinRadius)) moveAwayFromPlayer();
     
-    agent.v.checkIfInPlayerArea();
 
     //agent.v.centerBoid.isMoving();
 
     //addTrailRipples();
     setLungState();
+  }
+
+  void moveAwayFromPlayer() {
+    /*
+    Vec2 vehiclePosVecPixels = box2d.getBodyPixelCoord(envo.v.centerBoid.body);
+     vehiclePosVecPixels.subLocal(envo.v.centerBoid.offset);
+     Vec2 targetPosition = box2d.coordPixelsToWorld(vehiclePosVecPixels);
+     */
+
+    Vec2 playerPosVecPixels = box2d.getBodyPixelCoord(player.centerSphere.body);
+    //playerPosVecPixels.subLocal(envo.v.centerBoid.offset);
+    Vec2 targetPosition = box2d.coordPixelsToWorld(playerPosVecPixels);
+
+    agent.v.centerBoid.status = "flee";
+    agent.v.centerBoid.flee(targetPosition);
   }
 
   public boolean getReadyToSetState() {
@@ -259,7 +275,6 @@ class VInDeadState implements VehicleLocationState {
 
       setReadyToSetState(false);
     }
-
   }
 
   public boolean getReadyToSetState() {
@@ -269,8 +284,6 @@ class VInDeadState implements VehicleLocationState {
   public void setReadyToSetState(boolean rtss) {
     readyToSetState = rtss;
   }
-
-  
 }
 
 // ********************************************************

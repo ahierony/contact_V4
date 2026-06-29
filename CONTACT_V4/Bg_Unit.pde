@@ -219,7 +219,7 @@ class Bg_Unit {
       agent.v.makeBlob(unitPosVecPixels);
     } else if (containsEnvironment) {
       environment.v.makeBlob(unitPosVecPixels);
-      environment.v.membrane.updatePosition(unitPos.x, unitPos.y);
+      environment.updatePosition(unitPos.x, unitPos.y);
     }
   }
 }

@@ -1,4 +1,5 @@
 class VehicleMembrane {
+  /*
   PVector position;
   float radius;
   boolean coreOccupied;
@@ -8,12 +9,16 @@ class VehicleMembrane {
   float noiseOffset;
   boolean birthBurst = false;
   int burstTimer = 0;
-
+    */
   VehicleMembrane(float x, float y, float r) {
+    /*
     position = new PVector(x, y);
     radius = r;
     noiseOffset = random(1000);
+    */
   }
+  
+  /*
 
   boolean contains(PVector agentPos) {
     return PVector.dist(position, agentPos) < radius;
@@ -84,6 +89,7 @@ class VehicleMembrane {
      fill(hue, 70, 80);
      colorMode(RGB, 255);
      circle(position.x, position.y, (radius/4) * 2);
-     */
+     
   }
+  */
 }

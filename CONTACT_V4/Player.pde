@@ -96,7 +96,9 @@ class Player {
 
   //float borderRadiusMin;
   //float borderRadiusMax;
-  float sensingRadius;
+  float sensingMaxRadius;
+  float sensingMinRadius;
+  
 
   //Track data
   boolean checkForVehiclesMovingInOutofPlayerArea;
@@ -135,11 +137,13 @@ class Player {
 
     //borderRadiusMin = (unit_w*unitRowMax)*0.4;
     //borderRadiusMax = (unit_w*unitRowMin) * 0.6;
+    
+    sensingMinRadius = 300;
 
     if (fullScale) {
-      sensingRadius = (unit_w*unitRowMax)*0.1;
+      sensingMaxRadius = (unit_w*unitRowMax)*0.1;
     } else {
-      sensingRadius = (unit_w*unitRowMax)*0.3;
+      sensingMaxRadius = (unit_w*unitRowMax)*0.3;
     }
 
     // Create the empty ArrayLists
@@ -471,23 +475,24 @@ class Player {
       eyesAreInverted = true;
     }
   }
-
+  /*
   void updateInputGamePad(float yawLeft, float rollLeft, float yawRight, float rollRight) {
-
-    if (leftEye.coltxt == "red") {
-
-      leftEye.updateInputGamePad(yawLeft, rollLeft);
-      rightEye.updateInputGamePad(yawRight, rollRight);
-
-      eyesAreInverted = false;
-    } else if (leftEye.coltxt == "green") {
-
-      leftEye.updateInputGamePad(yawRight, rollRight);
-      rightEye.updateInputGamePad(yawLeft, rollLeft);
-
-      eyesAreInverted = true;
-    }
-  }
+   
+   if (leftEye.coltxt == "red") {
+   
+   leftEye.updateInputGamePad(yawLeft, rollLeft);
+   rightEye.updateInputGamePad(yawRight, rollRight);
+   
+   eyesAreInverted = false;
+   } else if (leftEye.coltxt == "green") {
+   
+   leftEye.updateInputGamePad(yawRight, rollRight);
+   rightEye.updateInputGamePad(yawLeft, rollLeft);
+   
+   eyesAreInverted = true;
+   }
+   }
+   */
   /*
   void updateInputSensor(float yawLeft, float rollLeft, float pitchLeft, float yawRight, float rollRight, float pitchRight) {
    
@@ -521,7 +526,7 @@ class Player {
     // trailRight.display();
 
     displaySensingRadius();
-
+  
     displayBlob();
 
     lung.display();
@@ -533,7 +538,7 @@ class Player {
     displayEyes();
   }
 
-
+  
   //--------------------------------------------------------------
 
   void displaySensingRadius() {
@@ -555,8 +560,10 @@ class Player {
     noFill();
     strokeWeight(2);
     stroke(0);
+    //
+    circle(0, 0, sensingMinRadius);
     //stroke(200);
-    circle(0, 0, sensingRadius);
+    circle(0, 0, sensingMaxRadius);
     //circle(0, 0, borderRadiusMin);
     //circle(0, 0, borderRadiusMax);
 
