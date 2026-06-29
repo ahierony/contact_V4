@@ -1,12 +1,12 @@
 class Collision {
 
   int agentsRemaining;
-  
+
   PApplet app;
 
 
   Collision(PApplet p) {
-    
+
     app = p;
 
     agentsRemaining = agents.size();
@@ -41,11 +41,11 @@ class Collision {
 
             if (e.v.zone.collisionState.getReadyToSetState()) {
 
-              //manageBirth(e, a);
+              manageBirth(e, a);
 
               e.v.collided();
 
-              println("collision!");
+              //println("collision!");
 
               //switchVehicleFromBreathingToMoving(v);
               e.v.zone.setState(e.v.zone.collisionState);
@@ -94,7 +94,7 @@ class Collision {
     Vec2 velocity = envoPos.sub(agentPos);
 
     float len = velocity.length();
-    len += 200; //50;
+    len += 100; //50;
     velocity.normalize();
     velocity.mulLocal(len);
 
@@ -102,8 +102,16 @@ class Collision {
 
     int vehicleColorNum = int(random(0, 360));
 
-    int agentIndex = agents.size();
+    int agentIndex;
+    if (agents.size() == 0) {
+      agentIndex = 1;
+    } else {
+      agentIndex = agents.size();
+    }
+    //int agentIndex = agents.size()+1;
     Agent agent = new Agent(newVelocity.x, newVelocity.y, vehicleColorNum, true, "DYNAMIC", 0, player, agentIndex);
+
+    println("agentIndex birth", agentIndex);
 
     agents.add(agent);
   }

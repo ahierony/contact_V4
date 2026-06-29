@@ -109,7 +109,7 @@ class Bg {
         index++;
       }
     }
-    //println("index ", index);
+
   }
   //--------------------------------------------------------------
 
@@ -131,7 +131,6 @@ class Bg {
     int beginningIndex = int(random(3));
 
     for (int i = beginningIndex; i < arr.length; i+=3) {
-      println("i ", i);
       if (i != 12) {
         arr[i] = 0;
       }
@@ -147,63 +146,7 @@ class Bg {
     }
   }
 
-  //--------------------------------------------------------------
-  /*
-  void createRandomPlacementOfElements() {
-   
-   // Initialize all values
-   for (int i = 0; i < arr.length; i++) {
-   arr[i] = -1;
-   }
-   
-   // Place the value 2 at index 12
-   arr[12] = 2;
-   
-   // Create an IntList with 16 zeros and 8 ones
-   IntList pool = new IntList();
-   for (int i = 0; i < 16; i++) pool.append(0);
-   for (int i = 0; i < 8; i++) pool.append(1);
-   
-   // Randomly fill all other positions
-   for (int i = 0; i < arr.length; i++) {
-   if (i != 12) {
-   int randIndex = int(random(pool.size()));
-   arr[i] = pool.get(randIndex);
-   pool.remove(randIndex);
-   }
-   }
-   }
-   
-   //--------------------------------------------------------------
-   
-   void createRandomPlacementOfElements2() {
-   
-   // Initialize all values
-   for (int i = 0; i < arr.length; i++) {
-   arr[i] = -1;
-   }
-   
-   // Place the value 2 at index 12
-   arr[12] = 2;
-   
-   // Create an IntList with 4 zeros and 8 ones and 8 threes
-   IntList pool = new IntList();
-   for (int i = 0; i < 8; i++) pool.append(0);
-   for (int i = 0; i < 8; i++) pool.append(1);
-   for (int i = 0; i < 8; i++) pool.append(3);
-   
-   // Randomly fill all other positions
-   for (int i = 0; i < arr.length; i++) {
-   if (i != 12) {
-   int randIndex = int(random(pool.size()));
-   arr[i] = pool.get(randIndex);
-   pool.remove(randIndex);
-   }
-   }
-   }
-   */
-
-
+ 
 
   //*******************************************************
   // UPDATE

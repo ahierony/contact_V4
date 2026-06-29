@@ -162,8 +162,16 @@ class Bg_Unit {
     //PVector centerPos = new PVector(unitPos.x - sizeHalf_w, unitPos.y - sizeHalf_h);
 
     basicPos = PVector.sub(randomPos, unitPos);
-
-    int agentIndex = agents.size();
+    
+    
+     int agentIndex;
+    if (agents.size() == 0) {
+      agentIndex = 1;
+    } else {
+      agentIndex = agents.size();
+    }
+    //int agentIndex = agents.size() +1;
+    println("agentIndex unit", agentIndex);
     agent = new Agent(randomPos.x, randomPos.y, vehicleColorNum, true, "DYNAMIC", index, player, agentIndex);
     agents.add(agent);
   }
@@ -189,9 +197,17 @@ class Bg_Unit {
     //PVector centerPos = new PVector(unitPos.x, unitPos.y);
 
     basicPos = PVector.sub(randomPos, unitPos);
-
-    int environmentIndex = environments.size();
-    environment = new Environment(randomPos.x, randomPos.y, vehicleColorNum, false, "STATIC", index, player, environmentIndex, app);
+    
+    
+    int agentIndex;
+    if (agents.size() == 0) {
+      agentIndex = 1;
+    } else {
+      agentIndex = agents.size();
+    }
+    //int environmentIndex = environments.size() + 1;
+    //println("environmentIndex ", environmentIndex);
+    environment = new Environment(randomPos.x, randomPos.y, vehicleColorNum, false, "STATIC", index, player, agentIndex, app);
     environments.add(environment);
   }
 

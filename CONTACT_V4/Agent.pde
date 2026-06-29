@@ -110,7 +110,9 @@ class Agent {
           SoundFile agentSound = agentSounds[randNum];
           agentSound.play(1);
         }
+        
       }
+      
 
       // gradual thrust for jump with exponentual decay
       // frame 1 big push, frame 2 smaller, frame 3 smaller, trails to zero
@@ -119,6 +121,7 @@ class Agent {
         velocity.add(PVector.mult(kickDir, thisFrame));
         kickDecay -= thisFrame;
         if (kickDecay < 0.5) kickDecay = 0;
+        v.centerBoid.applyImpulseAnu(velocity);
       }
     } else {
       // kick is ignored post-birth during the env burst
@@ -244,7 +247,7 @@ class Agent {
     PVector sep = seperate(agents, sepDist, sepForce);
     velocity.add(sep);
     //position.add(velocity);
-    v.centerBoid.applyImpulseAnu(velocity);
+    //v.centerBoid.applyImpulseAnu(velocity);
   }
 
   //--------------------------------------------------------------

@@ -1224,8 +1224,6 @@ void updateConfig() {
   config.sepForce = data.separationForceSlider.getPos();
   config.sensingRadius = data.sensingRadiusSlider.getPos();
   config.regenRate = data.regenRateSlider.getPos();
-  
-  println("config.maxSpeed ", config.maxSpeed);
 }
 
 // ADDED HELPERS

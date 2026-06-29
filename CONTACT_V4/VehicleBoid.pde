@@ -187,6 +187,7 @@ class VehicleBoid {
 
 
   void applyImpulse(Vec2 steer) {
+    
 
     applyingImpulse = true;
 
@@ -200,7 +201,7 @@ class VehicleBoid {
   }
 
   void applyImpulseAnu(PVector velocityAnu) {
-
+    
     applyingImpulse = true;
 
     float speed = random(30000, 50000);
@@ -316,7 +317,7 @@ class VehicleBoid {
 
     // Define a fixture
     FixtureDef fd = new FixtureDef();
-
+    
     fd.filter.groupIndex = -vehicleIndex;
 
     fd.shape = cs;

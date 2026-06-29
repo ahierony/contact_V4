@@ -118,7 +118,7 @@ class Vehicle {
   // Constructor
   Vehicle(float x, float y, int _colorAngle, boolean _inMotion, String type_, int unitNum_, Player p, int vIndex, Environment thisE) {
 
-    index = vIndex;
+    index = unitNum_;
     
     thisEnvironment = thisE;
 
