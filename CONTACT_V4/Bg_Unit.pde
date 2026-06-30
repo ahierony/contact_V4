@@ -180,7 +180,12 @@ class Bg_Unit {
 
     float vehicleRadius_w = ((unit_w*.3)*0.5)*0.7;
     float vehicleRadius_h = ((unit_h*.3)*0.5)*0.7;
-    int vehicleColorNum = int(random(0, 360)); // 0, 45, 90, 135, 180, 225, 270, 315
+    
+    
+    int[] possibleColors = {0, 45, 90, 135, 180, 225, 270, 315};
+    int randomCol = int(random(possibleColors.length));
+    int vehicleColorNum = possibleColors[randomCol];
+    //int vehicleColorNum = int(random(0, 360)); // 0, 45, 90, 135, 180, 225, 270, 315
 
     PVector unitPos = new PVector(pos.x, pos.y);
 

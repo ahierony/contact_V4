@@ -237,7 +237,7 @@ void setup() {
 
   //*********************************************************************
   //gamePadIsOn = false;
-  inputControls = InputControls.KEYBOARD; //KEYBOARD; //JOYSTICKS;
+  inputControls = InputControls.JOYSTICKS; //KEYBOARD; //JOYSTICKS;
   //protoSticks = false;
   debugMode = false;
   screengrab = false;
@@ -621,25 +621,9 @@ void draw() {
       //collision.checkPlayerAgainstVehicleRipples();
       collision.checkVehicleAgainstVehicle();
 
-      for (Agent a : agents) {
+      updateEnvironments();
 
-        a.run(agents, environments);
-        if (a.v.location.getState() == a.v.location.vInMovingState) {
-          a.maxSpeed = config.maxSpeed;
-          a.update(config, agents, environments);
-          //a.update(data.drainSlider.getPos(), agents, environments, data.separationDistSlider.getPos(), data.separationForceSlider.getPos(), data.sensingRadiusSlider.getPos());
-        }
-        if (a.dead()) {
-          if (a.v.location.getState() == a.v.location.vInMovingState) {
-            a.v.die();
-          }
-        }
-      }
-
-      for (Environment e : environments) {
-
-        e.run(agents, environments);
-      }
+      updateAgents();
 
       player.display();
 
@@ -768,7 +752,94 @@ void draw() {
   if (scrollbar) data.display();
 } // draw
 
+//--------------------------------------------------------------
+void updateEnvironments() {
 
+  for (Environment e : environments) {
+
+    e.run(agents, environments);
+  }
+
+  /*
+  for (Environment e : environments) {
+   e.updatedCore(agents, config.regenRate);
+   e.draw(config.sensingRadius);
+   }
+   */
+}
+
+//--------------------------------------------------------------
+
+void updateAgents() {
+
+  for (Agent a : agents) {
+
+    a.run(agents, environments);
+    if (a.v.location.getState() == a.v.location.vInMovingState) {
+      a.maxSpeed = config.maxSpeed;
+      a.update(config, agents, environments);
+      //a.update(data.drainSlider.getPos(), agents, environments, data.separationDistSlider.getPos(), data.separationForceSlider.getPos(), data.sensingRadiusSlider.getPos());
+    }
+    if (a.dead()) {
+      if (a.v.location.getState() == a.v.location.vInMovingState) {
+        a.v.die();
+      }
+    }
+  }
+
+  /*
+  for (int i = agents.size()-1; i >= 0; i--) { // iterate backwards so when we remove dead agent, indices don't shift
+   Agent a = agents.get(i);
+   a.maxSpeed = config.maxSpeed;
+   a.update(config, agents, environments);
+   a.draw();
+   for (Environment e : environments) {
+   // agent can only reproduce if it is in the core and there is no cooldown from prev reproduction
+   // no other agent should be reproducing there and it hasn't tried reproducing this visit
+   if (e.containsCore(a.position) && a.reproductionCooldown == 0 && !e.coreOccupied && !a.triedReproduction) {
+   tryReproduce(a, e); //only one reproduction per frame
+   break;
+   } else if (e.contains(a.position)) {
+   refillAir(a, e);
+   }
+   }
+   if (a.dead()) {
+   agents.remove(i); // remove agents from agents ArrayList if it ran out of air or health dropped to 0
+   }
+   }
+   */
+}
+
+//--------------------------------------------------------------
+
+// refills agent air when inside the environemnt, costs the env some energy
+void refillAir(Agent a, Environment e) {
+  float healthRatio = e.energy / e.maxEnergy;
+  float effectiveRefill = config.refillRate * healthRatio;
+  a.air += effectiveRefill;
+  a.air = min(a.air, a.maxAir);
+  e.energy -= 0.5;
+  e.energy = max(e.energy, 0);
+}
+
+//--------------------------------------------------------------
+/*
+// tries to reproduce if agent is in the core and conditions are met
+ void tryReproduce(Agent a, Environment e){
+ a.triedReproduction = true;
+ if (random(1) < (e.energy / e.maxEnergy)){
+ e.coreOccupied = true;
+ e.energy -= 100;
+ e.energy = max(e.energy, 0);
+ a.hasGivenBirth = true;
+ a.birthEnvironment = e;
+ Agent child = a.reproduce(e);
+ agents.add(child);
+ a.reproductionCooldown = 300;
+ e.triggerBirthBurst();
+ }
+ }
+ */
 
 //--------------------------------------------------------------
 
@@ -791,31 +862,7 @@ boolean fadeAnimationIsOver() {
   }
 }
 
-//--------------------------------------------------------------
-/*
-void createVehicleCopy(Vehicle v) {
- 
- Vec2 playerPos = box2d.getBodyPixelCoord(player.centerSphere.body);
- Vec2 vehiclePos = box2d.getBodyPixelCoord(v.centerBoid.body);
- 
- Vec2 velocity = playerPos.sub(vehiclePos);
- 
- float len = velocity.length();
- len += 200; //50;
- velocity.normalize();
- velocity.mulLocal(len);
- 
- 
- Vec2 newVelocity = playerPos.add(velocity);
- 
- //float vehicleRadius = ((unit_size*.3)*0.5)*0.7;
- int vehicleColorNum = int(random(0, 360));
- 
- Vehicle vehicle = new Vehicle(newVelocity.x, newVelocity.y, vehicleColorNum, true, "DYNAMIC", 0, player);
- 
- vehicles.add(vehicle);
- }
- */
+
 //--------------------------------------------------------------
 
 void updatePlayerEyeSides(float mainTheta) {

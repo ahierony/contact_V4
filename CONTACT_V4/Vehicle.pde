@@ -105,6 +105,7 @@ class Vehicle {
   //VehicleMembrane membrane;
 
   boolean repellOther;
+  boolean isColliding;
 
   int index;
 
@@ -115,8 +116,8 @@ class Vehicle {
 
   //--------------------------------------------------------------
 
-  // Constructor
-  Vehicle(float x, float y, int _colorAngle, boolean _inMotion, String type_, int unitNum_, Player p, int vIndex, Environment thisE) {
+  // Constructor from Environment
+  Vehicle(float x, float y, int _colorAngle, boolean _inMotion, String type_, int unitNum_, Player p, Environment thisE) {
 
     index = unitNum_;
     
@@ -208,13 +209,14 @@ class Vehicle {
     colorAngleSwitchVehicle = baseSwitchVehicle; //90; //5; //7; //15; //7;
 
     repellOther = false;
+    isColliding = false;
 
     initialize();
   }
 
   //--------------------------------------------------------------
 
-  // Constructor
+  // Constructor from Agent
   Vehicle(float x, float y, int _colorAngle, boolean _inMotion, String type_, int unitNum_, Player p, int vIndex, Agent thisA) {
 
     index = vIndex;
@@ -453,6 +455,7 @@ class Vehicle {
 
         if (!otherVehicleInBreathingZone && !playerInBreathingZone) {
           repellOther = false;
+          isColliding = false;
           zone.setState(zone.fullState);
         }
       }
@@ -870,7 +873,7 @@ class Vehicle {
 
     repellOther = true;
 
-    println("collision!");
+    //println("collision!");
   }
 
   // ********************************************************
@@ -922,7 +925,8 @@ class Vehicle {
     if (!inMotion) {
 
       //zone.display();
-      thisEnvironment.display(data.sensingRadiusSlider.getPos(), colorBreathing);
+      //thisEnvironment.display(data.sensingRadiusSlider.getPos(), colorBreathing);
+      thisEnvironment.display(data.sensingRadiusSlider.getPos());
 
       /*
       if ( zone.getState() == zone.fullState) {

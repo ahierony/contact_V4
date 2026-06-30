@@ -36,10 +36,9 @@ class Environment {
       radius = unit_w * 0.7;
     }
 
-
     index = vIndex + 1;
 
-    v = new Vehicle(x, y, _colorAngle, _inMotion, type_, unitNum_, p, vIndex, this);
+    v = new Vehicle(x, y, _colorAngle, _inMotion, type_, unitNum_, p, this);
 
     currentStage = 1;
     stages = 5;
@@ -109,7 +108,7 @@ class Environment {
   }
 
   //--------------------------------------------------------------
-
+    /*
   // counts down the birth burst timer and turns off the burst when it expires
   void tickBurstTimer() {
     if (burstTimer > 0) {
@@ -138,7 +137,7 @@ class Environment {
       }
     }
     if (!parentStillInside) coreOccupied = false;
-  }
+  }*/
 
   //--------------------------------------------------------------
 
@@ -152,7 +151,7 @@ class Environment {
   }
 
   //--------------------------------------------------------------
-
+/*
   void updatedCore(ArrayList<Agent> agents, float regenRate) {
     tickBurstTimer();
     regenerateEnergy(regenRate);
@@ -167,7 +166,7 @@ class Environment {
     birthBurst = true;
     burstTimer = 120;
   }
-
+*/
   //--------------------------------------------------------------
 
   // 5 different stages for environements
@@ -251,7 +250,7 @@ class Environment {
    */
 
   //--------------------------------------------------------------
-
+/*
   // draws the solid circle at the centre when reproduction happens
   void drawCore(float healthRatio) {
     float[] col = getMembraneColor(healthRatio);
@@ -264,7 +263,7 @@ class Environment {
     colorMode(RGB, 255);
     circle(position.x, position.y, 100); // same size as agent
   }
-
+*/
   //--------------------------------------------------------------
 
   // draws the outer ring showing how far agents can detect this environment
@@ -296,7 +295,47 @@ class Environment {
   }
 
   //--------------------------------------------------------------
+  
+    // Environemnt is teal when healthy and purple when depleted
+  void display(float sensingRadius) {
+    drawSensingRing(sensingRadius);
+    float healthRatio = energy / maxEnergy;
+    drawMembrane(healthRatio);
+    //drawCore(healthRatio);
+  }
+  
+   //--------------------------------------------------------------
+  // draws the wobbly noisy membrane using current stage values
+  void drawMembrane(float healthRatio) {
+    float[] sv = getStageValues(healthRatio);
+    float nAmp = sv[0]; // how far the membrane distorts outward/inward
+    float nInt = sv[1]; // how many spikes around the ring
+    float displayRadius = radius * sv[2]; // slightly smaller when dying
+    float resolution = sv[3]; // how many points draw the shape
+    float stageSpeed = sv[4]; // how fast the membrane animates
 
+    float[] col = getMembraneColor(healthRatio);
+    float hue = col[0];
+    float sat = col[1];
+    float bri = col[2];
+
+    colorMode(HSB, 360, 100, 100);
+    strokeWeight(1.2);
+    stroke(hue, sat + 8, bri - 12);
+    fill(hue, sat, bri, 150);
+    beginShape();
+    for (float a = 0; a <= TWO_PI; a += TWO_PI / resolution) {
+      float nVal = 1.0 + map(noise(cos(a) * nInt + noiseOffset, sin(a) * nInt + noiseOffset + 500, noiseT), 0.0, 1.0, -nAmp, nAmp);
+      float x = position.x + cos(a) * displayRadius * nVal;
+      float y = position.y + sin(a) * displayRadius * nVal;
+      vertex(x, y);
+    }
+    endShape(CLOSE);
+    noiseT += stageSpeed;
+  }
+  
+   //--------------------------------------------------------------
+  /*
   void display(float sensingRadius, color colorBreathing ) {
     strokeWeight(3);
     noFill();
@@ -324,6 +363,7 @@ class Environment {
     }
     endShape(CLOSE);
     noiseT += 0.02;
+    */
 
     /*
     noStroke();
@@ -332,5 +372,6 @@ class Environment {
      circle(position.x, position.y, (radius/4) * 2);
      
      }*/
-  }
+  //}
+  
 }

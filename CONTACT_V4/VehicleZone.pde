@@ -511,7 +511,7 @@ class CollisionState implements VehicleZoneState {
 
       //vehicle.zone.setState(vehicle.zone.emptyState);
 
-      vehicle.updateColorNum();
+      //vehicle.updateColorNum();
     }
   }
 

@@ -2,6 +2,8 @@ class Collision {
 
   int agentsRemaining;
 
+  int agentCount = 0;
+
   PApplet app;
 
 
@@ -37,23 +39,54 @@ class Collision {
 
         if (vehiclesAreTouching(e, a)) {
 
-          if ( e.v.zone.getState() != e.v.zone.collisionState) {
+          if (!e.v.isColliding) {
 
-            if (e.v.zone.collisionState.getReadyToSetState()) {
+            manageBirth(e, a);
 
-              manageBirth(e, a);
+            e.v.collided();
 
-              e.v.collided();
+            e.v.isColliding = true;
 
-              //println("collision!");
+            e.v.zone.setState(e.v.zone.collisionState);
 
-              //switchVehicleFromBreathingToMoving(v);
-              e.v.zone.setState(e.v.zone.collisionState);
-            }
+            a.v.colorWheelAngle = selectRandomCol(e.v.colorWheelAngle);
           }
+
+
+          /*
+          if ( e.v.zone.getState() != e.v.zone.collisionState) {
+           
+           if (e.v.zone.collisionState.getReadyToSetState()) {
+           
+           manageBirth(e, a);
+           
+           e.v.collided();
+           
+           //println("collision!");
+           
+           //switchVehicleFromBreathingToMoving(v);
+           e.v.zone.setState(e.v.zone.collisionState);
+           }
+           }
+           */
         }
       }
     }
+  }
+
+  int selectRandomCol(int oppositeCol) {
+    
+    int currentCol = oppositeCol;
+    int vehicleColorNum = currentCol;
+    int[] possibleColors = {0, 45, 90, 135, 180, 225, 270, 315};
+    int randomCol;
+
+    while (currentCol == vehicleColorNum) {
+      randomCol = int(random(possibleColors.length));
+      vehicleColorNum = possibleColors[randomCol];
+    }
+    
+    return vehicleColorNum;
   }
 
 
@@ -94,24 +127,25 @@ class Collision {
     Vec2 velocity = envoPos.sub(agentPos);
 
     float len = velocity.length();
-    len += 100; //50;
+    len += 20; //50;
     velocity.normalize();
     velocity.mulLocal(len);
 
     Vec2 newVelocity = envoPos.add(velocity);
+  
+    int vehicleColorNum = selectRandomCol(envo.v.colorWheelAngle);
 
-    int vehicleColorNum = int(random(0, 360));
-
+    /*
     int agentIndex;
-    if (agents.size() == 0) {
-      agentIndex = 1;
-    } else {
-      agentIndex = agents.size();
-    }
-    //int agentIndex = agents.size()+1;
+     if (agents.size() == 0) {
+     agentIndex = 1;
+     } else {
+     agentIndex = agents.size();
+     }
+     */
+    int agentIndex = 1000 + agentCount;
+    agentCount++;
     Agent agent = new Agent(newVelocity.x, newVelocity.y, vehicleColorNum, true, "DYNAMIC", 0, player, agentIndex);
-
-    println("agentIndex birth", agentIndex);
 
     agents.add(agent);
   }
@@ -123,8 +157,6 @@ class Collision {
 
   boolean checkPlayerAgainstVehicleInZone() { // called from player location
 
-    int vNum = 0;
-
     boolean vehicleWasTouched = false;
 
     for (int i = 0; i < environments.size(); i++) {
@@ -134,8 +166,6 @@ class Collision {
       for (VehicleSphere vs : e.v.spheres) {
 
         if (vs.wasTouched) {
-
-          vNum = i;
 
           vs.wasTouched = false;
 

@@ -68,7 +68,7 @@ class Data {
     for (int i = 0; i < environments.size(); i++) {
       Environment e = environments.get(i);
       float healthRatio = e.energy / e.maxEnergy;
-      fill(0);
+      fill(255);
       noStroke();
       textAlign(RIGHT);
       text("Env " + (i+1) + " Energy: " + int(e.energy) + " / " + int(e.maxEnergy), width/2 - 20, -height/2 + 30 + (i * 60));
