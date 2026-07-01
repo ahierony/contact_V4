@@ -55,7 +55,7 @@ class Agent {
     Vec2 vehiclePos = box2d.getBodyPixelCoord(v.centerBoid.body);
     position.set(vehiclePos.x, vehiclePos.y);
 
-    lungSize = map(air, 0, maxAir, 4, 60); // shrinks as air disappears
+    lungSize = map(air, 0, maxAir, 15, 100); // shrinks as air disappears
   }
   // ANDREW ENDS
 
@@ -110,9 +110,8 @@ class Agent {
           SoundFile agentSound = agentSounds[randNum];
           agentSound.play(1);
         }
-        
       }
-      
+
 
       // gradual thrust for jump with exponentual decay
       // frame 1 big push, frame 2 smaller, frame 3 smaller, trails to zero
@@ -361,6 +360,7 @@ class Agent {
   //--------------------------------------------------------------
 
   // agents wrap at canvas edges, so we draw a ghost copy on the opposite side
+  /*
   void draw() {
     drawAt(position.x, position.y);
     float ghostX = position.x;
@@ -373,12 +373,14 @@ class Agent {
       drawAt(ghostX, ghostY);
     }
   }
+  */
 
   //--------------------------------------------------------------
 
   // COLORS
   // Outer membrane: Hue shifts from green to orange as health deteriorates
   // Inner lung: hue shifts from blue to red, empty red, blue full
+  /*
   void drawAt(float x, float y) {
     colorMode(HSB, 360, 100, 100);
 
@@ -399,5 +401,17 @@ class Agent {
     circle(x, y, lungSize);
 
     colorMode(RGB, 255);
+  }
+  */
+
+  //--------------------------------------------------------------
+
+  void refillAir(Environment e) {
+    float healthRatio = e.energy / e.maxEnergy;
+    float effectiveRefill = config.refillRate * healthRatio;
+    air += effectiveRefill;
+    air = min(air, maxAir);
+
+    //--------------------------------------------------------------
   }
 }

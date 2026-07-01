@@ -108,36 +108,36 @@ class Environment {
   }
 
   //--------------------------------------------------------------
-    /*
+  /*
   // counts down the birth burst timer and turns off the burst when it expires
-  void tickBurstTimer() {
-    if (burstTimer > 0) {
-      burstTimer--;
-    } else {
-      birthBurst = false;
-    }
-  }
-
-  //--------------------------------------------------------------
-
-  // adds regen energy each frame up to the max
-  void regenerateEnergy(float regenRate) {
-    energy = min(energy + regenRate, maxEnergy);
-  }
-
-  //--------------------------------------------------------------
-
-  // checks if the reproducing parent is still inside, keeps core locked until they leave
-  void checkCoreOccupied(ArrayList<Agent> agents) {
-    boolean parentStillInside = false;
-    for (Agent a : agents) {
-      if (a.hasGivenBirth && contains(a.position)) {
-        parentStillInside = true;
-        break;
-      }
-    }
-    if (!parentStillInside) coreOccupied = false;
-  }*/
+   void tickBurstTimer() {
+   if (burstTimer > 0) {
+   burstTimer--;
+   } else {
+   birthBurst = false;
+   }
+   }
+   
+   //--------------------------------------------------------------
+   
+   // adds regen energy each frame up to the max
+   void regenerateEnergy(float regenRate) {
+   energy = min(energy + regenRate, maxEnergy);
+   }
+   
+   //--------------------------------------------------------------
+   
+   // checks if the reproducing parent is still inside, keeps core locked until they leave
+   void checkCoreOccupied(ArrayList<Agent> agents) {
+   boolean parentStillInside = false;
+   for (Agent a : agents) {
+   if (a.hasGivenBirth && contains(a.position)) {
+   parentStillInside = true;
+   break;
+   }
+   }
+   if (!parentStillInside) coreOccupied = false;
+   }*/
 
   //--------------------------------------------------------------
 
@@ -151,22 +151,22 @@ class Environment {
   }
 
   //--------------------------------------------------------------
-/*
+  /*
   void updatedCore(ArrayList<Agent> agents, float regenRate) {
-    tickBurstTimer();
-    regenerateEnergy(regenRate);
-    // coreOccupied stays true as long as the reproducing parent is still inside
-    // once parent leaves, slot opens for next reproduction
-    checkCoreOccupied(agents);
-  }
-
-  //--------------------------------------------------------------
-
-  void triggerBirthBurst() {
-    birthBurst = true;
-    burstTimer = 120;
-  }
-*/
+   tickBurstTimer();
+   regenerateEnergy(regenRate);
+   // coreOccupied stays true as long as the reproducing parent is still inside
+   // once parent leaves, slot opens for next reproduction
+   checkCoreOccupied(agents);
+   }
+   
+   //--------------------------------------------------------------
+   /*
+   void triggerBirthBurst() {
+   birthBurst = true;
+   burstTimer = 120;
+   }
+   */
   //--------------------------------------------------------------
 
   // 5 different stages for environements
@@ -250,20 +250,20 @@ class Environment {
    */
 
   //--------------------------------------------------------------
-/*
+  /*
   // draws the solid circle at the centre when reproduction happens
-  void drawCore(float healthRatio) {
-    float[] col = getMembraneColor(healthRatio);
-    float hue = col[0];
-    float sat = col[1];
-    float bri = col[2];
-    colorMode(HSB, 360, 100, 100);
-    noStroke();
-    fill(hue, sat + 15, max(bri + 10, 35));
-    colorMode(RGB, 255);
-    circle(position.x, position.y, 100); // same size as agent
-  }
-*/
+   void drawCore(float healthRatio) {
+   float[] col = getMembraneColor(healthRatio);
+   float hue = col[0];
+   float sat = col[1];
+   float bri = col[2];
+   colorMode(HSB, 360, 100, 100);
+   noStroke();
+   fill(hue, sat + 15, max(bri + 10, 35));
+   colorMode(RGB, 255);
+   circle(position.x, position.y, 100); // same size as agent
+   }
+   */
   //--------------------------------------------------------------
 
   // draws the outer ring showing how far agents can detect this environment
@@ -277,13 +277,13 @@ class Environment {
   //--------------------------------------------------------------
   /*
   // Environemnt is teal when healthy and purple when depleted
-  void draw(float sensingRadius) {
-    drawSensingRing(sensingRadius);
-    float healthRatio = energy / maxEnergy;
-    drawMembrane(healthRatio);
-    drawCore(healthRatio);
-  }
-  */
+   void draw(float sensingRadius) {
+   drawSensingRing(sensingRadius);
+   float healthRatio = energy / maxEnergy;
+   drawMembrane(healthRatio);
+   drawCore(healthRatio);
+   }
+   */
 
   //--------------------------------------------------------------
 
@@ -295,16 +295,16 @@ class Environment {
   }
 
   //--------------------------------------------------------------
-  
-    // Environemnt is teal when healthy and purple when depleted
+
+  // Environemnt is teal when healthy and purple when depleted
   void display(float sensingRadius) {
     drawSensingRing(sensingRadius);
     float healthRatio = energy / maxEnergy;
     drawMembrane(healthRatio);
     //drawCore(healthRatio);
   }
-  
-   //--------------------------------------------------------------
+
+  //--------------------------------------------------------------
   // draws the wobbly noisy membrane using current stage values
   void drawMembrane(float healthRatio) {
     float[] sv = getStageValues(healthRatio);
@@ -333,45 +333,66 @@ class Environment {
     endShape(CLOSE);
     noiseT += stageSpeed;
   }
-  
-   //--------------------------------------------------------------
+
+  //--------------------------------------------------------------
+
+  void alterEnergy() {
+
+    energy -= 2; //0.5;
+    energy = max(energy, 0);
+  }
+
+  void alterEnergyWhenGivingBirth() {
+
+    if (random(1) < (energy / maxEnergy)) {
+      //coreOccupied = true;
+      energy -= 100;
+      energy = max(energy, 0);
+      //a.hasGivenBirth = true;
+      //a.birthEnvironment = e;
+      //Agent child = a.reproduce(e);
+      //agents.add(child);
+      //a.reproductionCooldown = 300;
+      //e.triggerBirthBurst();
+    }
+  }
+
   /*
   void display(float sensingRadius, color colorBreathing ) {
-    strokeWeight(3);
-    noFill();
-    stroke(0, 97, 0);
-    circle(position.x, position.y, sensingRadius * 2);
-    float healthRatio = energy / maxEnergy;
-    // membrane wobbles more as health drops
-    float nAmp = map(healthRatio, 0, 1, 0.15, 0.0);
-    float nInt = 3.5;
-    float resolution = 80;
+   strokeWeight(3);
+   noFill();
+   stroke(0, 97, 0);
+   circle(position.x, position.y, sensingRadius * 2);
+   float healthRatio = energy / maxEnergy;
+   // membrane wobbles more as health drops
+   float nAmp = map(healthRatio, 0, 1, 0.15, 0.0);
+   float nInt = 3.5;
+   float resolution = 80;
+   
+   float hue = map(healthRatio, 0, 1, 360, 240);
+   //colorMode(HSB, 360, 100, 100);
+   //strokeWeight(0.8);
+   
+   stroke(hue, 60, 75);
+   //fill(hue, 50, 95, 60);
+   fill(colorBreathing);
+   beginShape();
+   for (float a = 0; a <= TWO_PI; a += TWO_PI / resolution) {
+   float nVal = 1.0 + map(noise(cos(a) * nInt + noiseOffset, sin(a) * nInt + noiseOffset, noiseT), 0.0, 1.0, -nAmp, nAmp);
+   float x = position.x + cos(a) * radius * nVal;
+   float y = position.y + sin(a) * radius * nVal;
+   vertex(x, y);
+   }
+   endShape(CLOSE);
+   noiseT += 0.02;
+   */
 
-    float hue = map(healthRatio, 0, 1, 360, 240);
-    //colorMode(HSB, 360, 100, 100);
-    //strokeWeight(0.8);
-
-    stroke(hue, 60, 75);
-    //fill(hue, 50, 95, 60);
-    fill(colorBreathing);
-    beginShape();
-    for (float a = 0; a <= TWO_PI; a += TWO_PI / resolution) {
-      float nVal = 1.0 + map(noise(cos(a) * nInt + noiseOffset, sin(a) * nInt + noiseOffset, noiseT), 0.0, 1.0, -nAmp, nAmp);
-      float x = position.x + cos(a) * radius * nVal;
-      float y = position.y + sin(a) * radius * nVal;
-      vertex(x, y);
-    }
-    endShape(CLOSE);
-    noiseT += 0.02;
-    */
-
-    /*
+  /*
     noStroke();
-     fill(hue, 70, 80);
-     colorMode(RGB, 255);
-     circle(position.x, position.y, (radius/4) * 2);
-     
-     }*/
+   fill(hue, 70, 80);
+   colorMode(RGB, 255);
+   circle(position.x, position.y, (radius/4) * 2);
+   
+   }*/
   //}
-  
 }

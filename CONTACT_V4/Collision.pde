@@ -48,6 +48,8 @@ class Collision {
             e.v.isColliding = true;
 
             e.v.zone.setState(e.v.zone.collisionState);
+            
+            e.alterEnergyWhenGivingBirth();
 
             a.v.colorWheelAngle = selectRandomCol(e.v.colorWheelAngle);
           }

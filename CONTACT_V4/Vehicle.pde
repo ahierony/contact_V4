@@ -639,16 +639,7 @@ class Vehicle {
 
     return force;
   }
-
-  // ********************************************************
-  // ENVIRONMENT CODE
-  // ********************************************************
-
-  void alterEnvironmentEnergy(Vehicle v) {
-
-    v.thisEnvironment.energy -= 5; //0.5;
-    v.thisEnvironment.energy = max(v.thisEnvironment.energy, 0);
-  }
+ 
   // ********************************************************
   // PLAYER IS IN VEHICLE ZONE
   // ********************************************************
@@ -725,7 +716,12 @@ class Vehicle {
         inOtherVehicleBreathingZone = true;
         applyZoneForceOnVehicle(otherV); // apply succion/repel gravity between vehicle breathing and vehicle moving
         // membrane
-        alterEnvironmentEnergy(otherV);
+        
+        otherV.thisEnvironment.alterEnergy();
+        thisAgent.refillAir(otherV.thisEnvironment);
+        
+        println("thisAgent air ", thisAgent.air);
+        
       }
     }
   }

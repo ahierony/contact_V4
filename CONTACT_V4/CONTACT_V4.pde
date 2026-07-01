@@ -237,7 +237,7 @@ void setup() {
 
   //*********************************************************************
   //gamePadIsOn = false;
-  inputControls = InputControls.JOYSTICKS; //KEYBOARD; //JOYSTICKS;
+  inputControls = InputControls.KEYBOARD; //KEYBOARD; //JOYSTICKS;
   //protoSticks = false;
   debugMode = false;
   screengrab = false;
@@ -786,41 +786,37 @@ void updateAgents() {
       }
     }
   }
-
-  /*
+    
+    /*
   for (int i = agents.size()-1; i >= 0; i--) { // iterate backwards so when we remove dead agent, indices don't shift
-   Agent a = agents.get(i);
-   a.maxSpeed = config.maxSpeed;
-   a.update(config, agents, environments);
-   a.draw();
-   for (Environment e : environments) {
-   // agent can only reproduce if it is in the core and there is no cooldown from prev reproduction
-   // no other agent should be reproducing there and it hasn't tried reproducing this visit
-   if (e.containsCore(a.position) && a.reproductionCooldown == 0 && !e.coreOccupied && !a.triedReproduction) {
-   tryReproduce(a, e); //only one reproduction per frame
-   break;
-   } else if (e.contains(a.position)) {
-   refillAir(a, e);
-   }
-   }
-   if (a.dead()) {
-   agents.remove(i); // remove agents from agents ArrayList if it ran out of air or health dropped to 0
-   }
-   }
-   */
+    Agent a = agents.get(i);
+    a.maxSpeed = config.maxSpeed;
+    a.update(config, agents, environments);
+    a.draw();
+    for (Environment e : environments) {
+      // agent can only reproduce if it is in the core and there is no cooldown from prev reproduction
+      // no other agent should be reproducing there and it hasn't tried reproducing this visit
+      if (e.containsCore(a.position) && a.reproductionCooldown == 0 && !e.coreOccupied && !a.triedReproduction) {
+        tryReproduce(a, e); //only one reproduction per frame
+        break;
+      } else if (e.contains(a.position)) {
+        refillAir(a, e);
+      }
+    }
+    if (a.dead()) {
+      agents.remove(i); // remove agents from agents ArrayList if it ran out of air or health dropped to 0
+    }
+  }
+  */
+
 }
 
 //--------------------------------------------------------------
 
 // refills agent air when inside the environemnt, costs the env some energy
-void refillAir(Agent a, Environment e) {
-  float healthRatio = e.energy / e.maxEnergy;
-  float effectiveRefill = config.refillRate * healthRatio;
-  a.air += effectiveRefill;
-  a.air = min(a.air, a.maxAir);
-  e.energy -= 0.5;
-  e.energy = max(e.energy, 0);
-}
+
+
+
 
 //--------------------------------------------------------------
 /*
@@ -1304,8 +1300,6 @@ void drawBackground(float avgHealth) {
     hue = lerp(350, 360, t); // Red to violet to bluish-violet
     stage = 5;
   }
-
-  println("hue ", hue);
 
   background(hue, 65, 70);
   colorMode(RGB, 255);
