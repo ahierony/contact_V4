@@ -4,9 +4,9 @@
   <drain>0.034700003</drain>
   <refill>0.5840001</refill>
   <spawnRate>1900.0001</spawnRate>
-  <sepDist>150.0</sepDist>
+  <sepDist>294.99994</sepDist>
   <sepForce>7.529996</sepForce>
   <population>15</population>
   <regenRate>0.7500001</regenRate>
-  <sensingRadius>1700.0002</sensingRadius>
+  <sensingRadius>1210.0</sensingRadius>
 </settings>

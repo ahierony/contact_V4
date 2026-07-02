@@ -221,8 +221,6 @@ class Bg_Unit {
 
   void wrapVehicle() {
     
-    println("wrap ");
-
     if (containsAgent) {
       agent.v.killBlob();
     } else if (containsEnvironment) {

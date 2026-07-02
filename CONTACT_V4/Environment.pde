@@ -268,10 +268,13 @@ class Environment {
 
   // draws the outer ring showing how far agents can detect this environment
   void drawSensingRing(float sensingRadius) {
+    strokeWeight(3);
     colorMode(RGB, 255);
     noFill();
-    stroke(150, 180);
+    //stroke(150, 180);
+    stroke(0);
     circle(position.x, position.y, sensingRadius * 2);
+    strokeWeight(1);
   }
 
   //--------------------------------------------------------------
@@ -338,11 +341,11 @@ class Environment {
 
   void alterEnergy() {
 
-    energy -= 2; //0.5;
+    energy -= 5; //0.5;
     energy = max(energy, 0);
   }
 
-  void alterEnergyWhenGivingBirth() {
+  void alterEnergyAfterGivingBirth() {
 
     if (random(1) < (energy / maxEnergy)) {
       //coreOccupied = true;

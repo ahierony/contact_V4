@@ -134,21 +134,32 @@ class Agent {
   }
 
   //--------------------------------------------------------------
-
+    // explain this code anushcka?
   // steers agent towards nearest environment when air drops below 70%
   void applySeekForce(ArrayList<Environment> environments, float sensingRadius, boolean insideAnyEnv) {
+
     if (air >= maxAir * 0.7 || burstSeekSuppression > 0 || driftingOut) {
+      //if (air >= maxAir * 0.7 ) {
+
+      //  println("out");
       return;
     }
     Environment nearest = nearestInRange(environments, sensingRadius);
     if (nearest == null) {
       return;
+    } else {
+      println("nearest ", nearest);
     }
+
     PVector toEnv = PVector.sub(nearest.position, position);
     float distToEnv = toEnv.mag();
+
     float nearestHealth = nearest.energy / nearest.maxEnergy;
 
     if (distToEnv < nearest.radius * 0.7) {
+
+      //println("nearest.radius * 0.7");
+
       // to avoid getting stuck at the core
       // agent can get stuck at the centre because seek force is the weakest there
       // if it is barely moving, we give it a small push away from the core
@@ -166,6 +177,9 @@ class Agent {
       }
       // slow down an aim for the boundary during seeking
     } else if (distToEnv < nearest.radius * 1.1) {
+
+      //println("nearest.radius * 1.1");
+
       toEnv.setMag(nearest.radius * 0.9); // just inside edge
       PVector target = PVector.add(position, toEnv);
       PVector seekForce = PVector.sub(target, position);
@@ -176,6 +190,9 @@ class Agent {
       seekForce.mult(urgency);
       velocity.add(seekForce);
     } else {
+
+      //println("nearest.radius ");
+
       // if far away full seek force towards env
       toEnv.setMag(nearest.radius * 0.9);
       PVector target = PVector.add(position, toEnv);
@@ -186,6 +203,27 @@ class Agent {
       seekForce.mult(urgency);
       velocity.add(seekForce);
     }
+  }
+
+  //--------------------------------------------------------------
+
+  Environment nearestInRange(ArrayList<Environment> environments, float sensingRadius) {
+
+    if (trackedEnv != null) {
+      float d = PVector.dist(position, trackedEnv.position);
+      if (d > sensingRadius * 1.12) trackedEnv = null; // agent must travel further out before switching from seeking force
+    }
+    if (trackedEnv == null) {
+      for (Environment e : environments) {
+        float d = PVector.dist(position, e.position);
+        if (d < sensingRadius * 0.95) {
+          if (trackedEnv == null || e.energy > trackedEnv.energy) { // prefer healthier env
+            trackedEnv = e;
+          }
+        }
+      }
+    }
+    return trackedEnv;
   }
 
   //--------------------------------------------------------------
@@ -233,10 +271,12 @@ class Agent {
   //--------------------------------------------------------------
 
   // limits and dampens velocity: slower inside environemnts like moving through liquid, more viscous
+      // what is this Anushcka?
   void applyDamping(boolean insideAnyEnv) {
     velocity.limit(maxSpeed * 3.5);
     velocity.mult(insideAnyEnv ? 0.55 : 0.72);
   }
+  
 
   //--------------------------------------------------------------
 
@@ -245,6 +285,8 @@ class Agent {
     applyDamping(insideAnyEnv);
     PVector sep = seperate(agents, sepDist, sepForce);
     velocity.add(sep);
+    
+
     //position.add(velocity);
     //v.centerBoid.applyImpulseAnu(velocity);
   }
@@ -253,6 +295,7 @@ class Agent {
 
   // resets reproduction flag once agent leaves the core
   // clears birth tracking once agent has left the environment
+  /*
   void updateReproductionFlags(ArrayList<Environment> environments) {
     boolean inAnyCore = false;
     for (Environment e : environments) {
@@ -266,9 +309,10 @@ class Agent {
       birthEnvironment = null;
     }
   }
+  */
 
   //--------------------------------------------------------------
-
+    /*
   // wraps agent to opposite side when it goes off the canvas edge
   void wrapEdges() {
     if (position.x > width/2)  position.x = -width/2;
@@ -276,7 +320,7 @@ class Agent {
     if (position.y > height/2)  position.y = -height/2;
     if (position.y < -height/2) position.y = height/2;
   }
-
+*/
   //--------------------------------------------------------------
 
   void update(SimConfig config, ArrayList<Agent> agents, ArrayList<Environment> environments) {
@@ -287,10 +331,10 @@ class Agent {
     applyDriftForce(config.sensingRadius);
     applyBirthBurst(environments);
     applyPhysics(agents, config.sepDist, config.sepForce, insideAnyEnv);
-    wrapEdges();
+    //wrapEdges();
     air -= config.drainRate;
     if (air <= 0) println("agent dead");
-    updateReproductionFlags(environments);
+    //updateReproductionFlags(environments);
   }
 
   //--------------------------------------------------------------
@@ -317,25 +361,6 @@ class Agent {
     return sum;
   }
 
-  //--------------------------------------------------------------
-
-  Environment nearestInRange(ArrayList<Environment> environments, float sensingRadius) {
-    if (trackedEnv != null) {
-      float d = PVector.dist(position, trackedEnv.position);
-      if (d > sensingRadius * 1.12) trackedEnv = null; // agent must travel further out before switching from seeking force
-    }
-    if (trackedEnv == null) {
-      for (Environment e : environments) {
-        float d = PVector.dist(position, e.position);
-        if (d < sensingRadius * 0.95) {
-          if (trackedEnv == null || e.energy > trackedEnv.energy) { // prefer healthier env
-            trackedEnv = e;
-          }
-        }
-      }
-    }
-    return trackedEnv;
-  }
 
   //--------------------------------------------------------------
   /*
@@ -362,18 +387,18 @@ class Agent {
   // agents wrap at canvas edges, so we draw a ghost copy on the opposite side
   /*
   void draw() {
-    drawAt(position.x, position.y);
-    float ghostX = position.x;
-    float ghostY = position.y;
-    if (position.x > width/2 - 60)  ghostX = position.x - width;
-    if (position.x < -width/2 + 60) ghostX = position.x + width;
-    if (position.y > height/2 - 60)  ghostY = position.y - height;
-    if (position.y < -height/2 + 60) ghostY = position.y + height;
-    if (ghostX != position.x || ghostY != position.y) {
-      drawAt(ghostX, ghostY);
-    }
-  }
-  */
+   drawAt(position.x, position.y);
+   float ghostX = position.x;
+   float ghostY = position.y;
+   if (position.x > width/2 - 60)  ghostX = position.x - width;
+   if (position.x < -width/2 + 60) ghostX = position.x + width;
+   if (position.y > height/2 - 60)  ghostY = position.y - height;
+   if (position.y < -height/2 + 60) ghostY = position.y + height;
+   if (ghostX != position.x || ghostY != position.y) {
+   drawAt(ghostX, ghostY);
+   }
+   }
+   */
 
   //--------------------------------------------------------------
 
@@ -382,27 +407,27 @@ class Agent {
   // Inner lung: hue shifts from blue to red, empty red, blue full
   /*
   void drawAt(float x, float y) {
-    colorMode(HSB, 360, 100, 100);
-
-    float memHue = map(health, 0, maxHealth, 25, 135); // orange at low health green at full
-    float memSat = map(health, 0, maxHealth, 50, 75);
-    float memBri = map(health, 0, maxHealth, 55, 90);
-    strokeWeight(1.5);
-    stroke(memHue, memSat + 8, memBri - 10);
-    fill(memHue, memSat, memBri, 190);
-    circle(x, y, 100);
-
-    float lungSize = map(air, 0, maxAir, 4, 60); // shrinks as air disappears
-    float lungHue = map(air, 0, maxAir, 355, 210);
-    float lungSat = map(air, 0, maxAir, 72, 72);
-    float lungBri = map(air, 0, maxAir, 88, 70);
-    noStroke();
-    fill(lungHue, lungSat, lungBri);
-    circle(x, y, lungSize);
-
-    colorMode(RGB, 255);
-  }
-  */
+   colorMode(HSB, 360, 100, 100);
+   
+   float memHue = map(health, 0, maxHealth, 25, 135); // orange at low health green at full
+   float memSat = map(health, 0, maxHealth, 50, 75);
+   float memBri = map(health, 0, maxHealth, 55, 90);
+   strokeWeight(1.5);
+   stroke(memHue, memSat + 8, memBri - 10);
+   fill(memHue, memSat, memBri, 190);
+   circle(x, y, 100);
+   
+   float lungSize = map(air, 0, maxAir, 4, 60); // shrinks as air disappears
+   float lungHue = map(air, 0, maxAir, 355, 210);
+   float lungSat = map(air, 0, maxAir, 72, 72);
+   float lungBri = map(air, 0, maxAir, 88, 70);
+   noStroke();
+   fill(lungHue, lungSat, lungBri);
+   circle(x, y, lungSize);
+   
+   colorMode(RGB, 255);
+   }
+   */
 
   //--------------------------------------------------------------
 

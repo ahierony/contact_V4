@@ -210,8 +210,6 @@ boolean screengrab;
 
 boolean fullScale;
 
-//PlayerWorldLimits playerWorldLimits;
-
 // TRAIL
 BgTrailBox bgTrailBox;
 
@@ -487,7 +485,6 @@ void resetContact() {
   collision = new Collision(this);
 
   bgTrailBox = new BgTrailBox(unitTotal, unit_w, unit_h);
-  //playerWorldLimits = new PlayerWorldLimits(unitTotal, unit_w, unit_h);
 
   //setBackgroundTimer();
 }

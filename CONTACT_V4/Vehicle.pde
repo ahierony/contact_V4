@@ -7,7 +7,7 @@ class Vehicle {
   //ArrayList<Vehicle> vehicles;
   ArrayList<Agent> agents;
   ArrayList<Environment> environments;
-  
+
   Agent thisAgent;
   Environment thisEnvironment;
 
@@ -90,7 +90,7 @@ class Vehicle {
   boolean otherVehicleInDistanceZone;
   boolean otherVehicleInBreathingZone;
   boolean otherBreathingVehicleComingClose;
-  
+
   boolean inPlayerMaxRadius;
   boolean inPlayerMinRadius;
 
@@ -120,7 +120,7 @@ class Vehicle {
   Vehicle(float x, float y, int _colorAngle, boolean _inMotion, String type_, int unitNum_, Player p, Environment thisE) {
 
     index = unitNum_;
-    
+
     thisEnvironment = thisE;
 
     unitNum = unitNum_;
@@ -220,7 +220,7 @@ class Vehicle {
   Vehicle(float x, float y, int _colorAngle, boolean _inMotion, String type_, int unitNum_, Player p, int vIndex, Agent thisA) {
 
     index = vIndex;
-    
+
     thisAgent = thisA;
 
     unitNum = unitNum_;
@@ -379,7 +379,9 @@ class Vehicle {
       centerBoid.update();
 
 
-      wrap();
+      if (location.getState() == location.vInMovingState) {
+        wrap();
+      }
 
 
       /*
@@ -639,7 +641,7 @@ class Vehicle {
 
     return force;
   }
- 
+
   // ********************************************************
   // PLAYER IS IN VEHICLE ZONE
   // ********************************************************
@@ -716,12 +718,9 @@ class Vehicle {
         inOtherVehicleBreathingZone = true;
         applyZoneForceOnVehicle(otherV); // apply succion/repel gravity between vehicle breathing and vehicle moving
         // membrane
-        
-        otherV.thisEnvironment.alterEnergy();
+
+        if (!otherV.repellOther) otherV.thisEnvironment.alterEnergy();
         thisAgent.refillAir(otherV.thisEnvironment);
-        
-        println("thisAgent air ", thisAgent.air);
-        
       }
     }
   }
@@ -748,37 +747,36 @@ class Vehicle {
   // ********************************************************
   // VEHICLE IN PLAYER SENSING RADIUS
   // ********************************************************
-  
+
   boolean checkIfInPlayerArea(float r) {
-    
+
     if (isInPlayerArea(r)) {
-      
+
       return true;
     } else {
       return false;
     }
-    
   }
 
 
   //--------------------------------------------------------------
-/*
+  /*
   boolean checkIfInPlayerMaxArea() {
-    
-    inPlayerMaxRadius = false;
-    //inPlayerDistanceArea = false;
-    //inPlayerBreathingArea = false;
-    
-    if (isInPlayerArea(player.sensingMaxRadius)) {
-      
-      inPlayerMaxRadius = true;
-    } else {
-      inPlayerMaxRadius = false;
-    }
-    
-    return inPlayerMaxRadius;
-  }
-*/
+   
+   inPlayerMaxRadius = false;
+   //inPlayerDistanceArea = false;
+   //inPlayerBreathingArea = false;
+   
+   if (isInPlayerArea(player.sensingMaxRadius)) {
+   
+   inPlayerMaxRadius = true;
+   } else {
+   inPlayerMaxRadius = false;
+   }
+   
+   return inPlayerMaxRadius;
+   }
+   */
 
   //--------------------------------------------------------------
 

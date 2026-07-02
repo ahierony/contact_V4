@@ -49,7 +49,7 @@ class Collision {
 
             e.v.zone.setState(e.v.zone.collisionState);
             
-            e.alterEnergyWhenGivingBirth();
+            e.alterEnergyAfterGivingBirth();
 
             a.v.colorWheelAngle = selectRandomCol(e.v.colorWheelAngle);
           }
@@ -100,8 +100,8 @@ class Collision {
     vehiclePosVecPixels.subLocal(envo.v.centerBoid.offset);
     Vec2 targetPosition = box2d.coordPixelsToWorld(vehiclePosVecPixels);
 
-    agent.v.centerBoid.status = "flee";
-    agent.v.centerBoid.flee(targetPosition);
+    //agent.v.centerBoid.status = "flee";
+    //agent.v.centerBoid.flee(targetPosition);
   }
 
   //boolean vehiclesAreTouching(Vehicle vInMotion, Vehicle vBreathing) {
