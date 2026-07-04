@@ -88,6 +88,10 @@ class VehicleZone {
     state.update();
 
     resetStates();
+    
+    distanceRadius = data.sensingRadiusSlider.getPos();
+    
+    
   }
 
   void resetStates() {

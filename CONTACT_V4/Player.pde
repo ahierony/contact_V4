@@ -414,7 +414,7 @@ class Player {
   }
 
   //--------------------------------------------------------------
-
+  /*
   void updateInVehicleDistanceZone() {
 
     // first entrance into zone
@@ -432,7 +432,7 @@ class Player {
     }
     jointSphere.body.setType(BodyType.DYNAMIC);
   }
-
+*/
 
   //--------------------------------------------------------------
 

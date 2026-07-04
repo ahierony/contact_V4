@@ -652,14 +652,15 @@ class Vehicle {
     playerInDistanceZone = false;
     playerInBreathingZone = false;
 
+    //if (isPlayerInZone(player, thisAgent.sensingRadius)) { // player is in distance zone
     if (isPlayerInZone(player, zone.distanceRadius)) { // player is in distance zone
-
+   
       playerInDistanceZone = true;
 
       // to make sure body type of revolute joint stays dynamic for attraction / repulsion
 
       if (isPlayerInZone(player, zone.radius)) { // player is in breathing zone
-
+      
         playerInBreathingZone = true;
       } else {
 
@@ -683,7 +684,7 @@ class Vehicle {
     Vec2 playerPosPix = box2d.getBodyPixelCoord(p.centerSphere.body);//b.centerBoid.body.getWorldCenter();
 
     float d_pix = dist(vehiclePosPix.x, vehiclePosPix.y, playerPosPix.x, playerPosPix.y);
-
+    
     if (d_pix < zoneRadius + p.blobRadius) { //  - p.blobRadius
 
       colorWithinDistance = colorBreathing;

@@ -157,7 +157,7 @@ boolean isSwitchingSides = false;
 
 Collision collision;
 
-//int worldStages;
+
 int currentWorldStage;
 int worldStagePlaying;
 
@@ -351,7 +351,7 @@ void setupSounds() {
   worldStagePlaying = 0;
   currentWorldSound = worldSounds[worldStagePlaying];
   currentWorldSound.play();
-  currentWorldSound.amp(0.2);
+  currentWorldSound.amp(0.5);
   soundTransition = false;
 
   println("play");
@@ -365,7 +365,7 @@ void setupSounds() {
   agentSounds[4] = new SoundFile(this, "../../MUSIC/Agent_Sounds/agent_E.mp3");
 
 
-  //currentWorldSound.loop();
+  currentWorldSound.loop();
 
 
   //worldSounds = new SoundFile[stages];
@@ -416,8 +416,8 @@ void updateSounds() {
 
 
 
-  println("worldStagePlaying ", worldStagePlaying);
-  println("currentWorldStage ", currentWorldStage);
+  //println("worldStagePlaying ", worldStagePlaying);
+  //println("currentWorldStage ", currentWorldStage);
   /*
    println("soundTransition ", soundTransition);
    
@@ -438,7 +438,7 @@ void updateSounds() {
     worldStagePlaying = currentWorldStage;
     currentWorldSound = worldSounds[worldStagePlaying];
     currentWorldSound.play();
-    currentWorldSound.amp(0.2);
+    currentWorldSound.amp(0.5);
     currentWorldSound.loop();
 
     /*
@@ -1399,7 +1399,7 @@ void mousePressed() {
 
   //soundTransition = true;
 
-  currentWorldSound.pause();
+  //currentWorldSound.pause();
 
   //recordSVG = true;
 }

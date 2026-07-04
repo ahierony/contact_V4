@@ -14,13 +14,16 @@ class Environment {
 
   int stages;
   int currentStage;
+  int stagePlaying;
 
   int index;
 
   // sound
-  SoundFile[] environmentsBaseSounds;
-  SoundFile[] environmentsMuffledSounds;
-  SoundFile currentEnvironmentSound;
+  SoundFile[] baseSounds;
+  SoundFile[] muffledSounds;
+  SoundFile currentSound;
+
+
 
   //--------------------------------------------------------------
 
@@ -45,7 +48,7 @@ class Environment {
 
     if (playSoundContactV4) {
 
-      //setupSounds(app);
+      setupSounds(app);
     }
   }
 
@@ -55,9 +58,12 @@ class Environment {
 
     v.run(agents, environments);
 
+    currentStage = getStageNum();
+    stagePlaying = currentStage;
+
     if (playSoundContactV4) {
 
-      //updateSounds();
+      updateSounds();
     }
   }
 
@@ -65,34 +71,91 @@ class Environment {
 
   void setupSounds(PApplet app) {
 
-    environmentsBaseSounds = new SoundFile[stages];
+    baseSounds = new SoundFile[stages];
 
-    environmentsBaseSounds[0] = new SoundFile(app, "../../MUSIC/Environments_Base/environment_base_" + index + "A.mp3");
-    environmentsBaseSounds[1] = new SoundFile(app, "../../MUSIC/Environments_Base/environment_base_" + index + "B.mp3");
-    environmentsBaseSounds[2] = new SoundFile(app, "../../MUSIC/Environments_Base/environment_base_" + index + "C.mp3");
-    environmentsBaseSounds[3] = new SoundFile(app, "../../MUSIC/Environments_Base/environment_base_" + index + "D.mp3");
-    environmentsBaseSounds[4] = new SoundFile(app, "../../MUSIC/Environments_Base/environment_base_" + index + "E.mp3");
+    baseSounds[0] = new SoundFile(app, "../../MUSIC/Environments_Base/environment_base_" + index + "A.mp3");
+    baseSounds[1] = new SoundFile(app, "../../MUSIC/Environments_Base/environment_base_" + index + "B.mp3");
+    baseSounds[2] = new SoundFile(app, "../../MUSIC/Environments_Base/environment_base_" + index + "C.mp3");
+    baseSounds[3] = new SoundFile(app, "../../MUSIC/Environments_Base/environment_base_" + index + "D.mp3");
+    baseSounds[4] = new SoundFile(app, "../../MUSIC/Environments_Base/environment_base_" + index + "E.mp3");
 
-    environmentsMuffledSounds = new SoundFile[stages];
+    muffledSounds = new SoundFile[stages];
 
-    environmentsMuffledSounds[0] = new SoundFile(app, "../../MUSIC/Environments_Muffled/environment_muffled_" + index + "A.mp3");
-    environmentsMuffledSounds[1] = new SoundFile(app, "../../MUSIC/Environments_Muffled/environment_muffled_" + index + "B.mp3");
-    environmentsMuffledSounds[2] = new SoundFile(app, "../../MUSIC/Environments_Muffled/environment_muffled_" + index + "C.mp3");
-    environmentsMuffledSounds[3] = new SoundFile(app, "../../MUSIC/Environments_Muffled/environment_muffled_" + index + "D.mp3");
-    environmentsMuffledSounds[4] = new SoundFile(app, "../../MUSIC/Environments_Muffled/environment_muffled_" + index + "E.mp3");
+    muffledSounds[0] = new SoundFile(app, "../../MUSIC/Environments_Muffled/environment_muffled_" + index + "A.mp3");
+    muffledSounds[1] = new SoundFile(app, "../../MUSIC/Environments_Muffled/environment_muffled_" + index + "B.mp3");
+    muffledSounds[2] = new SoundFile(app, "../../MUSIC/Environments_Muffled/environment_muffled_" + index + "C.mp3");
+    muffledSounds[3] = new SoundFile(app, "../../MUSIC/Environments_Muffled/environment_muffled_" + index + "D.mp3");
+    muffledSounds[4] = new SoundFile(app, "../../MUSIC/Environments_Muffled/environment_muffled_" + index + "E.mp3");
 
-
-
-    currentEnvironmentSound = environmentsBaseSounds[currentStage];
-
-    currentWorldSound.amp(0.5);
-    //currentWorldSound.play();
-    //currentWorldSound.loop();
+    currentSound = baseSounds[stagePlaying];
+    currentSound.pause();
   }
 
   //--------------------------------------------------------------
 
   void updateSounds() {
+
+
+    if (v.playerInDistanceZone) {
+
+      stagePlaying = currentStage;
+      currentSound = baseSounds[stagePlaying];
+
+      if (v.playerInBreathingZone) {
+
+        float d;
+
+        if (baseSounds[stagePlaying].isPlaying()) {
+
+          baseSounds[stagePlaying].pause();
+          d = baseSounds[stagePlaying].position();
+        } else {
+
+          d = 0;
+        }
+
+        if (!muffledSounds[stagePlaying].isPlaying()) {
+
+          //println("play environment sound");
+
+          muffledSounds[stagePlaying].amp(0.5);
+          muffledSounds[stagePlaying].cue(d);
+          muffledSounds[stagePlaying].play();
+          muffledSounds[stagePlaying].loop();
+        }
+      } else { // not in breathing zone
+
+        float dm;
+
+        if (muffledSounds[stagePlaying].isPlaying()) {
+
+          muffledSounds[stagePlaying].pause();
+          dm = muffledSounds[stagePlaying].position();
+        } else {
+
+          dm = 0;
+        }
+
+        if (!baseSounds[stagePlaying].isPlaying()) {
+
+          //println("play environment sound");
+
+          baseSounds[stagePlaying].amp(0.5);
+          baseSounds[stagePlaying].cue(dm);
+          baseSounds[stagePlaying].play();
+          baseSounds[stagePlaying].loop();
+        }
+      }
+    } else { // not in distance zone
+
+      if (baseSounds[stagePlaying].isPlaying()) {
+
+        baseSounds[stagePlaying].pause();
+       
+      } 
+
+      //println("stop environment sound");
+    }
   }
 
   //--------------------------------------------------------------
@@ -103,9 +166,11 @@ class Environment {
   boolean containsCore(PVector agentPos) { // inner zone for birth
     return PVector.dist(position, agentPos) < 50; // radius matches core visual size
   }
+
   boolean containsSensing(PVector agentPos, float sensingRadius) { // outer sensing ring
     return PVector.dist(position, agentPos) < sensingRadius;
   }
+
 
   //--------------------------------------------------------------
   /*
@@ -143,11 +208,24 @@ class Environment {
 
   String getStageName() {
     float h = energy / maxEnergy;
-    if (h > 0.8) return "1";
-    else if (h > 0.6) return "2";
-    else if (h > 0.4) return "3";
-    else if (h > 0.2) return "4";
-    else return "5";
+    if (h > 0.8) return "0";
+    else if (h > 0.6) return "1";
+    else if (h > 0.4) return "2";
+    else if (h > 0.2) return "3";
+    else return "4";
+  }
+
+  //
+
+  //--------------------------------------------------------------
+
+  int getStageNum() {
+    float h = energy / maxEnergy;
+    if (h > 0.8) return 0;
+    else if (h > 0.6) return 1;
+    else if (h > 0.4) return 2;
+    else if (h > 0.2) return 3;
+    else return 4;
   }
 
   //--------------------------------------------------------------
@@ -161,7 +239,7 @@ class Environment {
    }
    
    //--------------------------------------------------------------
-   /*
+  /*
    void triggerBirthBurst() {
    birthBurst = true;
    burstTimer = 120;
@@ -273,7 +351,7 @@ class Environment {
     noFill();
     //stroke(150, 180);
     stroke(0);
-    circle(position.x, position.y, sensingRadius * 2);
+    circle(position.x, position.y, sensingRadius);
     strokeWeight(1);
   }
 

@@ -146,28 +146,28 @@ class VInMovingState implements VehicleLocationState {
     }
 
     //if(agent.v.checkIfInPlayerArea(player.sensingMinRadius)) moveAwayFromPlayer();
-    
+
 
     agent.v.centerBoid.isMoving();
 
     //addTrailRipples();
     setLungState();
   }
-  
+
   /*
   void moveAwayFromPlayer() {
-    
-    println("flee player!");
-    
-  
-    Vec2 playerPosVecPixels = box2d.getBodyPixelCoord(player.centerSphere.body);
-    //playerPosVecPixels.subLocal(envo.v.centerBoid.offset);
-    Vec2 targetPosition = box2d.coordPixelsToWorld(playerPosVecPixels);
-
-    agent.v.centerBoid.status = "flee";
-    agent.v.centerBoid.flee(targetPosition);
-  }
-  */
+   
+   println("flee player!");
+   
+   
+   Vec2 playerPosVecPixels = box2d.getBodyPixelCoord(player.centerSphere.body);
+   //playerPosVecPixels.subLocal(envo.v.centerBoid.offset);
+   Vec2 targetPosition = box2d.coordPixelsToWorld(playerPosVecPixels);
+   
+   agent.v.centerBoid.status = "flee";
+   agent.v.centerBoid.flee(targetPosition);
+   }
+   */
 
   public boolean getReadyToSetState() {
     return readyToSetState;
