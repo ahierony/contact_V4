@@ -24,7 +24,7 @@ class VehicleBoid {
   Vec2 posVecPixels;
   Vec2 boidPosition;
   Vec2 boidPositionVecPixelsRelativeToTarget;
-  Vec2 targetPosition;
+  Vec2 playerPosition;
 
   Vec2 offset;
 
@@ -53,7 +53,7 @@ class VehicleBoid {
 
     posVecPixels = new Vec2(_x, _y);
     boidPosition = new Vec2(0, 0);
-    targetPosition = new Vec2(0, 0);
+    playerPosition = new Vec2(0, 0);
     offset = new Vec2(0, 0);
 
     makeBody(posVecPixels, bodyType, categoryBits, maskBits);
@@ -85,9 +85,17 @@ class VehicleBoid {
   }
 
 
-  
+
   // called from vehicleLocation > VInMovingState
   void isMoving() {
+    
+    // CALCULATE PLAYER POSITION
+    
+    Vec2 playerPosVecPixels = box2d.getBodyPixelCoord(player.centerSphere.body);
+
+    playerPosVecPixels.subLocal(offset);
+
+    playerPosition = box2d.coordPixelsToWorld(playerPosVecPixels);
 
     // CALCULATE BOID POSITION
 
@@ -99,24 +107,40 @@ class VehicleBoid {
     boidPositionVecPixelsRelativeToTarget = new Vec2(boidPosPixels.x, boidPosPixels.y);
 
     boidPosition = box2d.coordPixelsToWorld(boidPosPixels);
+    
+    ///
+    
+    float playerVehicleDistance = dist(boidPosPixels.x, boidPosPixels.y, playerPosVecPixels.x, playerPosVecPixels.y);
+    
+    if(playerVehicleDistance < player.sensingMinRadius){
+      
+      flee(playerPosition);
+    }
+    
+    //
+    
+    
+    
+    
+    //
 
     separate(agents);
-    
+
     //if(v.checkIfInPlayerArea(player.sensingMaxRadius){
-      
-      
-   //}
+
+
+    //}
 
     //status = "wander";
     //wander();
 
     //previousStatus = status;
   }
-  
+
 
   // Separation
   // Method checks for nearby boids and steers away
-  
+
   void separate (ArrayList<Agent> agents) {
 
     float desiredseparation = box2d.scalarPixelsToWorld(500);
@@ -155,41 +179,41 @@ class VehicleBoid {
         steer.normalize();
         steer.mulLocal(maxforce);
       }
-      
+
       PVector steerPix = new PVector(steer.x, steer.y);
       applyImpulseAnu(steerPix);
     }
   }
-  
-  
+
+
   /*
   void wander() {
-    float wanderR = box2d.scalarPixelsToWorld(50);         // Radius for our "wander circle"
-    float wanderD = box2d.scalarPixelsToWorld(200);         // Distance for our "wander circle"
-    float change = 0.3;
-
-
-    wandertheta += random(-change, change);     // Randomly change wander theta
-
-    Vec2 velocity = body.getLinearVelocity();
-    Vec2 circlepos = new Vec2(velocity.x, velocity.y);
-
-    circlepos.normalize();            // Normalize to get heading
-    circlepos.mulLocal(wanderD);          // Multiply by distance
-    circlepos.addLocal(boidPosition);               // Make it relative to boid's position
-
-    float h = atan2(velocity.y, velocity.x);
-
-    Vec2 circleOffSet = new Vec2(wanderR*cos(wandertheta+h), wanderR*sin(wandertheta+h));
-
-    Vec2 target = circlepos.add(circleOffSet);
-
-    Vec2 desiredVelocity = target.sub(boidPosition);
-
-
-    seek(desiredVelocity);
-  }
-  */
+   float wanderR = box2d.scalarPixelsToWorld(50);         // Radius for our "wander circle"
+   float wanderD = box2d.scalarPixelsToWorld(200);         // Distance for our "wander circle"
+   float change = 0.3;
+   
+   
+   wandertheta += random(-change, change);     // Randomly change wander theta
+   
+   Vec2 velocity = body.getLinearVelocity();
+   Vec2 circlepos = new Vec2(velocity.x, velocity.y);
+   
+   circlepos.normalize();            // Normalize to get heading
+   circlepos.mulLocal(wanderD);          // Multiply by distance
+   circlepos.addLocal(boidPosition);               // Make it relative to boid's position
+   
+   float h = atan2(velocity.y, velocity.x);
+   
+   Vec2 circleOffSet = new Vec2(wanderR*cos(wandertheta+h), wanderR*sin(wandertheta+h));
+   
+   Vec2 target = circlepos.add(circleOffSet);
+   
+   Vec2 desiredVelocity = target.sub(boidPosition);
+   
+   
+   seek(desiredVelocity);
+   }
+   */
 
 
   void applyForce(Vec2 v) {
@@ -198,22 +222,22 @@ class VehicleBoid {
 
   /*
   void applyImpulse(Vec2 steer) {
-    
-
-    applyingImpulse = true;
-
-    float speed = random(30000, 50000);
-
-    Vec2 boidSpeed = new Vec2(steer.x, steer.y);
-    boidSpeed.normalize();
-    boidSpeed.mulLocal(speed);
-
-    body.applyLinearImpulse( boidSpeed, body.getPosition(), true);
-  }
-  */
+   
+   
+   applyingImpulse = true;
+   
+   float speed = random(30000, 50000);
+   
+   Vec2 boidSpeed = new Vec2(steer.x, steer.y);
+   boidSpeed.normalize();
+   boidSpeed.mulLocal(speed);
+   
+   body.applyLinearImpulse( boidSpeed, body.getPosition(), true);
+   }
+   */
 
   void applyImpulseAnu(PVector velocityAnu) {
-    
+
     applyingImpulse = true;
 
     float speed = random(30000, 50000);
@@ -225,25 +249,25 @@ class VehicleBoid {
     body.applyLinearImpulse( boidSpeed, body.getPosition(), true);
   }
 
-  /*
+
   void arrive(Vec2 target) {
     Vec2 desiredVelocity = new Vec2(0, 0);
     desiredVelocity = target.sub(boidPosition);
     seek(desiredVelocity);
   }
-  */
-  
+
+
   void flee(Vec2 target) {
 
     Vec2 desiredVelocity = new Vec2(0, 0);
     desiredVelocity = boidPosition.sub(target);
     seek(desiredVelocity);
   }
-  
+
 
   // A method that calculates and applies a steering force towards a target
   // STEER = DESIRED MINUS VELOCITY
-  
+
   void seek(Vec2 desired) {
 
     Vec2 steer = new Vec2(0, 0);
@@ -263,29 +287,32 @@ class VehicleBoid {
     steer.normalize();
     steer.mulLocal(maxforce);
 
+    PVector steerPix = new PVector(steer.x, steer.y);
+    applyImpulseAnu(steerPix);
+
     //Vec2 velocity = body.getLinearVelocity();
 
     //float impulseFrequency = 50.0;
-    
+
     //applyImpulse(steer);
-    
+
     /*
 
-    if (status == "flee" || status == "arrive") {
-
-      applyImpulse(steer);
-    } else {
-
-      if (velocity.length() <= impulseFrequency) {
-
-        applyImpulse(steer);
-
-        previousVelocityLength = velocity.length();
-      }
-    }
-    */
+     if (status == "flee" || status == "arrive") {
+     
+     applyImpulse(steer);
+     } else {
+     
+     if (velocity.length() <= impulseFrequency) {
+     
+     applyImpulse(steer);
+     
+     previousVelocityLength = velocity.length();
+     }
+     }
+     */
   }
-  
+
 
   void display() {
     // We look at each body and get its screen position
@@ -338,7 +365,7 @@ class VehicleBoid {
 
     // Define a fixture
     FixtureDef fd = new FixtureDef();
-    
+
     fd.filter.groupIndex = -vehicleIndex;
 
     fd.shape = cs;

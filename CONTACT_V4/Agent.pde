@@ -7,12 +7,12 @@ class Agent {
   float maxAir = 100;
   float xoff, yoff;
   float maxSpeed = 5;
-  int reproductionCooldown = 0; // frames before agent can reproduce again
+ // int reproductionCooldown = 0; // frames before agent can reproduce again
   boolean hasGivenBirth = false;
   Environment birthEnvironment = null;
   boolean triedReproduction = false;
   boolean bursted = false;
-  int burstSeekSuppression = 0; // frames where agent ignore seeking force urge post-birth
+  //int burstSeekSuppression = 0; // frames where agent ignore seeking force urge post-birth
   boolean driftingOut = false; // true when healthy agent leaves dying env
   Environment driftingFrom = null;
   int kickTimer = 0;
@@ -69,8 +69,8 @@ class Agent {
 
   // count down all timer flags each frame
   void tickCooldowns() {
-    if (reproductionCooldown > 0) reproductionCooldown--;
-    if (burstSeekSuppression > 0) burstSeekSuppression--;
+    //if (reproductionCooldown > 0) reproductionCooldown--;
+    //if (burstSeekSuppression > 0) burstSeekSuppression--;
     if (tadpoleSuppression > 0) tadpoleSuppression--;
   }
 
@@ -108,7 +108,7 @@ class Agent {
           int randNum = int(random(5));
 
           SoundFile agentSound = agentSounds[randNum];
-          agentSound.play(1);
+          //agentSound.play(1);
         }
       }
 
@@ -138,7 +138,8 @@ class Agent {
   // steers agent towards nearest environment when air drops below 70%
   void applySeekForce(ArrayList<Environment> environments, float sensingRadius, boolean insideAnyEnv) {
 
-    if (air >= maxAir * 0.7 || burstSeekSuppression > 0 || driftingOut) {
+    //if (air >= maxAir * 0.7 || burstSeekSuppression > 0 || driftingOut) {
+    if (air >= maxAir * 0.7 || driftingOut) {
       //if (air >= maxAir * 0.7 ) {
 
       //  println("out");
@@ -147,19 +148,20 @@ class Agent {
     Environment nearest = nearestInRange(environments, sensingRadius);
     if (nearest == null) {
       return;
-    } else {
-      println("nearest ", nearest);
-    }
+    } 
 
     PVector toEnv = PVector.sub(nearest.position, position);
     float distToEnv = toEnv.mag();
 
     float nearestHealth = nearest.energy / nearest.maxEnergy;
+    
+    Vec2 nearTarget = new Vec2(nearest.position.x, nearest.position.y);
+    v.centerBoid.arrive(nearTarget);
 
     if (distToEnv < nearest.radius * 0.7) {
-
-      //println("nearest.radius * 0.7");
-
+      
+      println("nearest.radius * 0.7");
+        /*
       // to avoid getting stuck at the core
       // agent can get stuck at the centre because seek force is the weakest there
       // if it is barely moving, we give it a small push away from the core
@@ -175,6 +177,7 @@ class Agent {
         driftingOut = true;
         driftingFrom = nearest;
       }
+      */
       // slow down an aim for the boundary during seeking
     } else if (distToEnv < nearest.radius * 1.1) {
 
@@ -247,7 +250,7 @@ class Agent {
   }
 
   //--------------------------------------------------------------
-
+  /*
   // when birth happens all agents get pushed outside the env with a burst
   void applyBirthBurst(ArrayList<Environment> environments) {
     for (Environment e : environments) {
@@ -267,6 +270,7 @@ class Agent {
       if (!e.birthBurst) bursted = false;
     }
   }
+  */
 
   //--------------------------------------------------------------
 
@@ -329,7 +333,7 @@ class Agent {
     applyMovement();
     applySeekForce(environments, config.sensingRadius, insideAnyEnv);
     applyDriftForce(config.sensingRadius);
-    applyBirthBurst(environments);
+    //applyBirthBurst(environments);
     applyPhysics(agents, config.sepDist, config.sepForce, insideAnyEnv);
     //wrapEdges();
     air -= config.drainRate;

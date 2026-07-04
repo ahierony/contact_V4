@@ -138,7 +138,7 @@ class Player {
     //borderRadiusMin = (unit_w*unitRowMax)*0.4;
     //borderRadiusMax = (unit_w*unitRowMin) * 0.6;
     
-    sensingMinRadius = 500;
+    sensingMinRadius = 750;
 
     if (fullScale) {
       sensingMaxRadius = (unit_w*unitRowMax)*0.1;

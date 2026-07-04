@@ -170,8 +170,7 @@ class Bg_Unit {
     } else {
       agentIndex = agents.size();
     }
-    //int agentIndex = agents.size() +1;
-    println("agentIndex unit", agentIndex);
+
     agent = new Agent(randomPos.x, randomPos.y, vehicleColorNum, true, "DYNAMIC", index, player, agentIndex);
     agents.add(agent);
   }

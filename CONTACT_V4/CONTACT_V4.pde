@@ -157,8 +157,9 @@ boolean isSwitchingSides = false;
 
 Collision collision;
 
-int stages;
-int currentStage;
+//int worldStages;
+int currentWorldStage;
+int worldStagePlaying;
 
 //*********************************************************************
 // AUDIO
@@ -174,6 +175,11 @@ SoundFile[] worldSounds;
 SoundFile[] eventSounds;
 
 SoundFile currentWorldSound;
+
+boolean soundTransition;
+
+float fadeRate = 0.01;
+float soundAmp = 0.2;
 
 /*
 SoundFile eye_push;
@@ -240,8 +246,8 @@ void setup() {
   debugMode = false;
   screengrab = false;
   showDistance = false;
-  playSoundContactV4 = false;
-  fullScale = false;
+  playSoundContactV4 = true;
+  fullScale = true;
   //playSound = false; // enables sound // current sound until Woohun updates
   //audioIsPlaying = false; // new sound by woohun not ready yet
   //*********************************************************************
@@ -252,9 +258,6 @@ void setup() {
   }
 
   frameRate(30);
-
-  stages = 5;
-  currentStage = 2;
 
   //*************** OSCP5 SOUND ***************************************
 
@@ -337,7 +340,7 @@ void setupSounds() {
    SoundFile[] eventSounds;
    */
 
-  worldSounds = new SoundFile[stages];
+  worldSounds = new SoundFile[5];
 
   worldSounds[0] = new SoundFile(this, "../../MUSIC/World/world_A.mp3");
   worldSounds[1] = new SoundFile(this, "../../MUSIC/World/world_B.mp3");
@@ -345,7 +348,13 @@ void setupSounds() {
   worldSounds[3] = new SoundFile(this, "../../MUSIC/World/world_D.mp3");
   worldSounds[4] = new SoundFile(this, "../../MUSIC/World/world_E.mp3");
 
-  currentWorldSound = worldSounds[currentStage];
+  worldStagePlaying = 0;
+  currentWorldSound = worldSounds[worldStagePlaying];
+  currentWorldSound.play();
+  currentWorldSound.amp(0.2);
+  soundTransition = false;
+
+  println("play");
 
   agentSounds = new SoundFile[5];
 
@@ -355,15 +364,11 @@ void setupSounds() {
   agentSounds[3] = new SoundFile(this, "../../MUSIC/Agent_Sounds/agent_D.mp3");
   agentSounds[4] = new SoundFile(this, "../../MUSIC/Agent_Sounds/agent_E.mp3");
 
-  currentWorldSound.amp(0.5);
-  //currentWorldSound.play();
+
   //currentWorldSound.loop();
 
 
   //worldSounds = new SoundFile[stages];
-
-
-
 
   /*
   backgroundSounds = new SoundFile[9];
@@ -385,8 +390,154 @@ void setupSounds() {
 }
 
 //--------------------------------------------------------------
+/*
+void fadeSound(SoundFile sound) {
+ 
+ if (soundAmp > 0) {
+ 
+ soundAmp -= fadeRate;
+ currentWorldSound.amp(soundAmp);
+ } else {
+ soundTransition = false;
+ }
+ 
+ println("soundAmp ", soundAmp);
+ }
+ */
+
+//--------------------------------------------------------------
 
 void updateSounds() {
+  /*
+  if (soundTransition) {
+   fadeSound(currentWorldSound);
+   }
+   */
+
+
+
+  println("worldStagePlaying ", worldStagePlaying);
+  println("currentWorldStage ", currentWorldStage);
+  /*
+   println("soundTransition ", soundTransition);
+   
+   println("currentWorldSound.duration() ", currentWorldSound.duration());
+   println("currentWorldSound.position() ", currentWorldSound.position());
+   */
+
+  //if(currentWorldSound.duration() - 5)
+
+
+  if (currentWorldStage != worldStagePlaying) {
+
+    println("pause");
+
+    //
+    currentWorldSound.pause();
+
+    worldStagePlaying = currentWorldStage;
+    currentWorldSound = worldSounds[worldStagePlaying];
+    currentWorldSound.play();
+    currentWorldSound.amp(0.2);
+    currentWorldSound.loop();
+
+    /*
+    currentWorldSound = worldSounds[worldStagePlaying];
+     currentWorldSound.play();
+     currentWorldSound.amp(0.2);
+     currentWorldSound.loop();
+     */
+
+    /*
+   SoundFile file1 = currentWorldSound;
+     SoundFile file2;
+     
+     //println("worldStagePlaying ", worldStagePlaying);
+     //println("currentWorldStage ", currentWorldStage);
+     println("transition ******************");
+     
+     Env env1;
+     env1 = new Env(this);
+     env1.play(file1, 0, 0, .2, 5);
+     //currentWorldSound.cue(0);
+     
+     worldStagePlaying = currentWorldStage;
+     file2 = worldSounds[worldStagePlaying];
+     file2.play();
+     file2.amp(0.2);
+     currentWorldSound = file2;
+     */
+  }
+
+
+
+  /*
+  if (currentWorldSound.position() >= currentWorldSound.duration()-5) {
+   
+   if (soundTransition) {
+   
+   println("loop ******************");
+   
+   //SoundFile file1 = currentWorldSound;
+   
+   
+   //worldSounds[worldStagePlaying] = currentWorldSound;
+   
+   SoundFile file1 = worldSounds[0];
+   //SoundFile file2 = worldSounds[0];
+   
+   //file2.cue(0);
+   
+   // loop sound
+   println("envelope");
+   Env env1;
+   env1 = new Env(this);
+   env1.play(currentWorldSound, 0, 0, .2, 5);
+   file1.cue(0);
+   
+   //currentWorldSound = worldSounds[worldStagePlaying];
+   //currentWorldSound.cue(0);
+   
+   
+   //currentWorldSound = worldSounds[worldStagePlaying];
+   file1.cue(0);
+   file1.play();
+   file1.amp(0.2);
+   
+   currentWorldSound = file1;
+   
+   soundTransition = false;
+   }
+   } else {
+   
+   soundTransition = true;
+   }
+   */
+
+
+
+
+  /*
+  currentWorldStage = 1;
+   currentWorldSound = worldSounds[currentWorldStage-1];
+   currentWorldSound.play();
+   currentWorldSound.amp(0.2);
+   */
+
+
+  /*
+
+   if (!currentWorldSound.isPlaying()) {
+   
+   println("currentWorldStage ", currentWorldStage);
+   
+   currentWorldSound = worldSounds[currentWorldStage];
+   currentWorldSound.amp(0.5);
+   currentWorldSound.play();
+   }
+   */
+
+
 
   /*
 
@@ -504,9 +655,6 @@ void draw() {
    }
    */
 
-  if (playSoundContactV4)
-    updateSounds();
-
   if (recordSVG) {
     // Note that #### will be replaced with the frame number. Fancy!
     beginRecord(SVG, "../SVG/frame-####.svg");
@@ -596,7 +744,7 @@ void draw() {
     //background(0, 0, 19);
 
     float avgHealth = avgEnvironmentHealth();
-    drawBackground(avgHealth);
+    currentWorldStage = drawBackground(avgHealth);
 
     if (!recordSVG) {
 
@@ -634,7 +782,7 @@ void draw() {
           drawFrameRate();
         } else {
           drawFrame();
-          //drawFrameRate();
+          drawFrameRate();
           showRemainingAgentsNum();
           //noCursor();
         }
@@ -746,6 +894,9 @@ void draw() {
    }
    */
 
+  if (playSoundContactV4)
+    updateSounds();
+
   if (scrollbar) data.display();
 } // draw
 
@@ -777,35 +928,37 @@ void updateAgents() {
       a.update(config, agents, environments);
       //a.update(data.drainSlider.getPos(), agents, environments, data.separationDistSlider.getPos(), data.separationForceSlider.getPos(), data.sensingRadiusSlider.getPos());
     }
-    if (a.dead()) {
-      if (a.v.location.getState() == a.v.location.vInMovingState) {
-        a.v.die();
-      }
-    }
   }
-    
-    /*
-  for (int i = agents.size()-1; i >= 0; i--) { // iterate backwards so when we remove dead agent, indices don't shift
-    Agent a = agents.get(i);
-    a.maxSpeed = config.maxSpeed;
-    a.update(config, agents, environments);
-    a.draw();
-    for (Environment e : environments) {
-      // agent can only reproduce if it is in the core and there is no cooldown from prev reproduction
-      // no other agent should be reproducing there and it hasn't tried reproducing this visit
-      if (e.containsCore(a.position) && a.reproductionCooldown == 0 && !e.coreOccupied && !a.triedReproduction) {
-        tryReproduce(a, e); //only one reproduction per frame
-        break;
-      } else if (e.contains(a.position)) {
-        refillAir(a, e);
-      }
-    }
-    if (a.dead()) {
-      agents.remove(i); // remove agents from agents ArrayList if it ran out of air or health dropped to 0
-    }
-  }
-  */
 
+  for (int i = 0; i < agents.size(); i++) {
+    Agent a = agents.get(i);
+    if (a.dead()) {
+      a.v.killBlob();
+      agents.remove(i);
+    }
+  }
+
+  /*
+  for (int i = agents.size()-1; i >= 0; i--) { // iterate backwards so when we remove dead agent, indices don't shift
+   Agent a = agents.get(i);
+   a.maxSpeed = config.maxSpeed;
+   a.update(config, agents, environments);
+   a.draw();
+   for (Environment e : environments) {
+   // agent can only reproduce if it is in the core and there is no cooldown from prev reproduction
+   // no other agent should be reproducing there and it hasn't tried reproducing this visit
+   if (e.containsCore(a.position) && a.reproductionCooldown == 0 && !e.coreOccupied && !a.triedReproduction) {
+   tryReproduce(a, e); //only one reproduction per frame
+   break;
+   } else if (e.contains(a.position)) {
+   refillAir(a, e);
+   }
+   }
+   if (a.dead()) {
+   agents.remove(i); // remove agents from agents ArrayList if it ran out of air or health dropped to 0
+   }
+   }
+   */
 }
 
 //--------------------------------------------------------------
@@ -1050,7 +1203,7 @@ void showRemainingAgentsNum() {
   textSize(18);
   //int len = vehicles.size();
   //String numTxt = str(len);
-  text(collision.agentsRemaining, width-50, 30);
+  text(agents.size(), width-50, 30);
 }
 //--------------------------------------------------------------
 
@@ -1244,6 +1397,10 @@ void drawCorner() {
 // Use a keypress so thousands of files aren't created
 void mousePressed() {
 
+  //soundTransition = true;
+
+  currentWorldSound.pause();
+
   //recordSVG = true;
 }
 
@@ -1272,30 +1429,30 @@ float avgEnvironmentHealth() {
 //--------------------------------------------------------------
 
 // draws background color based on average environment health
-void drawBackground(float avgHealth) {
+int drawBackground(float avgHealth) {
   colorMode(HSB, 360, 100, 100);
   float hue;
   int stage;
 
   if (avgHealth > 0.90) {
     hue = 210; // Blue
-    stage = 1;
+    stage = 0;
   } else if (avgHealth > 0.70) {
     float t = map(avgHealth, 0.70, 0.90, 0.0, 1.0);
     hue = lerp(150, 210, t); // Blue to bluish-green to green
-    stage = 2;
+    stage = 1;
   } else if (avgHealth > 0.50) {
     float t = map(avgHealth, 0.50, 0.70, 0.0, 1.0);
     hue = lerp(45, 150, t); // Green to yellow to yellowish orange
-    stage = 3;
+    stage = 2;
   } else if (avgHealth > 0.21) {
     float t = map(avgHealth, 0.21, 0.50, 0.0, 1.0);
     hue = lerp(0, 45, t); // Orange to red
-    stage = 4;
+    stage = 3;
   } else {
     float t = map(avgHealth, 0.12, 0.21, 0.0, 1.0);
     hue = lerp(350, 360, t); // Red to violet to bluish-violet
-    stage = 5;
+    stage = 4;
   }
 
   background(hue, 65, 70);
@@ -1306,6 +1463,8 @@ void drawBackground(float avgHealth) {
   textAlign(LEFT);
   textSize(13);
   text("BG Stage: " + stage + "  AvgHealth: " + nf(avgHealth, 1, 2), 20, 380);
+
+  return stage;
 }
 
 //--------------------------------------------------------------
