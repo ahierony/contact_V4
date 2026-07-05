@@ -108,7 +108,8 @@ class Agent {
           int randNum = int(random(5));
 
           SoundFile agentSound = agentSounds[randNum];
-          //agentSound.play(1);
+          agentSound.play();
+          agentSound.amp(0.5);
         }
       }
 

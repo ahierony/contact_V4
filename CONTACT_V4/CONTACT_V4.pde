@@ -160,6 +160,7 @@ Collision collision;
 
 int currentWorldStage;
 int worldStagePlaying;
+boolean playWorldSounds;
 
 //*********************************************************************
 // AUDIO
@@ -247,7 +248,8 @@ void setup() {
   screengrab = false;
   showDistance = false;
   playSoundContactV4 = true;
-  fullScale = true;
+  playWorldSounds = false;
+  fullScale = false;
   //playSound = false; // enables sound // current sound until Woohun updates
   //audioIsPlaying = false; // new sound by woohun not ready yet
   //*********************************************************************
@@ -267,8 +269,10 @@ void setup() {
   //*******************************************************************
   // contact v4 sounds
 
-  if (playSoundContactV4)
-    setupSounds();
+  if (playSoundContactV4){
+    setupAgentSounds();
+    if(playWorldSounds) setupWorldSounds();
+  }
 
   //*******************************************************************
 
@@ -331,14 +335,18 @@ void setup() {
 
 // contact v4 sounds
 
-void setupSounds() {
-  /*
-  SoundFile[] agentSounds;
-   SoundFile[][] environmentsBaseSounds;
-   SoundFile[][] environmentsMuffledSounds;
-   SoundFile[] worldSounds;
-   SoundFile[] eventSounds;
-   */
+void setupAgentSounds() {
+
+  agentSounds = new SoundFile[5];
+
+  agentSounds[0] = new SoundFile(this, "../../MUSIC/Agent_Sounds/agent_A.mp3");
+  agentSounds[1] = new SoundFile(this, "../../MUSIC/Agent_Sounds/agent_B.mp3");
+  agentSounds[2] = new SoundFile(this, "../../MUSIC/Agent_Sounds/agent_C.mp3");
+  agentSounds[3] = new SoundFile(this, "../../MUSIC/Agent_Sounds/agent_D.mp3");
+  agentSounds[4] = new SoundFile(this, "../../MUSIC/Agent_Sounds/agent_E.mp3");
+}
+
+void setupWorldSounds() {
 
   worldSounds = new SoundFile[5];
 
@@ -349,211 +357,27 @@ void setupSounds() {
   worldSounds[4] = new SoundFile(this, "../../MUSIC/World/world_E.mp3");
 
   worldStagePlaying = 0;
-  currentWorldSound = worldSounds[worldStagePlaying];
-  currentWorldSound.play();
-  currentWorldSound.amp(0.5);
-  soundTransition = false;
+  //currentWorldSound = worldSounds[worldStagePlaying];
+  worldSounds[worldStagePlaying].play();
+  worldSounds[worldStagePlaying].amp(0.2);
+  worldSounds[worldStagePlaying].loop();
 
-  println("play");
-
-  agentSounds = new SoundFile[5];
-
-  agentSounds[0] = new SoundFile(this, "../../MUSIC/Agent_Sounds/agent_A.mp3");
-  agentSounds[1] = new SoundFile(this, "../../MUSIC/Agent_Sounds/agent_B.mp3");
-  agentSounds[2] = new SoundFile(this, "../../MUSIC/Agent_Sounds/agent_C.mp3");
-  agentSounds[3] = new SoundFile(this, "../../MUSIC/Agent_Sounds/agent_D.mp3");
-  agentSounds[4] = new SoundFile(this, "../../MUSIC/Agent_Sounds/agent_E.mp3");
-
-
-  currentWorldSound.loop();
-
-
-  //worldSounds = new SoundFile[stages];
-
-  /*
-  backgroundSounds = new SoundFile[9];
-   
-   for (int i=0; i < backgroundSounds.length; i++) {
-   backgroundSounds[i] = new SoundFile(this, "../../SOUNDS/background" + i + ".mp3");
-   }
-   
-   int randomBackgroundSound = int(random(0, backgroundSounds.length));
-   //println("randomBackgroundSound ", randomBackgroundSound);
-   currentBackgroundSound = backgroundSounds[randomBackgroundSound];
-   currentBackgroundSound.amp(0.5);
-   currentBackgroundSound.play();
-   switchBackgroundSound = true;
-   
-   p_touch_v_audio = new SoundFile(this, "../../SOUNDS/p_touch_v.mp3");
-   p_touch_v_audio.amp(1.0);
-   */
 }
 
 //--------------------------------------------------------------
-/*
-void fadeSound(SoundFile sound) {
- 
- if (soundAmp > 0) {
- 
- soundAmp -= fadeRate;
- currentWorldSound.amp(soundAmp);
- } else {
- soundTransition = false;
- }
- 
- println("soundAmp ", soundAmp);
- }
- */
 
-//--------------------------------------------------------------
-
-void updateSounds() {
-  /*
-  if (soundTransition) {
-   fadeSound(currentWorldSound);
-   }
-   */
-
-
-
-  //println("worldStagePlaying ", worldStagePlaying);
-  //println("currentWorldStage ", currentWorldStage);
-  /*
-   println("soundTransition ", soundTransition);
-   
-   println("currentWorldSound.duration() ", currentWorldSound.duration());
-   println("currentWorldSound.position() ", currentWorldSound.position());
-   */
-
-  //if(currentWorldSound.duration() - 5)
-
+void updateWorldSounds() {
 
   if (currentWorldStage != worldStagePlaying) {
 
-    println("pause");
-
-    //
-    currentWorldSound.pause();
+    worldSounds[worldStagePlaying].pause();
 
     worldStagePlaying = currentWorldStage;
-    currentWorldSound = worldSounds[worldStagePlaying];
-    currentWorldSound.play();
-    currentWorldSound.amp(0.5);
-    currentWorldSound.loop();
-
-    /*
-    currentWorldSound = worldSounds[worldStagePlaying];
-     currentWorldSound.play();
-     currentWorldSound.amp(0.2);
-     currentWorldSound.loop();
-     */
-
-    /*
-   SoundFile file1 = currentWorldSound;
-     SoundFile file2;
-     
-     //println("worldStagePlaying ", worldStagePlaying);
-     //println("currentWorldStage ", currentWorldStage);
-     println("transition ******************");
-     
-     Env env1;
-     env1 = new Env(this);
-     env1.play(file1, 0, 0, .2, 5);
-     //currentWorldSound.cue(0);
-     
-     worldStagePlaying = currentWorldStage;
-     file2 = worldSounds[worldStagePlaying];
-     file2.play();
-     file2.amp(0.2);
-     currentWorldSound = file2;
-     */
+    //currentWorldSound = worldSounds[worldStagePlaying];
+    worldSounds[worldStagePlaying].play();
+    worldSounds[worldStagePlaying].amp(0.5);
+    worldSounds[worldStagePlaying].loop();
   }
-
-
-
-  /*
-  if (currentWorldSound.position() >= currentWorldSound.duration()-5) {
-   
-   if (soundTransition) {
-   
-   println("loop ******************");
-   
-   //SoundFile file1 = currentWorldSound;
-   
-   
-   //worldSounds[worldStagePlaying] = currentWorldSound;
-   
-   SoundFile file1 = worldSounds[0];
-   //SoundFile file2 = worldSounds[0];
-   
-   //file2.cue(0);
-   
-   // loop sound
-   println("envelope");
-   Env env1;
-   env1 = new Env(this);
-   env1.play(currentWorldSound, 0, 0, .2, 5);
-   file1.cue(0);
-   
-   //currentWorldSound = worldSounds[worldStagePlaying];
-   //currentWorldSound.cue(0);
-   
-   
-   //currentWorldSound = worldSounds[worldStagePlaying];
-   file1.cue(0);
-   file1.play();
-   file1.amp(0.2);
-   
-   currentWorldSound = file1;
-   
-   soundTransition = false;
-   }
-   } else {
-   
-   soundTransition = true;
-   }
-   */
-
-
-
-
-  /*
-  currentWorldStage = 1;
-   currentWorldSound = worldSounds[currentWorldStage-1];
-   currentWorldSound.play();
-   currentWorldSound.amp(0.2);
-   */
-
-
-  /*
-
-   if (!currentWorldSound.isPlaying()) {
-   
-   println("currentWorldStage ", currentWorldStage);
-   
-   currentWorldSound = worldSounds[currentWorldStage];
-   currentWorldSound.amp(0.5);
-   currentWorldSound.play();
-   }
-   */
-
-
-
-  /*
-
-   if (!currentBackgroundSound.isPlaying()) {
-   
-   if (switchBackgroundSound) {
-   
-   int randomBackgroundSound = int(random(0, backgroundSounds.length));
-   currentBackgroundSound = backgroundSounds[randomBackgroundSound];
-   switchBackgroundSound = false;
-   currentBackgroundSound.play();
-   }
-   } else {
-   switchBackgroundSound = true;
-   }
-   */
 }
 
 //--------------------------------------------------------------
@@ -894,8 +718,9 @@ void draw() {
    }
    */
 
-  if (playSoundContactV4)
-    updateSounds();
+  if (playSoundContactV4){
+    if(playWorldSounds) updateWorldSounds();
+  }
 
   if (scrollbar) data.display();
 } // draw

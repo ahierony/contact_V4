@@ -10,6 +10,8 @@ class Environment {
   boolean birthBurst = false;
   int burstTimer = 0;
 
+  PApplet parentApp;
+
   Vehicle v;
 
   int stages;
@@ -21,13 +23,15 @@ class Environment {
   // sound
   SoundFile[] baseSounds;
   SoundFile[] muffledSounds;
-  SoundFile currentSound;
+  //SoundFile currentSound;
 
 
 
   //--------------------------------------------------------------
 
   Environment(float x, float y, int _colorAngle, boolean _inMotion, String type_, int unitNum_, Player p, int vIndex, PApplet app) {
+
+    parentApp = app;
 
     position = new PVector(x, y);
     //radius = r;
@@ -39,7 +43,7 @@ class Environment {
       radius = unit_w * 0.7;
     }
 
-    index = vIndex + 1;
+    index = vIndex; //vIndex + 1;
 
     v = new Vehicle(x, y, _colorAngle, _inMotion, type_, unitNum_, p, this);
 
@@ -59,7 +63,7 @@ class Environment {
     v.run(agents, environments);
 
     currentStage = getStageNum();
-    stagePlaying = currentStage;
+    //stagePlaying = currentStage;
 
     if (playSoundContactV4) {
 
@@ -87,8 +91,8 @@ class Environment {
     muffledSounds[3] = new SoundFile(app, "../../MUSIC/Environments_Muffled/environment_muffled_" + index + "D.mp3");
     muffledSounds[4] = new SoundFile(app, "../../MUSIC/Environments_Muffled/environment_muffled_" + index + "E.mp3");
 
-    currentSound = baseSounds[stagePlaying];
-    currentSound.pause();
+    //currentSound = baseSounds[stagePlaying];
+    baseSounds[stagePlaying].pause();
   }
 
   //--------------------------------------------------------------
@@ -96,16 +100,24 @@ class Environment {
   void updateSounds() {
 
 
-    if (v.playerInDistanceZone) {
+    if (v.playerInDistanceZone) { // update stage sound
 
-      stagePlaying = currentStage;
-      currentSound = baseSounds[stagePlaying];
+      if (stagePlaying != currentStage) {
+        baseSounds[stagePlaying].pause();
+        stagePlaying = currentStage;
+      }
+      //currentSound = baseSounds[stagePlaying];
 
-      if (v.playerInBreathingZone) {
+      if (v.playerInBreathingZone) {  // update stage sound
+
+        if (stagePlaying != currentStage) {
+          muffledSounds[stagePlaying].pause();
+          stagePlaying = currentStage;
+        }
 
         float d;
 
-        if (baseSounds[stagePlaying].isPlaying()) {
+        if (baseSounds[stagePlaying].isPlaying()) { // turn off
 
           baseSounds[stagePlaying].pause();
           d = baseSounds[stagePlaying].position();
@@ -114,7 +126,7 @@ class Environment {
           d = 0;
         }
 
-        if (!muffledSounds[stagePlaying].isPlaying()) {
+        if (!muffledSounds[stagePlaying].isPlaying()) { //turn on
 
           //println("play environment sound");
 
@@ -127,16 +139,25 @@ class Environment {
 
         float dm;
 
-        if (muffledSounds[stagePlaying].isPlaying()) {
+        if (muffledSounds[stagePlaying].isPlaying()) { // turn off
 
           muffledSounds[stagePlaying].pause();
           dm = muffledSounds[stagePlaying].position();
-        } else {
-
+        } else { // muffled sound wasn't playing
           dm = 0;
+          /*
+          if (!baseSounds[stagePlaying].isPlaying()) {
+           
+           
+           Env env1;
+           env1 = new Env(parentApp);
+           env1.play(baseSounds[stagePlaying], 0, 0, .2, 5);
+           }
+           */
         }
 
-        if (!baseSounds[stagePlaying].isPlaying()) {
+
+        if (!baseSounds[stagePlaying].isPlaying()) { // turn on
 
           //println("play environment sound");
 
@@ -148,11 +169,15 @@ class Environment {
       }
     } else { // not in distance zone
 
-      if (baseSounds[stagePlaying].isPlaying()) {
+      if (stagePlaying != currentStage) {
+        baseSounds[stagePlaying].pause();
+        stagePlaying = currentStage;
+      }
+      
+      if (baseSounds[stagePlaying].isPlaying()) { // turn off
 
         baseSounds[stagePlaying].pause();
-       
-      } 
+      }
 
       //println("stop environment sound");
     }
