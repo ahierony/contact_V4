@@ -162,6 +162,8 @@ int currentWorldStage;
 int worldStagePlaying;
 boolean playWorldSounds;
 
+boolean displaySensingRadii;
+
 //*********************************************************************
 // AUDIO
 //*********************************************************************
@@ -247,9 +249,10 @@ void setup() {
   debugMode = false;
   screengrab = false;
   showDistance = false;
-  playSoundContactV4 = true;
-  playWorldSounds = false;
-  fullScale = false;
+  playSoundContactV4 = false;
+  playWorldSounds = true;
+  fullScale = true;
+  displaySensingRadii = false;
   //playSound = false; // enables sound // current sound until Woohun updates
   //audioIsPlaying = false; // new sound by woohun not ready yet
   //*********************************************************************
@@ -269,9 +272,9 @@ void setup() {
   //*******************************************************************
   // contact v4 sounds
 
-  if (playSoundContactV4){
+  if (playSoundContactV4) {
     setupAgentSounds();
-    if(playWorldSounds) setupWorldSounds();
+    if (playWorldSounds) setupWorldSounds();
   }
 
   //*******************************************************************
@@ -361,7 +364,6 @@ void setupWorldSounds() {
   worldSounds[worldStagePlaying].play();
   worldSounds[worldStagePlaying].amp(0.2);
   worldSounds[worldStagePlaying].loop();
-
 }
 
 //--------------------------------------------------------------
@@ -469,15 +471,15 @@ void draw() {
   updateConfig();
 
   // TRAIL RECORDING STARTS
-  /*
+
   if (player.lung.getState() == player.lung.emptyState) {
-   
-   if (fadeAnimationIsOver()) {
-   
-   recordSVG = true;
-   }
-   }
-   */
+
+    if (fadeAnimationIsOver()) {
+
+      recordSVG = true;
+    }
+  }
+
 
   if (recordSVG) {
     // Note that #### will be replaced with the frame number. Fancy!
@@ -708,18 +710,18 @@ void draw() {
   // TRAIL RECORDING ENDS
   //if (player.lung.getState() == player.lung.emptyState) {
 
-  /*
-  if (player.lung.breath.movement == "empty" || collision.agentsRemaining == 0) {
-   
-   if (fadeAnimationIsOver()) {
-   
-   recordSVG = true;
-   }
-   }
-   */
 
-  if (playSoundContactV4){
-    if(playWorldSounds) updateWorldSounds();
+  if (player.lung.breath.movement == "empty" || agents.size() == 0) {
+
+    if (fadeAnimationIsOver()) {
+
+      recordSVG = true;
+    }
+  }
+
+
+  if (playSoundContactV4) {
+    if (playWorldSounds) updateWorldSounds();
   }
 
   if (scrollbar) data.display();

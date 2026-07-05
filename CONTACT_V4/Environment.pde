@@ -93,6 +93,7 @@ class Environment {
 
     //currentSound = baseSounds[stagePlaying];
     baseSounds[stagePlaying].pause();
+
   }
 
   //--------------------------------------------------------------
@@ -173,7 +174,7 @@ class Environment {
         baseSounds[stagePlaying].pause();
         stagePlaying = currentStage;
       }
-      
+
       if (baseSounds[stagePlaying].isPlaying()) { // turn off
 
         baseSounds[stagePlaying].pause();
@@ -314,7 +315,7 @@ class Environment {
   // teal when healthy, purple when dying
   float[] getMembraneColor(float healthRatio) {
     float decay = 1.0 - pow(healthRatio, 3.0);
-    float hue = map(decay, 0, 1, 190, 310);
+    float hue = map(v.colorWheelAngle, 0, 1, 190, 310);
     float sat = map(decay, 0, 1, 22, 72);
     float bri = map(decay, 0, 1, 88, 28);
     return new float[]{hue, sat, bri};
@@ -404,7 +405,8 @@ class Environment {
 
   // Environemnt is teal when healthy and purple when depleted
   void display(float sensingRadius) {
-    drawSensingRing(sensingRadius);
+    if(displaySensingRadii) drawSensingRing(sensingRadius);
+    
     float healthRatio = energy / maxEnergy;
     drawMembrane(healthRatio);
     //drawCore(healthRatio);
@@ -452,7 +454,22 @@ class Environment {
 
     if (random(1) < (energy / maxEnergy)) {
       //coreOccupied = true;
-      energy -= 100;
+      energy -= 50;
+      energy = max(energy, 0);
+      //a.hasGivenBirth = true;
+      //a.birthEnvironment = e;
+      //Agent child = a.reproduce(e);
+      //agents.add(child);
+      //a.reproductionCooldown = 300;
+      //e.triggerBirthBurst();
+    }
+  }
+  
+  void alterEnergyAfterTouchingPlayer() {
+
+    if (random(1) < (energy / maxEnergy)) {
+      //coreOccupied = true;
+      energy += 50;
       energy = max(energy, 0);
       //a.hasGivenBirth = true;
       //a.birthEnvironment = e;

@@ -184,6 +184,8 @@ class Collision {
 
             //killVehicle(vNum);
             e.v.collided();
+            
+            e.alterEnergyAfterTouchingPlayer();
 
             //vehicleRemaining--;
 

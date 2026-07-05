@@ -374,9 +374,9 @@ class VehicleBoid {
     fd.filter.maskBits = _maskBits;
     // Parameters that affect physics
 
-    fd.density = 1;
+    fd.density = 2;
     fd.friction = 0.3;
-    fd.restitution = 0.5;
+    fd.restitution = 0.2;
 
     body.createFixture(fd);
 

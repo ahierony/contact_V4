@@ -338,7 +338,7 @@ class Agent {
     applyPhysics(agents, config.sepDist, config.sepForce, insideAnyEnv);
     //wrapEdges();
     air -= config.drainRate;
-    if (air <= 0) println("agent dead");
+    //if (air <= 0) println("agent dead");
     //updateReproductionFlags(environments);
   }
 

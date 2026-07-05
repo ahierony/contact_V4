@@ -31,7 +31,7 @@ class Bg_Unit {
 
   // Constructor
   //Bg_Unit(float tempX, float tempY, boolean _containsVehicle, int _index) {
-  Bg_Unit(float tempX, float tempY, boolean _containsAgent, boolean _containsEnvironment, int _index, PApplet app) {
+  Bg_Unit(float tempX, float tempY, boolean _containsAgent, boolean _containsEnvironment, int _index, PApplet app, color vCol) {
 
     pos = new PVector(tempX, tempY);
     posStatic = new PVector(tempX, tempY);
@@ -43,13 +43,13 @@ class Bg_Unit {
     if (_containsAgent) {
       containsAgent = true;
       containsVehicle = true;
-      createAgent();
+      createAgent(vCol);
     }
 
     if (_containsEnvironment) {
       containsEnvironment = true;
       containsVehicle = true;
-      createEnvironment(app);
+      createEnvironment(app, vCol);
     }
 
     /*
@@ -76,9 +76,9 @@ class Bg_Unit {
     
      */
 
-    overlap = false;
+    //overlap = false;
 
-    readyToCreateAgent = false;
+    //readyToCreateAgent = false;
 
     //Vec2 pPos = box2d.getBodyPixelCoord(player.centerSphere.body);
 
@@ -141,11 +141,12 @@ class Bg_Unit {
 
   // CODE FOR VEHICLE ********************************************
 
-  void createAgent() {
+  void createAgent(color aCol) {
 
     float vehicleRadius_w = ((unit_w*.3)*0.5)*0.7;
     float vehicleRadius_h = ((unit_h*.3)*0.5)*0.7;
-    int vehicleColorNum = int(random(0, 360)); // 0, 45, 90, 135, 180, 225, 270, 315
+    //int vehicleColorNum = int(random(0, 360)); // 0, 45, 90, 135, 180, 225, 270, 315
+    int vehicleColorNum = aCol;
 
     PVector unitPos = new PVector(pos.x, pos.y);
 
@@ -175,16 +176,18 @@ class Bg_Unit {
     agents.add(agent);
   }
 
-  void createEnvironment(PApplet app) {
+  void createEnvironment(PApplet app, color eCol) {
 
     float vehicleRadius_w = ((unit_w*.3)*0.5)*0.7;
     float vehicleRadius_h = ((unit_h*.3)*0.5)*0.7;
     
-    
+    /*
     int[] possibleColors = {0, 45, 90, 135, 180, 225, 270, 315};
     int randomCol = int(random(possibleColors.length));
     int vehicleColorNum = possibleColors[randomCol];
+    */
     //int vehicleColorNum = int(random(0, 360)); // 0, 45, 90, 135, 180, 225, 270, 315
+    int vehicleColorNum = eCol;
 
     PVector unitPos = new PVector(pos.x, pos.y);
 

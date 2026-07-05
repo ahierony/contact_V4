@@ -3,7 +3,30 @@ TODO LIST
 
 ************** IN PROGRESS ********************
 
+- block environment animation when not in focus
+- remove dead vehicles // done
+
+- work on applyImpulse and status identification between anu code and vehicle boid code
+
+- implement functions from new environment class > spikes // done
+- implement functions from new agent class > sensing radius etc...
+	- vehicle sensing radius detection > impact on vehicle movement
+-
+- at office: player impact on environment positive / negative
+- vehicle impact on environment: only when entering. Not after birth
+
+- environment stays same color / vehicle changes on collision / is able to refill lung but then gets kicked out
+
+
+
 @@ player contact with environment: 
+
+
+
+
+- fix vehicleBoid multiple impulses calls
+
+- player refill / collsion > consequence
 
 - sensing radius becomes a state > make sure it gets detected
 - vehicle / player detection (separate)

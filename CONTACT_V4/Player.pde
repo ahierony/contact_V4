@@ -524,8 +524,8 @@ class Player {
 
     // trailLeft.display();
     // trailRight.display();
-
-    displaySensingRadius();
+    
+    if(displaySensingRadii) displaySensingRadius();
   
     displayBlob();
 

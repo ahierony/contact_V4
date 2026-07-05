@@ -80,8 +80,10 @@ class Vehicle {
 
   int colorAngleSwitchPlayer;
   int colorAngleSwitchVehicle;
+  
   int baseSwitchPlayer;
   int baseSwitchVehicle;
+  //int baseSwitch;
 
   Player player;
 
@@ -203,10 +205,10 @@ class Vehicle {
 
     otherBreathingVehicleComingClose = false;
 
-    baseSwitchPlayer = 30;
-    baseSwitchVehicle = 360; // 90;
-    colorAngleSwitchPlayer = baseSwitchPlayer; // 50; //45;
-    colorAngleSwitchVehicle = baseSwitchVehicle; //90; //5; //7; //15; //7;
+    //baseSwitchPlayer = 30;
+    //baseSwitchVehicle = 360; // 90;
+    //colorAngleSwitchPlayer = baseSwitchPlayer; // 50; //45;
+    //colorAngleSwitchVehicle = baseSwitchVehicle; //90; //5; //7; //15; //7;
 
     repellOther = false;
     isColliding = false;
@@ -293,20 +295,13 @@ class Vehicle {
 
     startedRipples = false;
 
-
-
     inOtherVehicleBreathingZone = false;
     inOtherVehicleDistanceZone = false;
     otherVehicleInDistanceZone = false;
     otherVehicleInBreathingZone = false;
 
     otherBreathingVehicleComingClose = false;
-
-    baseSwitchPlayer = 30;
-    baseSwitchVehicle = 360; // 90;
-    colorAngleSwitchPlayer = baseSwitchPlayer; // 50; //45;
-    colorAngleSwitchVehicle = baseSwitchVehicle; //90; //5; //7; //15; //7;
-
+    
     repellOther = false;
 
     initialize();
@@ -438,6 +433,8 @@ class Vehicle {
        }
        */
 
+      updateBaseSWitchPlayer();
+      updateBaseSWitchVehicle();
 
       location.update();
 
@@ -546,6 +543,59 @@ class Vehicle {
   // APPLY FORCES
   // ********************************************************
 
+  void updateBaseSWitchPlayer() {
+
+    int currentSwitch = thisEnvironment.getStageNum();
+
+    switch(currentSwitch) {
+
+    case 0:
+      baseSwitchPlayer = 360;
+      break;
+    case 1:
+      baseSwitchPlayer = 280;
+      break;
+    case 2:
+      baseSwitchPlayer = 200;
+      break;
+    case 3:
+      baseSwitchPlayer = 120;
+      break;
+    case 4:
+      baseSwitchPlayer = 40;
+      break;
+    default:
+      break;
+    }
+  }
+  
+   void updateBaseSWitchVehicle() {
+
+    int currentSwitch = thisEnvironment.getStageNum();
+
+    switch(currentSwitch) {
+
+    case 0:
+      baseSwitchVehicle = 360;
+      break;
+    case 1:
+      baseSwitchVehicle = 320;
+      break;
+    case 2:
+      baseSwitchVehicle = 280;
+      break;
+    case 3:
+      baseSwitchVehicle = 240;
+      break;
+    case 4:
+      baseSwitchVehicle = 200;
+      break;
+    default:
+      break;
+    }
+  }
+
+
   //--------------------------------------------------------------
 
   void applyZoneForceOnVehicle(Vehicle otherV) {
@@ -578,6 +628,8 @@ class Vehicle {
     } else {
       colorAngleSwitchPlayer = baseSwitchPlayer;
     }
+
+    //println("baseSwitch ", baseSwitchPlayer);
 
     float gravity = calculateGravity(player.colorWheelAngle, colorWheelAngle, 100000, colorAngleSwitchPlayer); // 100000 // 75000
 
@@ -654,13 +706,13 @@ class Vehicle {
 
     //if (isPlayerInZone(player, thisAgent.sensingRadius)) { // player is in distance zone
     if (isPlayerInZone(player, zone.distanceRadius)) { // player is in distance zone
-   
+
       playerInDistanceZone = true;
 
       // to make sure body type of revolute joint stays dynamic for attraction / repulsion
 
       if (isPlayerInZone(player, zone.radius)) { // player is in breathing zone
-      
+
         playerInBreathingZone = true;
       } else {
 
@@ -684,7 +736,7 @@ class Vehicle {
     Vec2 playerPosPix = box2d.getBodyPixelCoord(p.centerSphere.body);//b.centerBoid.body.getWorldCenter();
 
     float d_pix = dist(vehiclePosPix.x, vehiclePosPix.y, playerPosPix.x, playerPosPix.y);
-    
+
     if (d_pix < zoneRadius + p.blobRadius) { //  - p.blobRadius
 
       colorWithinDistance = colorBreathing;

@@ -26,6 +26,7 @@ class Bg {
 
   //chatgpt
   int[] arr = new int[25];
+  color[] randomCols = new color[arr.length];
 
   //--------------------------------------------------------------
   // Constructor
@@ -53,7 +54,11 @@ class Bg {
     wrapLimit_h = (unit_h * val_h) + (unit_h * 0.5);
 
     //createRandomPlacementOfElements2();
-    createCustomLayout();
+    if (fullScale) {
+      createCustomLayout();
+      assignUniqueColorsToEnvironments();
+      assignUniqueColorsToAgents();
+    }
 
     int index = 0;
     for (int j=0; j<unitLength; j++) {
@@ -62,23 +67,26 @@ class Bg {
         // CUSTOM NODES FULL LAYOUT
         if (fullScale) {
           if (arr[index] == 0) {
-            units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, true, index, app);
+            units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, true, index, app, randomCols[index]);
           } else if (arr[index] == 1) {
-            units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), true, false, index, app);
+            units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), true, false, index, app, randomCols[index]);
           } else {
-            units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, false, index, app);
+            units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, false, index, app, randomCols[index]);
           }
         } else {
 
           // 2 NODES
+          int[] possibleColors = {0, 45, 90, 135, 180, 225, 270, 315};
+          int randomCol = int(random(possibleColors.length));
+          int vehicleColorNum = possibleColors[randomCol];
 
           // conditional logic to set amount of elements in the grid (1 element at position 0:0)
           if (i == 0 && j == 0) {
-            units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, true, index, app);
+            units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, true, index, app, vehicleColorNum);
           } else if (i == 0 && j == 1 ) {
-            units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), true, false, index, app);
+            units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), true, false, index, app, vehicleColorNum);
           } else {
-            units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, false, index, app);
+            units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, false, index, app, vehicleColorNum);
           }
         }
 
@@ -105,12 +113,10 @@ class Bg {
          }
          */
 
-        
-        index++;
 
+        index++;
       }
     }
-
   }
   //--------------------------------------------------------------
 
@@ -147,7 +153,56 @@ class Bg {
     }
   }
 
- 
+
+  void assignUniqueColorsToEnvironments() {
+
+    int[] possibleColors = {0, 45, 90, 135, 180, 225, 270, 315};
+    IntList pool = new IntList();
+    for (int i = 0; i < 8; i++) pool.append(possibleColors[i]);
+
+    for (int i = 0; i < randomCols.length; i++) {
+      randomCols[i] = -1;
+    }
+
+    for (int i = 0; i < arr.length; i++) {
+      if (arr[i] == 0) {
+
+        int randIndex = int(random(pool.size()));
+        randomCols[i] = pool.get(randIndex);
+        pool.remove(randIndex);
+      }
+    }
+    
+    //println(randomCols);
+
+  }
+  
+    void assignUniqueColorsToAgents() {
+
+    int[] possibleColors = {0, 45, 90, 135, 180, 225, 270, 315};
+    IntList pool = new IntList();
+    for (int i = 0; i < 8; i++) pool.append(possibleColors[i]);
+    
+    /*
+    for (int i = 0; i < randomCols.length; i++) {
+      randomCols[i] = -1;
+    }
+    */
+
+    for (int i = 0; i < arr.length; i++) {
+      if (arr[i] == 1) {
+
+        int randIndex = int(random(pool.size()));
+        randomCols[i] = pool.get(randIndex);
+        pool.remove(randIndex);
+      }
+    }
+    
+    println(randomCols);
+
+  }
+
+
 
   //*******************************************************
   // UPDATE
