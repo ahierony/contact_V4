@@ -25,13 +25,15 @@ class Environment {
   SoundFile[] muffledSounds;
   //SoundFile currentSound;
 
-
+  int baseHue;
 
   //--------------------------------------------------------------
 
   Environment(float x, float y, int _colorAngle, boolean _inMotion, String type_, int unitNum_, Player p, int vIndex, PApplet app) {
 
     parentApp = app;
+    
+    baseHue = _colorAngle;
 
     position = new PVector(x, y);
     //radius = r;
@@ -310,47 +312,12 @@ class Environment {
 
   //--------------------------------------------------------------
 
-  // calculates the hue, sat, brightness based on how healthy the env is
-  // teal when healthy, purple when dying
   float[] getMembraneColor(float healthRatio) {
     float decay = 1.0 - pow(healthRatio, 3.0);
-    float hue = map(v.colorWheelAngle, 0, 1, 190, 310);
-    float sat = map(decay, 0, 1, 22, 72);
-    float bri = map(decay, 0, 1, 88, 28);
-    return new float[]{hue, sat, bri};
+    float sat = map(decay, 0, 1, 80, 60); // vivid when healthy, slight washed out when dying
+    float bri = 85;
+    return new float[]{baseHue, sat, bri};
   }
-
-  //--------------------------------------------------------------
-  /*
-  // draws the wobbly noisy membrane using current stage values
-   void drawMembrane(float healthRatio) {
-   float[] sv = getStageValues(healthRatio);
-   float nAmp = sv[0]; // how far the membrane distorts outward/inward
-   float nInt = sv[1]; // how many spikes around the ring
-   float displayRadius = radius * sv[2]; // slightly smaller when dying
-   float resolution = sv[3]; // how many points draw the shape
-   float stageSpeed = sv[4]; // how fast the membrane animates
-   
-   float[] col = getMembraneColor(healthRatio);
-   float hue = col[0];
-   float sat = col[1];
-   float bri = col[2];
-   
-   colorMode(HSB, 360, 100, 100);
-   strokeWeight(1.2);
-   stroke(hue, sat + 8, bri - 12);
-   fill(hue, sat, bri, 150);
-   beginShape();
-   for (float a = 0; a <= TWO_PI; a += TWO_PI / resolution) {
-   float nVal = 1.0 + map(noise(cos(a) * nInt + noiseOffset, sin(a) * nInt + noiseOffset + 500, noiseT), 0.0, 1.0, -nAmp, nAmp);
-   float x = position.x + cos(a) * displayRadius * nVal;
-   float y = position.y + sin(a) * displayRadius * nVal;
-   vertex(x, y);
-   }
-   endShape(CLOSE);
-   noiseT += stageSpeed;
-   }
-   */
 
   //--------------------------------------------------------------
   /*
@@ -412,6 +379,7 @@ class Environment {
   }
 
   //--------------------------------------------------------------
+
   // draws the wobbly noisy membrane using current stage values
   void drawMembrane(float healthRatio) {
     float[] sv = getStageValues(healthRatio);
