@@ -185,7 +185,11 @@ class Collision {
             //killVehicle(vNum);
             e.v.collided();
             
-            e.alterEnergyAfterTouchingPlayer();
+            
+            
+            e.v.isReadyForCollision = false;
+            
+            //e.alterEnergyAfterTouchingPlayer(true);
 
             //vehicleRemaining--;
 
@@ -193,7 +197,7 @@ class Collision {
 
             //println("vehicles remaining ", vehicleRemaining);
 
-            println("player collided");
+            //println("player collided");
 
             //v.playerInDistanceZone = false;
             //player.location.setState(player.location.pLocMovingState);

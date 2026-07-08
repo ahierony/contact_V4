@@ -98,7 +98,7 @@ class Player {
   //float borderRadiusMax;
   float sensingMaxRadius;
   float sensingMinRadius;
-  
+
 
   //Track data
   boolean checkForVehiclesMovingInOutofPlayerArea;
@@ -137,7 +137,7 @@ class Player {
 
     //borderRadiusMin = (unit_w*unitRowMax)*0.4;
     //borderRadiusMax = (unit_w*unitRowMin) * 0.6;
-    
+
     sensingMinRadius = 750;
 
     if (fullScale) {
@@ -416,23 +416,23 @@ class Player {
   //--------------------------------------------------------------
   /*
   void updateInVehicleDistanceZone() {
-
-    // first entrance into zone
-    if (!enteredTheVehicleZone) {
-
-      enteredTheVehicleZone = true;
-
-      if (leftEye.pupilState == "locked") {
-        leftEye.resetEye();
-      }
-
-      if (rightEye.pupilState == "locked") {
-        rightEye.resetEye();
-      }
-    }
-    jointSphere.body.setType(BodyType.DYNAMIC);
-  }
-*/
+   
+   // first entrance into zone
+   if (!enteredTheVehicleZone) {
+   
+   enteredTheVehicleZone = true;
+   
+   if (leftEye.pupilState == "locked") {
+   leftEye.resetEye();
+   }
+   
+   if (rightEye.pupilState == "locked") {
+   rightEye.resetEye();
+   }
+   }
+   jointSphere.body.setType(BodyType.DYNAMIC);
+   }
+   */
 
   //--------------------------------------------------------------
 
@@ -440,25 +440,31 @@ class Player {
 
     // values for portable mini sticks
 
-    /*
-    left_minRangeX = 400;
-     left_maxRangeX = 530;
-     left_minRangeY = 450;
-     left_maxRangeY = 600;
-     right_minRangeX = 450;
-     right_maxRangeX = 560;
-     right_minRangeY = 450;
-     right_maxRangeY = 560;
-     */
+    if (joysticksArePortable) {
 
-    left_minRangeX = 0;
-    left_maxRangeX = 1023;
-    left_minRangeY = 0;
-    left_maxRangeY = 1023;
-    right_minRangeX = 0;
-    right_maxRangeX = 1023;
-    right_minRangeY = 0;
-    right_maxRangeY = 1023;
+      left_minRangeX = 210;
+      left_maxRangeX = 820;
+      
+      left_minRangeY = 190;
+      left_maxRangeY = 840;
+      
+      right_minRangeX = 220;
+      right_maxRangeX = 780;
+      
+      right_minRangeY = 210;
+      right_maxRangeY = 780;
+      
+    } else {
+
+      left_minRangeX = 0;
+      left_maxRangeX = 1023;
+      left_minRangeY = 0;
+      left_maxRangeY = 1023;
+      right_minRangeX = 0;
+      right_maxRangeX = 1023;
+      right_minRangeY = 0;
+      right_maxRangeY = 1023;
+    }
 
 
     if (leftEye.coltxt == "red") {
@@ -475,42 +481,7 @@ class Player {
       eyesAreInverted = true;
     }
   }
-  /*
-  void updateInputGamePad(float yawLeft, float rollLeft, float yawRight, float rollRight) {
-   
-   if (leftEye.coltxt == "red") {
-   
-   leftEye.updateInputGamePad(yawLeft, rollLeft);
-   rightEye.updateInputGamePad(yawRight, rollRight);
-   
-   eyesAreInverted = false;
-   } else if (leftEye.coltxt == "green") {
-   
-   leftEye.updateInputGamePad(yawRight, rollRight);
-   rightEye.updateInputGamePad(yawLeft, rollLeft);
-   
-   eyesAreInverted = true;
-   }
-   }
-   */
-  /*
-  void updateInputSensor(float yawLeft, float rollLeft, float pitchLeft, float yawRight, float rollRight, float pitchRight) {
-   
-   if (leftEye.coltxt == "red") {
-   
-   leftEye.updateInputSensor(yawLeft, rollLeft, pitchLeft);
-   rightEye.updateInputSensor(yawRight, rollRight, pitchRight);
-   
-   eyesAreInverted = false;
-   } else if (leftEye.coltxt == "green") {
-   
-   leftEye.updateInputSensor(yawRight, rollRight, pitchRight);
-   rightEye.updateInputSensor(yawLeft, rollLeft, pitchRight);
-   
-   eyesAreInverted = true;
-   }
-   }
-   */
+
 
   // ********************************************************
   // DISPLAY
@@ -524,9 +495,9 @@ class Player {
 
     // trailLeft.display();
     // trailRight.display();
-    
-    if(displaySensingRadii) displaySensingRadius();
-  
+
+    if (displaySensingRadii) displaySensingRadius();
+
     displayBlob();
 
     lung.display();
@@ -538,7 +509,7 @@ class Player {
     displayEyes();
   }
 
-  
+
   //--------------------------------------------------------------
 
   void displaySensingRadius() {

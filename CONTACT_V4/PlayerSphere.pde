@@ -57,9 +57,9 @@ class PlayerSphere {
     fd.shape = cs;
 
     // Parameters that affect physics
-    fd.density = 1;
-    fd.friction = 0.1;
-    fd.restitution = 0.1;
+    fd.density = 2;
+    fd.friction = 0.3;
+    fd.restitution = 0.2;
 
     // for collision avoidance
     fd.filter.categoryBits = cB; // who you are

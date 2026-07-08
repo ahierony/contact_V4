@@ -452,9 +452,11 @@ class Vehicle {
       // after collision with either vehicle or player, zone repells until nobody is in the zone
       if (repellOther) {
 
-        if (!otherVehicleInBreathingZone && !playerInBreathingZone) {
+        if (!otherVehicleInBreathingZone && player.location.getState() != player.location.pLocVehicleZoneState) {
+        //if (!otherVehicleInBreathingZone && !playerInBreathingZone) {
           repellOther = false;
           isColliding = false;
+          isReadyForCollision = true;
           zone.setState(zone.fullState);
         }
       }
@@ -546,27 +548,32 @@ class Vehicle {
   void updateBaseSWitchPlayer() {
 
     int currentSwitch = thisEnvironment.getStageNum();
+    
+    //baseSwitchPlayer = 30;
+    
+    
 
     switch(currentSwitch) {
 
     case 0:
-      baseSwitchPlayer = 360;
+      baseSwitchPlayer = 300;
       break;
     case 1:
-      baseSwitchPlayer = 280;
+      baseSwitchPlayer = 250;
       break;
     case 2:
       baseSwitchPlayer = 200;
       break;
     case 3:
-      baseSwitchPlayer = 120;
+      baseSwitchPlayer = 150;
       break;
     case 4:
-      baseSwitchPlayer = 40;
+      baseSwitchPlayer = 100;
       break;
     default:
       break;
     }
+    
   }
   
    void updateBaseSWitchVehicle() {

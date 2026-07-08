@@ -443,12 +443,13 @@ class Environment {
   }
 
   //--------------------------------------------------------------
-
+  
   void alterEnergy() {
 
     energy -= 5; //0.5;
     energy = max(energy, 0);
   }
+  
 
   void alterEnergyAfterGivingBirth() {
 
@@ -465,19 +466,28 @@ class Environment {
     }
   }
   
-  void alterEnergyAfterTouchingPlayer() {
+  void alterEnergyAfterTouchingPlayer(boolean playerContact) {
+    
+    float energyAmount = 500;
+    
+    if(playerContact){
+      println("increase energy ");
+      energyAmount *= 1;
+    } else {
+      println("decrease energy ");
+      energyAmount *= -1;
+    }
+   
+
+    println("energy / maxEnergy ", energy / maxEnergy);
 
     if (random(1) < (energy / maxEnergy)) {
-      //coreOccupied = true;
-      energy += 50;
+    
+      energy += energyAmount;
       energy = max(energy, 0);
-      //a.hasGivenBirth = true;
-      //a.birthEnvironment = e;
-      //Agent child = a.reproduce(e);
-      //agents.add(child);
-      //a.reproductionCooldown = 300;
-      //e.triggerBirthBurst();
     }
+    
+    println("energy ", energy);
   }
 
   /*

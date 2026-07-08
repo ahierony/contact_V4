@@ -184,23 +184,14 @@ boolean soundTransition;
 float fadeRate = 0.01;
 float soundAmp = 0.2;
 
-/*
-SoundFile eye_push;
- 
- SoundFile[] backgroundSounds;
- boolean switchBackgroundSound;
- SoundFile currentBackgroundSound;
- 
- SoundFile p_enter_v_zone_audio;
- SoundFile p_touch_v_audio;
- */
 
 //
 
 
 boolean debugMode;
-boolean protoSticks;
+//boolean protoSticks;
 boolean showDistance;
+boolean joysticksArePortable;
 
 /*
 int backgroundColorNum;
@@ -248,11 +239,12 @@ void setup() {
   //protoSticks = false;
   debugMode = false;
   screengrab = false;
-  showDistance = false;
+  //showDistance = false;
   playSoundContactV4 = false;
   playWorldSounds = true;
-  fullScale = true;
+  fullScale = false;
   displaySensingRadii = false;
+  joysticksArePortable = false;
   //playSound = false; // enables sound // current sound until Woohun updates
   //audioIsPlaying = false; // new sound by woohun not ready yet
   //*********************************************************************
@@ -1060,6 +1052,8 @@ void serialEvent(Serial port)
       incoming_leftJoystick_yAxis = vals[1];
       incoming_rightJoystick_xAxis = vals[2];
       incoming_rightJoystick_yAxis = vals[3];
+      
+      //println("incoming_leftJoystick_xAxis ", incoming_leftJoystick_xAxis);
 
       newData = true;
     }
@@ -1086,10 +1080,6 @@ public void getUserInput() {
 
 void setupDeviceMode() {
 
-  //switch (inputControls) {
-
-  //case JOYSTICKS:
-
   newData = false;
 
   // Serial port setup.
@@ -1098,27 +1088,6 @@ void setupDeviceMode() {
   port = new Serial(this, Serial.list()[2], 9600);
 
   port.bufferUntil('\n');
-
-  //break;
-  /*
-  case GAMEPAD:
-   
-   // * GAMEPAD
-   control = ControlIO.getInstance(this);
-   // Find a gamepad that matches the configuration file. To match with any
-   // connected device remove the call to filter.
-   //gpad = control.filter(GCP.GAMEPAD).getMatchedDevice("xbox_gamepad_two_sticks");
-   gpad = control.filter(GCP.GAMEPAD).getMatchedDevice("PS4 controller");
-   if (gpad == null) {
-   println("No suitable device configured");
-   System.exit(-1); // End the program NOW!
-   }
-   
-   break;
-   */
-
-  //break;
-  //}
 }
 
 
@@ -1145,15 +1114,7 @@ boolean updateDeviceMode() {
 
       return false;
     }
-    /*
-  case GAMEPAD:
-     
-     getUserInput(); // Poll the input device
-     
-     player.updateInputGamePad(leftStickXpos, leftStickYpos, rightStickXpos, rightStickYpos);
-     
-     return true;
-     */
+   
   case KEYBOARD:
 
     return true;

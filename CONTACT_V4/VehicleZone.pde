@@ -44,7 +44,7 @@ class VehicleZone {
     //radiusMax = bgTrailBox.rectSize * 0.5;
     //println("radiusMax ", radiusMax);
     radiusMin = vehicle.blobRadius+5;
-    distanceRadius = radiusMax;
+    //distanceRadius = radiusMax;
     originalRadiusMax = radiusMax;
 
     radius = radiusMax;

@@ -3,7 +3,16 @@ TODO LIST
 
 ************** IN PROGRESS ********************
 
-- block environment animation when not in focus
+- player negative impact when leaving without touching
+- fix collision with player / vehicle and increase / decrease energy
+
+
+- player impact on environment only when leaving (contact or not)
+- vehicle impact on environmet only when leaving (contact or not)??
+
+
+
+- block environment animation when not in focus??
 - remove dead vehicles // done
 
 - work on applyImpulse and status identification between anu code and vehicle boid code

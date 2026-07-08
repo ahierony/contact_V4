@@ -18,7 +18,7 @@ class PlayerLocation {
 
   Vehicle currentVehicle;
 
-  boolean isHit;
+  //boolean isHit;
 
   boolean playerInLungRefillZone;
 
@@ -35,7 +35,7 @@ class PlayerLocation {
 
     setState(pLocMovingState);
 
-    isHit = false;
+    //isHit = false;
     playerInLungRefillZone = false;
   }
 
@@ -99,18 +99,11 @@ class PlayerLocation {
       }
     }
 
-    /*
-    for (Vehicle v : vehicles) {
-      if (v.playerInDistanceZone) {
-        inVehicleDistanceZone = true;
-        if (v.playerInBreathingZone) {
-          inVehicleBreathingZone = true;
-          currentVehicle = v;
-        }
-      }
-    }
-    */
-    
+
+    //println("getState ", getState());
+    //println("pLocMovingState.getReadyToSetState() ", pLocMovingState.getReadyToSetState());
+
+
     // ******************
     // IN SPACE MOVING
     // ******************
@@ -131,68 +124,52 @@ class PlayerLocation {
             setState(pLocVehicleZoneState);
           }
         }
-      } else {
-
-        // THIS CODE COMMENTED OUT FOR CONTACT V3 NO BREATHING STATE FOR PLAYER
-        /*
-        if (player.getLinearVelocity() <= player.minVel ) {
-         
-         if (pLocBreathingState.getReadyToSetState()) {
-         player.jointSphere.body.setType(BodyType.STATIC);
-         setState(pLocBreathingState);
-         }
-         }*/
       }
-
-
-
-      // ******************
-      // IN SPACE BREATHING
-      // ******************
-    } /*else if (getState() == pLocBreathingState) {
-     
-     // check to see if player is picking up speed and transition to moving
-     if (player.lung.getState() != player.lung.emptyState && player.lockedEye == "both") {
-     
-     if (pLocMovingState.getReadyToSetState()) {
-     player.jointSphere.body.setType(BodyType.DYNAMIC);
-     setState(pLocMovingState);
-     player.area.setState(player.area.notBreathingState);
-     }
-     }
-     
-     
-     if (inVehicleBreathingZone) {
-     
-     if (pLocVehicleZoneState.getReadyToSetState()) {
-     {
-     player.jointSphere.body.setType(BodyType.DYNAMIC);
-     setState(pLocVehicleZoneState);
-     }
-     }
-     }
-     // ******************
-     // IN VEHICLE ZONE
-     // ******************
-     }*/
-    else if (getState() == pLocVehicleZoneState) {
+    } else if (getState() == pLocVehicleZoneState) {
 
       // check to see if player is out of vehicle zone and moving
-
+      /*
       if (isHit) {
+       
+       if (player.lung.getState() == player.lung.fullState) {
+       
+       setState(pLocMovingState);
+       }
+       } else {
+      /*
+       if (!inVehicleBreathingZone) {
+       
+       if (pLocMovingState.getReadyToSetState()) {
+       
+       println("out of vehicle zone");
+       
+       setState(pLocMovingState);
+       }
+       }
+       */
+      //}
 
-        if (player.lung.getState() == player.lung.fullState) {
+      if (!inVehicleBreathingZone) {
+
+        println("inVehicleBreathingZone ", inVehicleBreathingZone);
+
+        if (pLocMovingState.getReadyToSetState()) {
+
+          currentVehicle.thisEnvironment.alterEnergyAfterTouchingPlayer(currentVehicle.repellOther);
+
+          //println("currentVehicle repell ", currentVehicle.repellOther);
+
+          /*
+          if(currentVehicle.isColliding){
+           print("increase energy");
+           } else {
+           print("remove energy");
+           }
+           */
+
+          println("out of vehicle zone");
 
           setState(pLocMovingState);
-        }
-      } else {
-
-        if (!inVehicleBreathingZone) {
-
-          if (pLocMovingState.getReadyToSetState()) {
-
-            setState(pLocMovingState);
-          }
         }
       }
     }

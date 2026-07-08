@@ -209,18 +209,11 @@ class Eye {
 
   //--------------------------------------------------------------
 
-  void updateJoystickInput(int _x, int _y, int minRangeX, int maxRangeX, int minRangeY, int maxRangeY) {
-
-    //float minRange = 400 // mini sticks;
-    //float maxRange = 600; // mini sticks;
-    
-    //float minRange = 450; //  0
-    //float maxRange = 600; // 1023
-    
+  void updateJoystickInput(int _x, int _y, int minRangeX, int maxRangeX, int minRangeY, int maxRangeY) {    
       
     sensorX = map(_x, minRangeX, maxRangeX, -eyeOuterRadius + eyeInnerRadius, eyeOuterRadius - eyeInnerRadius);
     sensorY = map(_y, minRangeY, maxRangeY, -eyeOuterRadius + eyeInnerRadius, eyeOuterRadius - eyeInnerRadius);
-
+    
     sensorX = constrain(sensorX, -eyeOuterRadius + eyeInnerRadius, eyeOuterRadius - eyeInnerRadius);
     sensorY = constrain(sensorY, -eyeOuterRadius + eyeInnerRadius, eyeOuterRadius - eyeInnerRadius);
   }
