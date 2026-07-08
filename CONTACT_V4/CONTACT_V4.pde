@@ -1,4 +1,4 @@
-//<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>//
+//<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>//
 
 // needed libraries
 import processing.serial.*;
@@ -160,6 +160,14 @@ enum InputControls
 };
 
 InputControls inputControls;
+
+// NEW STATES
+enum AgentState
+{
+  WANDER, APPROACH, LEAVE;
+};
+
+AgentState agentState;
 
 // SVG
 import processing.svg.*;
@@ -1222,7 +1230,9 @@ int drawBackground(float avgHealth) {
  }
  */
 
+
 //--------------------------------------------------------------
+// ANUSHCKA FUNCTIONS
 
 // holds all simulation parameters in one place instead of passing them around individually
 class SimConfig {
@@ -1237,3 +1247,17 @@ class SimConfig {
   float birthCost;// env energy lost per successful birth
   float birthCooldown; // frames before an agent can reproduce again
 }
+
+//--------------------------------------------------------------
+
+// how close 2 hues are on the color wheel
+// 1.0: same color, 0.5: 90 degs apart, 0.0: opposite color
+float colorMatch(float h1, float h2) {
+  float d = abs(h1 - h2)% 360; // raw angular distance
+  if (d > 180) {
+    d = 360 - d; // around the wheel
+  }
+  return 1.0 - d / 180.0; // convert distance to closeness
+}
+
+//--------------------------------------------------------------

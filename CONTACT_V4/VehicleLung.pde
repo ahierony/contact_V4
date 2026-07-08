@@ -42,16 +42,17 @@ class VehicleLung {
 
   int colorAngle;
 
-  VehicleLung(Agent a) {
+  VehicleLung(Agent a, Vehicle v) {
+    
+    //println("agent ", agent.v);
 
     startInhale = false;
     startExhale = false;
 
-    //agent = a;
     agent = a;
 
     radiusMin  = 32;
-    radiusMax  = 105;
+    radiusMax  = v.radius * 0.7; //105;
 
     radius = radiusMax;
 
@@ -131,7 +132,9 @@ class VehicleLung {
    */
   //--------------------------------------------------------------
 
-  void display() {
+  void display(float _lungHue, float _lungSat, float _lungBri, float _fadeValue, float _lungSize) {
+    
+    // lungHue, lungSat, lungBri, 255 * fade, lungSize
 
     Vec2 pos = box2d.getBodyPixelCoord(agent.v.centerBoid.body);
 
@@ -142,7 +145,7 @@ class VehicleLung {
 
     ellipseMode(RADIUS);
 
-    colorAngle = agent.v.colorWheelAngle;
+    colorAngle = int(agent.agentHue);
 
     /*
     if (getState() == exhaleState) {
@@ -170,10 +173,10 @@ class VehicleLung {
     } else {
 
 
-      fill(colorAngle, agent.v.saturation, agent.v.brightness);
+      fill(_lungHue, _lungSat, _lungBri, _fadeValue);
     }
 
-    circle(0, 0, agent.lungSize);
+    circle(0, 0, _lungSize);
 
     popMatrix();
 

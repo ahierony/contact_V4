@@ -80,7 +80,7 @@ class Vehicle {
 
   int colorAngleSwitchPlayer;
   int colorAngleSwitchVehicle;
-  
+
   int baseSwitchPlayer;
   int baseSwitchVehicle;
   //int baseSwitch;
@@ -270,9 +270,7 @@ class Vehicle {
 
     location = new VehicleLocation(player, thisAgent);
 
-    calibrateLungRadius = 0;
-    lung = new VehicleLung(thisAgent);
-    lung.previousRadius = lung.radiusMax;
+
 
     playerInBreathingZone = false;
     playerInDistanceZone = false;
@@ -301,10 +299,14 @@ class Vehicle {
     otherVehicleInBreathingZone = false;
 
     otherBreathingVehicleComingClose = false;
-    
+
     repellOther = false;
 
     initialize();
+
+    calibrateLungRadius = 0;
+    lung = new VehicleLung(thisAgent, this);
+    lung.previousRadius = lung.radiusMax;
   }
 
   //--------------------------------------------------------------
@@ -453,7 +455,7 @@ class Vehicle {
       if (repellOther) {
 
         if (!otherVehicleInBreathingZone && player.location.getState() != player.location.pLocVehicleZoneState) {
-        //if (!otherVehicleInBreathingZone && !playerInBreathingZone) {
+          //if (!otherVehicleInBreathingZone && !playerInBreathingZone) {
           repellOther = false;
           isColliding = false;
           isReadyForCollision = true;
@@ -548,10 +550,8 @@ class Vehicle {
   void updateBaseSWitchPlayer() {
 
     int currentSwitch = thisEnvironment.getStageNum();
-    
+
     //baseSwitchPlayer = 30;
-    
-    
 
     switch(currentSwitch) {
 
@@ -573,10 +573,9 @@ class Vehicle {
     default:
       break;
     }
-    
   }
-  
-   void updateBaseSWitchVehicle() {
+
+  void updateBaseSWitchVehicle() {
 
     int currentSwitch = thisEnvironment.getStageNum();
 
@@ -669,7 +668,7 @@ class Vehicle {
     if (angleDiff > angleSwitch) {
       //println("go away");
       outcomingForceDirection = -1;
-
+      gravityVal *= 5;
       gravity = map(angleDiff, angleSwitch, 180, 0, gravityVal);
     } else {
       //println("come closer");
@@ -976,7 +975,7 @@ class Vehicle {
   void display() {
 
 
-    if (!inMotion) {
+    if (!inMotion) { // environment
 
       //zone.display();
       //thisEnvironment.display(data.sensingRadiusSlider.getPos(), colorBreathing);
@@ -993,12 +992,14 @@ class Vehicle {
        }
        */
 
-      displayBlob();
-    } else {
+      displayEnvironmentBlob();
+    } else { // agent
 
-      displayBlob();
+      thisAgent.display();
 
-      lung.display();
+      //displayBlob();
+
+      //lung.display();
     }
 
     //displaySpheres();
@@ -1007,7 +1008,7 @@ class Vehicle {
 
   //--------------------------------------------------------------
 
-  void displayBlob() {
+  void displayEnvironmentBlob() {
 
     int many = spheres.size()-1;
 
@@ -1016,6 +1017,47 @@ class Vehicle {
     strokeWeight(sphereRadius*2);
     fill(colorWheelAngle, saturation, brightness, fadeValue);
     stroke(colorWheelAngle, saturation, brightness, fadeValue);
+
+    Vec2 pos;
+    pos = box2d.getBodyPixelCoord(spheres.get(many-1).body);
+    pos.x = int(pos.x);
+    pos.y = int(pos.y);
+
+    curveVertex(pos.x, pos.y); // begin control point
+
+    for (int i = 0; i <= many; i++) {
+      Body b = spheres.get(i).body;
+      // We look at each body and get its screen position
+      pos = box2d.getBodyPixelCoord(b);
+      pos.x = int(pos.x);
+      pos.y = int(pos.y);
+
+      curveVertex(pos.x, pos.y);
+    }
+
+    pos = box2d.getBodyPixelCoord(spheres.get(1).body);
+    pos.x = int(pos.x);
+    pos.y = int(pos.y);
+
+
+    curveVertex(pos.x, pos.y);
+
+    endShape(); // with or without cp,  not use CLOSE
+
+    strokeWeight(2);
+  }
+
+  void displayAgentBlob(float _colorWheelAngle, float _saturation, float _brightness, float _fadeValue) {
+    // agentHue, memSat, memBri, 190 * fade
+
+
+    int many = spheres.size()-1;
+
+    beginShape();
+    noFill();
+    strokeWeight(sphereRadius*2);
+    fill(_colorWheelAngle, _saturation, _brightness, _fadeValue);
+    stroke(_colorWheelAngle, _saturation, _brightness, _fadeValue);
 
     Vec2 pos;
     pos = box2d.getBodyPixelCoord(spheres.get(many-1).body);
