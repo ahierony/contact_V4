@@ -37,21 +37,6 @@ final short MASK_PLAYER = CATEGORY_VEHICLE; //CATEGORY_VEHICLE | CATEGORY_SCENER
 final short MASK_VEHICLE = CATEGORY_PLAYER; //CATEGORY_PLAYER | CATEGORY_SCENERY; // or ~CATEGORY_MONSTER
 
 
-/*********************************************************************
- * NOTE: the X,Y,Z axes fixed to sensor. See data sheet for details. *
- * Here's a diagram from Adafruit forum: https://bit.ly/2stiKgB.     *
- *********************************************************************/
-
-// Euler angles from both SENSORS (in DEGREES): in test setup, 1=left, 2=right.
-/*
-float pitch1 = 0.0;  // sensor 1 rotation about X axis
- float roll1  = 0.0;  // sensor 1 rotation about Y axis
- float yaw1   = 0.0;  // sensor 1 rotation about Z axis
- float pitch2 = 0.0;  // sensor 2 rotation about X axis
- float roll2  = 0.0;  // sensor 2 rotation about Y axis
- float yaw2   = 0.0;  // sensor 2 rotation about Z axis
- */
-
 int incoming_leftJoystick_xAxis;
 int incoming_leftJoystick_yAxis;
 int incoming_rightJoystick_xAxis;
@@ -61,36 +46,6 @@ Serial port;
 Player player;
 
 SimConfig config;
-
-// ********************** keyboard control ****************************************************
-/*
-boolean right_isUp, right_isDown, right_isLeft, right_isRight;
- boolean left_isUp, left_isDown, left_isLeft, left_isRight;
- boolean disableInput;
- */
-
-// ********************** sensor control ****************************************************
-/*
-// * GAMEPAD
- import org.gamecontrolplus.gui.*;
- import org.gamecontrolplus.*;
- import net.java.games.input.*;
- // * GAMEPAD
- 
- // use gamepad as input device
- //boolean gamePadIsOn;
- 
- ControlIO control;
- Configuration config;
- ControlDevice gpad;
- 
- float leftStickXpos = 0.0;
- float leftStickYpos = 0.0;
- float rightStickXpos = 0.0;
- float rightStickYpos = 0.0;
- 
- // * GAMEPAD
- */
 
 float scaleValue = 0.1;
 float minScale = 0.2;
@@ -184,24 +139,10 @@ boolean soundTransition;
 float fadeRate = 0.01;
 float soundAmp = 0.2;
 
-
-//
-
-
 boolean debugMode;
 //boolean protoSticks;
 boolean showDistance;
 boolean joysticksArePortable;
-
-/*
-int backgroundColorNum;
- color backgroundColor;
- Timer backgroundTimer;
- int backgroundCount;
- int backgroundCountBeginning;
- int  backgroundSaturation;
- int backgroundBrightness;
- */
 
 // SCREEN GRAD FOR DOCUMENTATION
 
@@ -235,7 +176,7 @@ void setup() {
 
   //*********************************************************************
   //gamePadIsOn = false;
-  inputControls = InputControls.KEYBOARD; //KEYBOARD; //JOYSTICKS;
+  inputControls = InputControls.JOYSTICKS; //KEYBOARD; //JOYSTICKS;
   //protoSticks = false;
   debugMode = false;
   screengrab = false;
@@ -243,7 +184,7 @@ void setup() {
   playSoundContactV4 = false;
   playWorldSounds = true;
   fullScale = false;
-  displaySensingRadii = false;
+  displaySensingRadii = true;
   joysticksArePortable = false;
   //playSound = false; // enables sound // current sound until Woohun updates
   //audioIsPlaying = false; // new sound by woohun not ready yet
@@ -1052,7 +993,7 @@ void serialEvent(Serial port)
       incoming_leftJoystick_yAxis = vals[1];
       incoming_rightJoystick_xAxis = vals[2];
       incoming_rightJoystick_yAxis = vals[3];
-      
+
       //println("incoming_leftJoystick_xAxis ", incoming_leftJoystick_xAxis);
 
       newData = true;
@@ -1114,7 +1055,7 @@ boolean updateDeviceMode() {
 
       return false;
     }
-   
+
   case KEYBOARD:
 
     return true;
@@ -1193,14 +1134,29 @@ void mousePressed() {
 }
 
 // pulls current slider values into the config object each frame
+/*
+void updateConfig() {
+ config.maxSpeed = data.speedSlider.getPos();
+ config.drainRate = data.drainSlider.getPos();
+ config.refillRate = data.refillSlider.getPos();
+ config.sepDist = data.separationDistSlider.getPos();
+ config.sepForce = data.separationForceSlider.getPos();
+ config.sensingRadius = data.sensingRadiusSlider.getPos();
+ config.regenRate = data.regenRateSlider.getPos();
+ }
+ */
+
 void updateConfig() {
   config.maxSpeed = data.speedSlider.getPos();
   config.drainRate = data.drainSlider.getPos();
   config.refillRate = data.refillSlider.getPos();
-  config.sepDist = data.separationDistSlider.getPos();
-  config.sepForce = data.separationForceSlider.getPos();
   config.sensingRadius = data.sensingRadiusSlider.getPos();
   config.regenRate = data.regenRateSlider.getPos();
+  config.visitCost = data.visitCostSlider.getPos();
+  config.birthCost = data.birthCostSlider.getPos();
+  config.birthCooldown = data.birthCooldownSlider.getPos();
+  config.sepDist = 150;
+  config.sepForce = 7.53;
 }
 
 // ADDED HELPERS
@@ -1277,4 +1233,7 @@ class SimConfig {
   float sensingRadius; // how far agents can detect environments
   float regenRate; // how fast environments recover energy
   float maxSpeed; // max agent speed
+  float visitCost;// env energy lost per refill frame
+  float birthCost;// env energy lost per successful birth
+  float birthCooldown; // frames before an agent can reproduce again
 }

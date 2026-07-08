@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+  <speed>1.54</speed>
+  <drain>0.034700003</drain>
+  <refill>0.5840001</refill>
+  <spawnRate>1900.0001</spawnRate>
+  <sepDist>294.99994</sepDist>
+  <sepForce>7.529996</sepForce>
+  <population>15</population>
+  <regenRate>0.7500001</regenRate>
+  <sensingRadius>2620.0005</sensingRadius>
+</settings>

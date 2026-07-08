@@ -93,7 +93,6 @@ class Environment {
 
     //currentSound = baseSounds[stagePlaying];
     baseSounds[stagePlaying].pause();
-
   }
 
   //--------------------------------------------------------------
@@ -405,8 +404,8 @@ class Environment {
 
   // Environemnt is teal when healthy and purple when depleted
   void display(float sensingRadius) {
-    if(displaySensingRadii) drawSensingRing(sensingRadius);
-    
+    if (displaySensingRadii) drawSensingRing(sensingRadius);
+
     float healthRatio = energy / maxEnergy;
     drawMembrane(healthRatio);
     //drawCore(healthRatio);
@@ -443,13 +442,13 @@ class Environment {
   }
 
   //--------------------------------------------------------------
-  
+
   void alterEnergy() {
 
     energy -= 5; //0.5;
     energy = max(energy, 0);
   }
-  
+
 
   void alterEnergyAfterGivingBirth() {
 
@@ -465,29 +464,36 @@ class Environment {
       //e.triggerBirthBurst();
     }
   }
-  
+
   void alterEnergyAfterTouchingPlayer(boolean playerContact) {
-    
+
     float energyAmount = 500;
-    
-    if(playerContact){
+
+    println("energy before ", energy);
+
+    if (playerContact) {
       println("increase energy ");
       energyAmount *= 1;
+
+      if (random(1) < (energy / maxEnergy)) {
+
+        energy += energyAmount;
+        energy = max(energy, 1);
+      }
     } else {
       println("decrease energy ");
       energyAmount *= -1;
-    }
-   
 
-    println("energy / maxEnergy ", energy / maxEnergy);
+      if (random(1) < (energy / maxEnergy)) {
 
-    if (random(1) < (energy / maxEnergy)) {
-    
-      energy += energyAmount;
-      energy = max(energy, 0);
+        energy += energyAmount;
+        energy = max(energy, 0);
+      }
     }
-    
-    println("energy ", energy);
+
+
+
+    println("energy after ", energy);
   }
 
   /*
