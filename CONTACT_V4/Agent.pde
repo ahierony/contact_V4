@@ -51,6 +51,8 @@ class Agent {
   // ANDREW START
   Vehicle v;
   float lungSize;
+  
+  float drainMultiplier = 1.0; // grows with each birth, parent burns air faster // LOOK INTO
   // ANDREW ENDS
 
   // ANDREW START
@@ -287,12 +289,13 @@ class Agent {
    //updateReproductionFlags(environments);
    }
    */
-
+  
+  /*
   void update(SimConfig config, ArrayList<Agent> agents, ArrayList<Environment> environments) {
     tickCooldowns();
     boolean insideAnyEnv = checkInsideEnv(environments);
     applyMovement();
-    //applyStateBehavior(environments, config.sensingRadius, insideAnyEnv);
+    applyStateBehavior(environments, config.sensingRadius, insideAnyEnv);
     //applyBirthBurst(environments); // LOOK INTO
     applyPhysics(agents, config.sepDist, config.sepForce, insideAnyEnv);
     //bounceEdges();
@@ -303,6 +306,27 @@ class Agent {
 
 
     //applyMovement();
+  }
+  */
+
+  void update(SimConfig config, ArrayList<Agent> agents, ArrayList<Environment> environments) {
+    Vec2 pos;
+    pos = box2d.getBodyPixelCoord(v.centerBoid.body);
+    position.set(pos.x, pos.y);
+    
+    
+    tickCooldowns();
+    boolean insideAnyEnv = checkInsideEnv(environments);
+    applyMovement();
+    applyStateBehavior(environments, config.sensingRadius, insideAnyEnv);
+    //applyBirthBurst(environments); // LOOK INTO
+    applyPhysics(agents, config.sepDist, config.sepForce, insideAnyEnv);
+    //bounceEdges();
+    enforceAvoidBarrier(config.sensingRadius);
+    air -= config.drainRate * drainMultiplier;
+    if (air <= 0) println("agent dead");
+    //updateReproductionFlags(environments); // LOOK INTO
+    noiseT += 0.012;
   }
 
   //--------------------------------------------------------------
@@ -336,19 +360,19 @@ class Agent {
   // child spawns nearby with health scaled to env it was born in
   // born in poor environment results in starting with bad health
   //Agent reproduce(Environment e) {
-    /*
+  /*
     health -= 20;
-    health = max(health, 0);
-    float offsetX = random(-30, 30);
-    float offsetY = random(-30, 30);
-    Agent child = new Agent(position.x + offsetX, position.y + offsetY);
-    float envHealth = e.energy / e.maxEnergy;
-    child.air = map(envHealth, 0, 1, 20, 100);
-    child.reproductionCooldown = 300;
-    child.health = health;
-    child.tadpoleSuppression = 360;
-    return child;
-    */
+   health = max(health, 0);
+   float offsetX = random(-30, 30);
+   float offsetY = random(-30, 30);
+   Agent child = new Agent(position.x + offsetX, position.y + offsetY);
+   float envHealth = e.energy / e.maxEnergy;
+   child.air = map(envHealth, 0, 1, 20, 100);
+   child.reproductionCooldown = 300;
+   child.health = health;
+   child.tadpoleSuppression = 360;
+   return child;
+   */
   //}
 
 
@@ -465,6 +489,8 @@ class Agent {
 
   void displayLung() {
 
+    colorMode(HSB, 360, 100, 100);
+
     // LUNG
 
     float fade = dead() ? deathFade / 60.0 : 1;
@@ -474,14 +500,17 @@ class Agent {
       lungHue = 220;
       lungSat = 80;
       lungBri = 80; // blue: seeking a core
+      //println("blue");
     } else if (agentState == AgentState.LEAVE) {
       lungHue = 6;
       lungSat = 65;
       lungBri = 85; // red: leaving
+      //println("red");
     } else {
       lungHue = 130;
       lungSat = 60;
       lungBri = 70; // green: wandering
+      //println("green");
     }
 
     //// target lung color for current state
@@ -530,23 +559,7 @@ class Agent {
   // three-agentState behavior: wander until env sensed in sensing radius, seek core and leave after visit
   void applyStateBehavior(ArrayList<Environment> environments, float sensingRadius, boolean insideAnyEnv) {
     if (agentState == AgentState.WANDER) {
-      // look for a target i.e. an env that we are not trying to avoid/have just visited
-      // the scoring system helps incase we have a situation where sensing radii for n environments overlap
-      float bestScore = -1;
-      Environment best = null;
-      for (Environment e : environments) {
-        if (e == avoidedEnv) continue;
-        float d = PVector.dist(position, e.position);
-        if (d < sensingRadius * 0.95) {
-          println("ready for approach");
-
-          float score = (e.energy / e.maxEnergy) * (0.3 + 0.7 * colorMatch(agentHue, e.environmentHue));
-          if (score > bestScore) {
-            bestScore = score;
-            best = e;
-          }
-        }
-      }
+      Environment best = findBestEnv(environments, sensingRadius);
       if (best != null) {
         trackedEnv = best;
         agentState = AgentState.APPROACH;
@@ -556,7 +569,6 @@ class Agent {
         agentState = AgentState.WANDER;
         return;
       }
-
       // straight at the core
       PVector seekForce = PVector.sub(trackedEnv.position, position);
       float seekMag = insideAnyEnv ? 2.5 : 7.0;
@@ -568,6 +580,15 @@ class Agent {
         agentState = AgentState.WANDER;
         return;
       }
+
+      // landed in another env's range while exiting, jump straight to approaching it
+      Environment best = findBestEnv(environments, sensingRadius);
+      if (best != null) {
+        trackedEnv = best;
+        agentState = AgentState.APPROACH;
+        return;
+      }
+
       float d = PVector.dist(position, avoidedEnv.position);
       if (d > sensingRadius * 1.5) {
         agentState = AgentState.WANDER;
@@ -579,8 +600,27 @@ class Agent {
       away.setMag(map(d, 0, sensingRadius * 1.5, 3.0, 0.3));
       velocity.add(away);
     }
+  }
 
-    println("agentState ", agentState);
+  //--------------------------------------------------------------
+
+
+  // scan for the best non-avoided env within sensing range, null if none
+  Environment findBestEnv(ArrayList<Environment> environments, float sensingRadius) {
+    float bestScore = -1;
+    Environment best = null;
+    for (Environment e : environments) {
+      if (e == avoidedEnv) continue;
+      float d = PVector.dist(position, e.position);
+      if (d < sensingRadius * 0.95) {
+        float score = (e.energy / e.maxEnergy) * (0.3 + 0.7 * colorMatch(agentHue, e.environmentHue));
+        if (score > bestScore) {
+          bestScore = score;
+          best = e;
+        }
+      }
+    }
+    return best;
   }
 
   //--------------------------------------------------------------
@@ -593,4 +633,20 @@ class Agent {
   }
 
   //--------------------------------------------------------------
+
+  // hard barrier: a wandering agent can never end a frame inside the avoided env's sensing ring
+  void enforceAvoidBarrier(float sensingRadius) {
+    if (agentState != AgentState.WANDER || avoidedEnv == null) return;
+    float barrier = sensingRadius * 1.5; // keep-out zone extends past the sensing ring
+    float d = PVector.dist(position, avoidedEnv.position);
+    if (d < barrier) {
+      PVector out = PVector.sub(position, avoidedEnv.position);
+      if (out.mag() < 1) out = PVector.random2D();
+      out.setMag(barrier); // place exactly on the barrier
+      position = PVector.add(avoidedEnv.position, out);
+      PVector toEnv = PVector.sub(avoidedEnv.position, position).normalize();
+      float inward = velocity.dot(toEnv);
+      if (inward > 0) velocity.sub(PVector.mult(toEnv, inward));
+    }
+  }
 }

@@ -4,9 +4,17 @@ TODO LIST
 ************** IN PROGRESS ********************
 
 
+- make sure LEAVE is happening BUG
+- color of agents based on state (check)
+
+
+- implement new agent state sounds
+- test full installation with mac mini
+
+
 - keep working on 4 vehicle states: in membrane, wander, approach, leave
-- make sure LEAVE is happening
-- make sure birth is happening
+
+- make sure birth is happening // done
 
 
 - player negative impact when leaving without touching

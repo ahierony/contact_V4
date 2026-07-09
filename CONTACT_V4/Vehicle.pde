@@ -360,9 +360,6 @@ class Vehicle {
 
     if (inMotion) { // VEHICLE IS IN MOTION
 
-      println("vehicle state ", location.getState());
-
-
 
       /*
       for (Environment e : environments) {
@@ -559,30 +556,29 @@ class Vehicle {
     int currentSwitch = thisEnvironment.getStageNum();
 
 
-    baseSwitchVehicle = 360;
-
-    /*
     switch(currentSwitch) {
-     
-     case 0:
-     baseSwitchVehicle = 360;
-     break;
-     case 1:
-     baseSwitchVehicle = 320;
-     break;
-     case 2:
-     baseSwitchVehicle = 280;
-     break;
-     case 3:
-     baseSwitchVehicle = 240;
-     break;
-     case 4:
-     baseSwitchVehicle = 200;
-     break;
-     default:
-     break;
-     }
-     */
+
+    case 0:
+      baseSwitchVehicle = 360;
+      break;
+    case 1:
+      baseSwitchVehicle = 320;
+      break;
+    case 2:
+      baseSwitchVehicle = 280;
+      break;
+    case 3:
+      baseSwitchVehicle = 240;
+      break;
+    case 4:
+      baseSwitchVehicle = 200;
+      break;
+    default:
+      break;
+    }
+
+
+     //baseSwitchVehicle = 30;
   }
 
 
@@ -592,6 +588,9 @@ class Vehicle {
 
     if (repellOther) {
       colorAngleSwitchVehicle = 1;
+      
+      agentV.thisAgent.startLeaving(thisEnvironment);
+     
     } else {
       colorAngleSwitchVehicle = baseSwitchVehicle;
     }
@@ -944,7 +943,7 @@ class Vehicle {
 
     repellOther = true;
 
-    //println("collision!");
+    println("collision!");
   }
 
   // ********************************************************
