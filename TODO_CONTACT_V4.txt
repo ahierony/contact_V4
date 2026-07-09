@@ -3,6 +3,12 @@ TODO LIST
 
 ************** IN PROGRESS ********************
 
+
+- keep working on 4 vehicle states: in membrane, wander, approach, leave
+- make sure LEAVE is happening
+- make sure birth is happening
+
+
 - player negative impact when leaving without touching
 - fix collision with player / vehicle and increase / decrease energy
 

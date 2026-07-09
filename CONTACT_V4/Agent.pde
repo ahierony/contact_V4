@@ -61,14 +61,14 @@ class Agent {
   //static final int WANDER = 0, APPROACH = 1, LEAVE = 2;
   //int state = WANDER;
   int deathFade = 60; // fade-out countdown once agent is dead
-  float agentHue;
+  int agentHue;
 
 
   //--------------------------------------------------------------
 
   // ANDREW START
   Agent(float x, float y, int _colorAngle, boolean _inMotion, String type_, int unitNum_, Player p, int vIndex) {
-    
+
     agentHue = _colorAngle;
 
     ellipseMode(RADIUS);
@@ -173,66 +173,6 @@ class Agent {
   }
 
   //--------------------------------------------------------------
-  /*
-  // explain this code anushcka?
-   // steers agent towards nearest environment when air drops below 70%
-   void applySeekForce(ArrayList<Environment> environments, float sensingRadius, boolean insideAnyEnv) {
-   
-   //if (air >= maxAir * 0.7 || burstSeekSuppression > 0 || driftingOut) {
-   if (air >= maxAir * 0.7 || driftingOut) {
-   //if (air >= maxAir * 0.7 ) {
-   
-   //  println("out");
-   return;
-   }
-   Environment nearest = nearestInRange(environments, sensingRadius);
-   if (nearest == null) {
-   return;
-   }
-   
-   PVector toEnv = PVector.sub(nearest.position, position);
-   float distToEnv = toEnv.mag();
-   
-   float nearestHealth = nearest.energy / nearest.maxEnergy;
-   
-   Vec2 nearTarget = new Vec2(nearest.position.x, nearest.position.y);
-   v.centerBoid.arrive(nearTarget);
-   
-   if (distToEnv < nearest.radius * 0.7) {
-   
-   println("nearest.radius * 0.7");
-   
-   // slow down an aim for the boundary during seeking
-   } else if (distToEnv < nearest.radius * 1.1) {
-   
-   //println("nearest.radius * 1.1");
-   
-   toEnv.setMag(nearest.radius * 0.9); // just inside edge
-   PVector target = PVector.add(position, toEnv);
-   PVector seekForce = PVector.sub(target, position);
-   float urgency = map(air, 0, maxAir * 0.5, 1.5, 0.0); // more desperate for air, stronger pull
-   float proximity = map(distToEnv, nearest.radius * 0.7, nearest.radius * 1.1, 0.3, 1.0); // weaker seek force if inside the env already
-   float seekMag = insideAnyEnv ? 2.5 : 7.0;
-   seekForce.setMag(seekMag * proximity);
-   seekForce.mult(urgency);
-   velocity.add(seekForce);
-   } else {
-   
-   //println("nearest.radius ");
-   
-   // if far away full seek force towards env
-   toEnv.setMag(nearest.radius * 0.9);
-   PVector target = PVector.add(position, toEnv);
-   PVector seekForce = PVector.sub(target, position);
-   float urgency = map(air, 0, maxAir * 0.5, 1.5, 0.0);
-   float seekMag = insideAnyEnv ? 2.5 : 7.0;
-   seekForce.setMag(seekMag);
-   seekForce.mult(urgency);
-   velocity.add(seekForce);
-   }
-   }
-   */
-  //--------------------------------------------------------------
 
   Environment nearestInRange(ArrayList<Environment> environments, float sensingRadius) {
 
@@ -254,49 +194,48 @@ class Agent {
   }
 
   //--------------------------------------------------------------
-  // if agent decided to leave a dying env, push it away until it is far enough to stop
-  /*
-  void applyDriftForce(float sensingRadius) {
-   if (!driftingOut || driftingFrom == null) {
-   return;
-   }
-   float distFromDead = PVector.dist(position, driftingFrom.position);
-   if (distFromDead > sensingRadius * 1.5) { // 1.5* radius for clean margin
-   driftingOut = false;
-   driftingFrom = null;
-   return;
-   }
-   // push away from the dying env, force fades out as env recovers past 40% health
-   PVector driftOut = PVector.sub(position, driftingFrom.position); // vector pointing away from env
-   driftOut.normalize();
-   float driftStrength = map(driftingFrom.energy / driftingFrom.maxEnergy, 0, 0.4, 2.5, 0.0); // stops pushing at 40% health
-   driftOut.setMag(driftStrength);
-   velocity.add(driftOut);
-   }
-   */
+
 
   //--------------------------------------------------------------
-  /*
+
   // when birth happens all agents get pushed outside the env with a burst
-   void applyBirthBurst(ArrayList<Environment> environments) {
-   for (Environment e : environments) {
-   float distFromCenter = PVector.dist(position, e.position);
-   if (e.birthBurst && !bursted && distFromCenter < e.radius) {
-   // push agent away from the env centre, stronger the closer it is
-   PVector repel = PVector.sub(position, e.position);
-   repel.normalize();
-   float kickStrength = map(distFromCenter, 0, e.radius, 200, 150);
-   repel.setMag(kickStrength);
-   velocity.add(repel);
-   bursted = true;
-   burstSeekSuppression = 480; // stop seeking for a while after being blasted
-   tadpoleSuppression = 60; // brief wander after birth to avoid sudden conflicts of pull and push
-   kickDecay = 0;
-   }
-   if (!e.birthBurst) bursted = false;
-   }
-   }
-   */
+  void applyBirthBurst(ArrayList<Environment> environments) {
+    for (Environment e : environments) {
+      float distFromCenter = PVector.dist(position, e.position);
+      if (e.birthBurst && !bursted && distFromCenter < e.radius) {
+        // push agent away from the env centre, stronger the closer it is
+        PVector repel = PVector.sub(position, e.position);
+        repel.normalize();
+        float kickStrength = map(distFromCenter, 0, e.radius, 200, 150);
+        repel.setMag(kickStrength);
+        velocity.add(repel);
+        bursted = true;
+        //burstSeekSuppression = 480; // stop seeking for a while after being blasted // ASK ANUSHCKA
+        //tadpoleSuppression = 60; // brief wander after birth to avoid sudden conflicts of pull and push
+        kickDecay = 0;
+      }
+      if (!e.birthBurst) bursted = false;
+    }
+  }
+
+  //--------------------------------------------------------------
+
+  // resets reproduction flag once agent leaves the core
+  // clears birth tracking once agent has left the environment
+
+  void updateReproductionFlags(ArrayList<Environment> environments) {
+    boolean inAnyCore = false;
+    for (Environment e : environments) {
+      if (e.containsCore(position)) inAnyCore = true;
+    }
+    if (!inAnyCore) triedReproduction = false;
+
+    // clear birth tracking once agent has left the environment
+    if (hasGivenBirth && birthEnvironment != null && !birthEnvironment.contains(position)) {
+      hasGivenBirth = false;
+      birthEnvironment = null;
+    }
+  }
 
   //--------------------------------------------------------------
 
@@ -321,25 +260,6 @@ class Agent {
     //v.centerBoid.applyImpulseAnu(velocity);
   }
 
-  //--------------------------------------------------------------
-
-  // resets reproduction flag once agent leaves the core
-  // clears birth tracking once agent has left the environment
-  /*
-  void updateReproductionFlags(ArrayList<Environment> environments) {
-   boolean inAnyCore = false;
-   for (Environment e : environments) {
-   if (e.containsCore(position)) inAnyCore = true;
-   }
-   if (!inAnyCore) triedReproduction = false;
-   
-   // clear birth tracking once agent has left the environment
-   if (hasGivenBirth && birthEnvironment != null && !birthEnvironment.contains(position)) {
-   hasGivenBirth = false;
-   birthEnvironment = null;
-   }
-   }
-   */
 
   //--------------------------------------------------------------
   /*
@@ -372,7 +292,7 @@ class Agent {
     tickCooldowns();
     boolean insideAnyEnv = checkInsideEnv(environments);
     applyMovement();
-    applyStateBehavior(environments, config.sensingRadius, insideAnyEnv);
+    //applyStateBehavior(environments, config.sensingRadius, insideAnyEnv);
     //applyBirthBurst(environments); // LOOK INTO
     applyPhysics(agents, config.sepDist, config.sepForce, insideAnyEnv);
     //bounceEdges();
@@ -380,8 +300,8 @@ class Agent {
     if (air <= 0) println("agent dead");
     //updateReproductionFlags(environments); // LOOK INTO
     noiseT += 0.012;
-    
-    
+
+
     //applyMovement();
   }
 
@@ -411,24 +331,26 @@ class Agent {
 
 
   //--------------------------------------------------------------
-  /*
+
   // Parent pays 20 to reproduce
-   // child spawns nearby with health scaled to env it was born in
-   // born in poor environment results in starting with bad health
-   Agent reproduce(Environment e) {
-   health -= 20;
-   health = max(health, 0);
-   float offsetX = random(-30, 30);
-   float offsetY = random(-30, 30);
-   Agent child = new Agent(position.x + offsetX, position.y + offsetY);
-   float envHealth = e.energy / e.maxEnergy;
-   child.air = map(envHealth, 0, 1, 20, 100);
-   child.reproductionCooldown = 300;
-   child.health = health;
-   child.tadpoleSuppression = 360;
-   return child;
-   }
-   */
+  // child spawns nearby with health scaled to env it was born in
+  // born in poor environment results in starting with bad health
+  //Agent reproduce(Environment e) {
+    /*
+    health -= 20;
+    health = max(health, 0);
+    float offsetX = random(-30, 30);
+    float offsetY = random(-30, 30);
+    Agent child = new Agent(position.x + offsetX, position.y + offsetY);
+    float envHealth = e.energy / e.maxEnergy;
+    child.air = map(envHealth, 0, 1, 20, 100);
+    child.reproductionCooldown = 300;
+    child.health = health;
+    child.tadpoleSuppression = 360;
+    return child;
+    */
+  //}
+
 
   //--------------------------------------------------------------
 
@@ -544,7 +466,7 @@ class Agent {
   void displayLung() {
 
     // LUNG
-    
+
     float fade = dead() ? deathFade / 60.0 : 1;
 
     float lungHue, lungSat, lungBri;
@@ -618,7 +540,7 @@ class Agent {
         if (d < sensingRadius * 0.95) {
           println("ready for approach");
 
-          float score = (e.energy / e.maxEnergy) * (0.3 + 0.7 * colorMatch(agentHue, e.baseHue));
+          float score = (e.energy / e.maxEnergy) * (0.3 + 0.7 * colorMatch(agentHue, e.environmentHue));
           if (score > bestScore) {
             bestScore = score;
             best = e;
@@ -639,7 +561,7 @@ class Agent {
       PVector seekForce = PVector.sub(trackedEnv.position, position);
       float seekMag = insideAnyEnv ? 2.5 : 7.0;
       seekForce.setMag(seekMag);
-      seekForce.mult(0.2 + 0.8 * colorMatch(agentHue, trackedEnv.baseHue));
+      seekForce.mult(0.2 + 0.8 * colorMatch(agentHue, trackedEnv.environmentHue));
       velocity.add(seekForce);
     } else if (agentState == AgentState.LEAVE) {
       if (avoidedEnv == null) {

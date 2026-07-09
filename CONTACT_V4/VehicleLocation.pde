@@ -110,7 +110,7 @@ class VehicleLocation {
         if (vInMovingState.getReadyToSetState()) {
 
           setState(vInMovingState); // changing state to moving
-          
+
           agent.startLeaving(environment);
         }
       }
@@ -331,11 +331,16 @@ class VInBreathingState implements VehicleLocationState {
 
         environment.v.applyZoneForceOnPlayer(player);
       }
-
+      
+      /*
       if (environment.v.zone.isBreathing) {
         environment.v.breath.breathe();
         //println("start breathing");
       }
+      */
+      
+      
+      
 
       /*
       if (vehicle.readyToUpdateDistanceZone) {

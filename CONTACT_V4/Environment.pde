@@ -25,7 +25,7 @@ class Environment {
   SoundFile[] muffledSounds;
   //SoundFile currentSound;
 
-  int baseHue;
+  int environmentHue;
 
   //--------------------------------------------------------------
 
@@ -33,7 +33,7 @@ class Environment {
 
     parentApp = app;
     
-    baseHue = _colorAngle;
+    environmentHue = _colorAngle;
 
     position = new PVector(x, y);
     //radius = r;
@@ -316,7 +316,7 @@ class Environment {
     float decay = 1.0 - pow(healthRatio, 3.0);
     float sat = map(decay, 0, 1, 80, 60); // vivid when healthy, slight washed out when dying
     float bri = 85;
-    return new float[]{baseHue, sat, bri};
+    return new float[]{environmentHue, sat, bri};
   }
 
   //--------------------------------------------------------------

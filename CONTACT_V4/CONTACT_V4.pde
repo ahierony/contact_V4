@@ -184,7 +184,7 @@ void setup() {
 
   //*********************************************************************
   //gamePadIsOn = false;
-  inputControls = InputControls.JOYSTICKS; //KEYBOARD; //JOYSTICKS;
+  inputControls = InputControls.KEYBOARD; //KEYBOARD; //JOYSTICKS;
   //protoSticks = false;
   debugMode = false;
   screengrab = false;

@@ -359,17 +359,17 @@ class Vehicle {
     ellipseMode(RADIUS);
 
     if (inMotion) { // VEHICLE IS IN MOTION
-    
-      //println("vehicle state ", location.getState());
-    
-      inOtherVehicleDistanceZone = false;
-      inOtherVehicleBreathingZone = false;
+
+      println("vehicle state ", location.getState());
 
 
+
+      /*
       for (Environment e : environments) {
-
-        checkIfInOtherVehicleZone(e.v);
-      }
+       
+       checkIfInOtherVehicleZone(e.v);
+       }
+       */
 
       location.update();
 
@@ -382,29 +382,21 @@ class Vehicle {
         wrap();
       }
 
-
-      /*
-      if (location.getState() == location.vInMovingState) {
-       
-       if (lung.getState() == lung.emptyState) {
-       
-       
-       die();
-       }
-       } else if (location.getState() == location.vInOtherVehicleZoneState) {
-       
-       
-       //e.energy -= 0.5;
-       //e.energy = max(e.energy, 0);
-       }
-       */
-
+      inOtherVehicleDistanceZone = false;
+      inOtherVehicleBreathingZone = false;
 
       //checkRippleCount(); // vehicle stops moving and starts breathing // not in this version
     } else { // // VEHICLE IS NOT IN MOTION
 
 
+      updateBaseSWitchPlayer();
+      updateBaseSWitchVehicle();
+
       boolean otherVehicleAlreadyHasPlayerInDistanceZone = false;
+
+      location.update();
+
+      zone.update();
 
       for (Environment e : environments) {
 
@@ -422,27 +414,9 @@ class Vehicle {
         checkIfPlayerInZone();
       }
 
-
       checkIfOtherVehicleInZone();
 
-      /*
-      if (playerInDistanceZone && otherBreathingVehicleComingClose) {
-       
-       zone.setState(zone.holdState);
-       
-       } else {
-       
-       
-       
-       }
-       */
 
-      updateBaseSWitchPlayer();
-      updateBaseSWitchVehicle();
-
-      location.update();
-
-      zone.update();
 
       //if (zone.getState() == zone.fullState) {
 
@@ -518,32 +492,35 @@ class Vehicle {
   // ********************************************************
 
   //--------------------------------------------------------------
-
+  /*
   void updateColorNum() {
-
-    int previousColorWheelAngle = colorWheelAngle;
-    int newColorWheelAngle = colorWheelAngle;
-
-    while (previousColorWheelAngle == newColorWheelAngle) {
-
-      int vehicleColorNum = int(random(0, 360));
-      /*
-      int vehicleColorNum = int(random(0, 7));
-       int[] colorNums = {0, 45, 90, 135, 180, 225, 270};
-       newColorWheelAngle = colorNums[vehicleColorNum];
-       */
+   
+   int previousColorWheelAngle = colorWheelAngle;
+   int newColorWheelAngle = colorWheelAngle;
+   
+   while (previousColorWheelAngle == newColorWheelAngle) {
+   
+   int vehicleColorNum = int(random(0, 360));
+  /*
+   int vehicleColorNum = int(random(0, 7));
+   int[] colorNums = {0, 45, 90, 135, 180, 225, 270};
+   newColorWheelAngle = colorNums[vehicleColorNum];
+   */
+  /*
       newColorWheelAngle = vehicleColorNum;
-    }
-
-    colorWheelAngle = newColorWheelAngle;
-    updateWithRandomColor();
-  }
-
+   }
+   
+   colorWheelAngle = newColorWheelAngle;
+   updateWithRandomColor();
+   }
+   */
+  /*
   void updateWithRandomColor() {
-
-    colorBreathing = color(colorWheelAngle, saturation, brightness, 100);
-    colorTrail = color(colorWheelAngle, saturation, brightness);
-  }
+   
+   colorBreathing = color(colorWheelAngle, saturation, brightness, 100);
+   colorTrail = color(colorWheelAngle, saturation, brightness);
+   }
+   */
 
   // ********************************************************
   // APPLY FORCES
@@ -580,52 +557,57 @@ class Vehicle {
   void updateBaseSWitchVehicle() {
 
     int currentSwitch = thisEnvironment.getStageNum();
-    
-    println("currentSwitch ", currentSwitch);
 
+
+    baseSwitchVehicle = 360;
+
+    /*
     switch(currentSwitch) {
-
-    case 0:
-      baseSwitchVehicle = 360;
-      break;
-    case 1:
-      baseSwitchVehicle = 320;
-      break;
-    case 2:
-      baseSwitchVehicle = 280;
-      break;
-    case 3:
-      baseSwitchVehicle = 240;
-      break;
-    case 4:
-      baseSwitchVehicle = 200;
-      break;
-    default:
-      break;
-    }
+     
+     case 0:
+     baseSwitchVehicle = 360;
+     break;
+     case 1:
+     baseSwitchVehicle = 320;
+     break;
+     case 2:
+     baseSwitchVehicle = 280;
+     break;
+     case 3:
+     baseSwitchVehicle = 240;
+     break;
+     case 4:
+     baseSwitchVehicle = 200;
+     break;
+     default:
+     break;
+     }
+     */
   }
 
 
   //--------------------------------------------------------------
 
-  void applyZoneForceOnVehicle(Vehicle otherV) {
+  void applyZoneForceOnVehicle(Vehicle agentV) {
 
-    if (otherV.repellOther) {
+    if (repellOther) {
       colorAngleSwitchVehicle = 1;
     } else {
       colorAngleSwitchVehicle = baseSwitchVehicle;
     }
 
-    float gravity = calculateGravity(colorWheelAngle, otherV.colorWheelAngle, 100000, colorAngleSwitchVehicle);
+    //println("colorAngleSwitchVehicle ", colorAngleSwitchVehicle);
+
+    float gravity = calculateGravity(agentV.thisAgent.agentHue, thisEnvironment.environmentHue, 100000, colorAngleSwitchVehicle);
 
     Vec2 pos = centerBoid.body.getWorldCenter();
-    Vec2 otherPos = otherV.centerBoid.body.getWorldCenter();
+    Vec2 agentVPos = agentV.centerBoid.body.getWorldCenter();
 
-    float mass = centerBoid.body.m_mass;
+    float mass = agentV.centerBoid.body.m_mass;
 
-    Vec2 force = calculateForce(pos, otherPos, gravity, mass);
+    Vec2 force = calculateForce(agentVPos, pos, gravity, mass);
 
-    centerBoid.applyForce(force);
+    agentV.centerBoid.applyForce(force);
   }
 
   //--------------------------------------------------------------
@@ -653,6 +635,7 @@ class Vehicle {
     player.centerSphere.applyForce(force);
   }
 
+
   //--------------------------------------------------------------
 
   float calculateGravity(int incomingColorAngle, int breathingColorAngle, int gravityVal, int _angleSwitch) {
@@ -662,20 +645,23 @@ class Vehicle {
     // angle determining when to switch from repel to attract
     int angleSwitch = _angleSwitch;
 
+    //println("angleSwitch ", angleSwitch);
 
     int angleDiff = abs(incomingColorAngle - breathingColorAngle);
+
+    //println("angleDiff ", angleDiff);
 
     if (angleDiff > 180) {
       angleDiff = 360 - angleDiff;
     }
 
     if (angleDiff > angleSwitch) {
-      //println("go away");
+      println("go away");
       outcomingForceDirection = -1;
       gravityVal *= 5;
       gravity = map(angleDiff, angleSwitch, 180, 0, gravityVal);
     } else {
-      //println("come closer");
+      println("come closer");
       outcomingForceDirection = 1;
 
       gravity = map(angleDiff, 0, angleSwitch, gravityVal, 0);
@@ -769,46 +755,66 @@ class Vehicle {
   // ********************************************************
   // VEHICLE IS IN OTHER VEHICLE ZONE
   // ********************************************************
-
-  void checkIfInOtherVehicleZone(Vehicle otherV) {
-
-    if (isInOtherVehicleZone(otherV, otherV.zone.distanceRadius)) {
-
-      inOtherVehicleDistanceZone = true;
-
-      if (isInOtherVehicleZone(otherV, otherV.zone.radius)) {
-
-        inOtherVehicleBreathingZone = true;
-        applyZoneForceOnVehicle(otherV); // apply succion/repel gravity between vehicle breathing and vehicle moving
-        // membrane
-
-        if (!otherV.repellOther) otherV.thisEnvironment.alterEnergy();
-        thisAgent.refillAir(otherV.thisEnvironment);
-      }
-    }
-  }
-
-  //--------------------------------------------------------------
-
-  boolean isInOtherVehicleZone(Vehicle otherV, float otherZoneRadius) {
-
-    Vec2 vehiclePosPix = box2d.getBodyPixelCoord(centerBoid.body);
-
-    Vec2 otherVehiclePosPix = box2d.getBodyPixelCoord(otherV.centerBoid.body);
-
-    float d_pix = dist(vehiclePosPix.x, vehiclePosPix.y, otherVehiclePosPix.x, otherVehiclePosPix.y);
-
-    if (d_pix < otherZoneRadius + blobRadius) {
-
-      return true;
-    } else {
-
-      return false;
-    }
-  }
-
+  /*
+  void checkIfOtherVehicleInZone() {
+   
+   otherVehiclerInDistanceZone = false;
+   otherVehicleInBreathingZone = false;
+   
+   //if (isPlayerInZone(player, thisAgent.sensingRadius)) { // otherVehicle is in distance zone
+   if (isOtherVehicleInZone(otherV, zone.distanceRadius)) { // otherVehicle is in distance zone
+   
+   otherVehicleInDistanceZone = true;
+   
+   // to make sure body type of revolute joint stays dynamic for attraction / repulsion
+   
+   if (isOtherVehicleInZone(otherVehicle, zone.radius)) { // otherVehicle is in breathing zone
+   
+   otherVehicleInBreathingZone = true;
+   } else {
+   
+   otherVehicleInBreathingZone = false;
+   }
+   } else { // player not in distance zone
+   
+   otherVehicleInDistanceZone = false;
+   }
+   
+   if (!otherVehicleInDistanceZone) {
+   otherVehicleInBreathingZone = false;
+   }
+   }
+   
+   
+   boolean isOtherVehicleInZone(Vehicle otherV, float zoneRadius) {
+   
+   Vec2 vehiclePosPix = box2d.getBodyPixelCoord(centerBoid.body);
+   ;
+   Vec2 otherVPosPix = box2d.getBodyPixelCoord(otherV.centerBoid.body);//b.centerBoid.body.getWorldCenter();
+   
+   float d_pix = dist(vehiclePosPix.x, vehiclePosPix.y, otherVPosPix.x, otherVPosPix.y);
+   
+   if (d_pix < zoneRadius + otherV.blobRadius) { //  - p.blobRadius
+   
+   colorWithinDistance = colorBreathing;
+   
+   if (d_pix < zoneRadius - otherV.blobRadius) {
+   otherV.location.otherVehicleInLungRefillZone = true;
+   } else {
+   otherV.location.otherVehicleInLungRefillZone = false;
+   }
+   
+   return true;
+   } else {
+   
+   //colorWithinDistance = darkGrey;
+   
+   return false;
+   }
+   }
+   */
   // ********************************************************
-  // VEHICLE IN PLAYER SENSING RADIUS
+  // VEHICLE IN PLAYER SENSING RADIUS // AGENT
   // ********************************************************
 
   boolean checkIfInPlayerArea(float r) {
@@ -897,7 +903,15 @@ class Vehicle {
 
         if (isOtherVehicleInZone(a.v, zone.radius)) {
 
+          a.v.inOtherVehicleBreathingZone = true;
+
           breathingFinal = true;
+
+          applyZoneForceOnVehicle(a.v); // apply succion/repel gravity between vehicle breathing and vehicle moving
+          // membrane
+
+          if (!repellOther) thisEnvironment.alterEnergy();
+          a.refillAir(thisEnvironment);
         }
       }
     }

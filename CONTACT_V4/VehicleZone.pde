@@ -293,7 +293,7 @@ class EmptyZoneState implements VehicleZoneState {
 
       setReadyToSetState(false);
 
-      vehicle.updateColorNum();
+      //vehicle.updateColorNum();
 
       /*
       if (zoneResize) {
