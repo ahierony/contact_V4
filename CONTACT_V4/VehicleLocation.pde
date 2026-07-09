@@ -110,6 +110,8 @@ class VehicleLocation {
         if (vInMovingState.getReadyToSetState()) {
 
           setState(vInMovingState); // changing state to moving
+          
+          agent.startLeaving(environment);
         }
       }
     }

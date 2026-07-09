@@ -68,6 +68,8 @@ class Agent {
 
   // ANDREW START
   Agent(float x, float y, int _colorAngle, boolean _inMotion, String type_, int unitNum_, Player p, int vIndex) {
+    
+    agentHue = _colorAngle;
 
     ellipseMode(RADIUS);
 
@@ -378,6 +380,9 @@ class Agent {
     if (air <= 0) println("agent dead");
     //updateReproductionFlags(environments); // LOOK INTO
     noiseT += 0.012;
+    
+    
+    //applyMovement();
   }
 
   //--------------------------------------------------------------

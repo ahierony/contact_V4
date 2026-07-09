@@ -359,7 +359,9 @@ class Vehicle {
     ellipseMode(RADIUS);
 
     if (inMotion) { // VEHICLE IS IN MOTION
-
+    
+      //println("vehicle state ", location.getState());
+    
       inOtherVehicleDistanceZone = false;
       inOtherVehicleBreathingZone = false;
 
@@ -578,6 +580,8 @@ class Vehicle {
   void updateBaseSWitchVehicle() {
 
     int currentSwitch = thisEnvironment.getStageNum();
+    
+    println("currentSwitch ", currentSwitch);
 
     switch(currentSwitch) {
 
