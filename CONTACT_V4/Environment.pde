@@ -435,12 +435,12 @@ class Environment {
 
   void alterEnergyAfterTouchingPlayer(boolean playerContact) {
 
-    float energyAmount = 500;
+    float energyAmount = 5000;
 
-    println("energy before ", energy);
+    //println("energy before ", energy);
 
     if (playerContact) {
-      println("increase energy ");
+      //println("increase energy ");
       energyAmount *= 1;
 
       if (random(1) < (energy / maxEnergy)) {
@@ -449,7 +449,7 @@ class Environment {
         energy = max(energy, 1);
       }
     } else {
-      println("decrease energy ");
+      //println("decrease energy ");
       energyAmount *= -1;
 
       if (random(1) < (energy / maxEnergy)) {
@@ -461,7 +461,7 @@ class Environment {
 
 
 
-    println("energy after ", energy);
+    //println("energy after ", energy);
   }
 
   /*

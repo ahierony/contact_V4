@@ -172,7 +172,7 @@ class Bg_Unit {
       agentIndex = agents.size();
     }
 
-    agent = new Agent(randomPos.x, randomPos.y, vehicleColorNum, true, "DYNAMIC", index, player, agentIndex);
+    agent = new Agent(randomPos.x, randomPos.y, vehicleColorNum, true, "DYNAMIC", index, player, agentIndex, true);
     agents.add(agent);
   }
 

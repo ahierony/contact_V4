@@ -22,7 +22,7 @@ class VehicleLocation {
 
   //--------------------------------------------------------------
 
-  VehicleLocation(Player p, Agent a) {
+  VehicleLocation(Player p, Agent a, boolean startState) {
 
     player = p;
     agent = a;
@@ -31,7 +31,11 @@ class VehicleLocation {
     vInOtherVehicleZoneState = new VInOtherVehicleZoneState(agent);
     vInDeadState = new VInDeadState(agent);
 
-    setState(vInMovingState);
+    if (startState) {
+      setState(vInMovingState);
+    } else {
+      setState(vInOtherVehicleZoneState);
+    }
   }
 
 
@@ -111,7 +115,7 @@ class VehicleLocation {
 
           setState(vInMovingState); // changing state to moving
 
-          agent.startLeaving(environment);
+          //agent.startLeaving(environment);
         }
       }
     }
@@ -331,16 +335,16 @@ class VInBreathingState implements VehicleLocationState {
 
         environment.v.applyZoneForceOnPlayer(player);
       }
-      
+
       /*
       if (environment.v.zone.isBreathing) {
-        environment.v.breath.breathe();
-        //println("start breathing");
-      }
-      */
-      
-      
-      
+       environment.v.breath.breathe();
+       //println("start breathing");
+       }
+       */
+
+
+
 
       /*
       if (vehicle.readyToUpdateDistanceZone) {

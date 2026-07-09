@@ -66,12 +66,14 @@ class Bg {
 
         // CUSTOM NODES FULL LAYOUT
         if (fullScale) {
-          if (arr[index] == 0) {
+          if (arr[index] == 0) { // add environment
             units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, true, index, app, randomCols[index]);
-          } else if (arr[index] == 1) {
+          } else if (arr[index] == 1) { // add agent
             units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), true, false, index, app, randomCols[index]);
-          } else {
-            units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, false, index, app, randomCols[index]);
+          } else if (arr[index] == 3) { // add more agents
+            units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), true, false, index, app, randomCols[index]);
+          } else { // player slot
+            units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), true, false, index, app, randomCols[index]);
           }
         } else {
 
@@ -151,6 +153,8 @@ class Bg {
         pool.remove(randIndex);
       }
     }
+    
+    println(arr);
   }
 
 
@@ -198,7 +202,7 @@ class Bg {
       }
     }
     
-    println(randomCols);
+    //println(randomCols);
 
   }
 

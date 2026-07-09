@@ -52,6 +52,8 @@ class PlayerLung {
     radiusMax  = 150;
 
     radius = radiusMax;
+    
+    
 
     isBreathing = true;
     setMovingRadius = true;

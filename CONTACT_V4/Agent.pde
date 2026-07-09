@@ -69,7 +69,7 @@ class Agent {
   //--------------------------------------------------------------
 
   // ANDREW START
-  Agent(float x, float y, int _colorAngle, boolean _inMotion, String type_, int unitNum_, Player p, int vIndex) {
+  Agent(float x, float y, int _colorAngle, boolean _inMotion, String type_, int unitNum_, Player p, int vIndex, boolean vehicleStartState) {
 
     agentHue = _colorAngle;
 
@@ -81,9 +81,13 @@ class Agent {
     velocity = PVector.random2D();
     air = maxAir;
 
-    v = new Vehicle(x, y, _colorAngle, _inMotion, type_, unitNum_, p, vIndex, this);
-
-    agentState = AgentState.WANDER;
+    v = new Vehicle(x, y, _colorAngle, _inMotion, type_, unitNum_, p, vIndex, this, vehicleStartState);
+    
+    if(vehicleStartState){
+      agentState = AgentState.WANDER;
+    } else {
+      agentState = AgentState.LEAVE;
+    }
   }
 
   //--------------------------------------------------------------
@@ -327,6 +331,8 @@ class Agent {
     if (air <= 0) println("agent dead");
     //updateReproductionFlags(environments); // LOOK INTO
     noiseT += 0.012;
+    
+    println("state ", agentState);
   }
 
   //--------------------------------------------------------------
@@ -529,7 +535,7 @@ class Agent {
     //lungB = lerp(lungB, targetB, 0.1);
 
 
-    float lungSize = constrain(map(air, 0, maxAir, 4, 60), 4, 60); // shrinks as air disappears
+    float lungSize = constrain(map(air, 0, maxAir, 4, 80), 4, 80); // shrinks as air disappears
 
 
     v.lung.display(lungHue, lungSat, lungBri, 255 * fade, lungSize);

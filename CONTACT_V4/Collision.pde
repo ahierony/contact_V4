@@ -147,8 +147,7 @@ class Collision {
      */
     int agentIndex = 1000 + agentCount;
     agentCount++;
-    Agent agent = new Agent(newVelocity.x, newVelocity.y, vehicleColorNum, true, "DYNAMIC", 0, player, agentIndex);
-
+    Agent agent = new Agent(newVelocity.x, newVelocity.y, vehicleColorNum, true, "DYNAMIC", 0, player, agentIndex, false);
     agents.add(agent);
   }
 

@@ -52,7 +52,7 @@ class VehicleLung {
     agent = a;
 
     radiusMin  = 32;
-    radiusMax  = v.radius * 0.7; //105;
+    radiusMax  = v.radius; //105;
 
     radius = radiusMax;
 

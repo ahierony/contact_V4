@@ -84,11 +84,11 @@ class Eye {
 
   float currentForce;
   // to be implemented
-  /*
+  
   float forceVal_movement;
-  float forceVal_rotation;
-  */
-  float forceVal;
+  //float forceVal_rotation;
+  
+  //float forceVal;
 
   PVector s;
   PVector e;
@@ -176,7 +176,8 @@ class Eye {
      */
 
     currentForce = 0; //0;
-    forceVal = 1000000;
+    forceVal_movement = 10000000;
+    //forceVal_rotation = 500000;
 
     s = new PVector(0, 0);
     e = new PVector(0, 0);
@@ -294,7 +295,7 @@ class Eye {
 
       if (h3 > 0) {
 
-        currentForce = map(h3, eyeCenter.radius, eyeOuterRadius*2 - eyeInnerRadius, 0, forceVal);
+        currentForce = map(h3, eyeCenter.radius, eyeOuterRadius*2 - eyeInnerRadius, 0, forceVal_movement);
 
         float t = atan2(pupil.pos.y, pupil.pos.x);
         outerTheta = t;
@@ -338,7 +339,7 @@ class Eye {
 
       if (h3 > 0) {
 
-        currentForce = map(h3, eyeCenter.radius, eyeOuterRadius*2 - eyeInnerRadius, 0, forceVal);
+        currentForce = map(h3, eyeCenter.radius, eyeOuterRadius*2 - eyeInnerRadius, 0, forceVal_movement);
 
         float t = atan2(pupil.pos.y, pupil.pos.x);
         outerTheta = t;

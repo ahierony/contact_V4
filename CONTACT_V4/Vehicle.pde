@@ -219,7 +219,7 @@ class Vehicle {
   //--------------------------------------------------------------
 
   // Constructor from Agent
-  Vehicle(float x, float y, int _colorAngle, boolean _inMotion, String type_, int unitNum_, Player p, int vIndex, Agent thisA) {
+  Vehicle(float x, float y, int _colorAngle, boolean _inMotion, String type_, int unitNum_, Player p, int vIndex, Agent thisA, boolean _startState) {
 
     index = vIndex;
 
@@ -268,7 +268,7 @@ class Vehicle {
 
     blobRadius = radius + sphereRadius;
 
-    location = new VehicleLocation(player, thisAgent);
+    location = new VehicleLocation(player, thisAgent, _startState);
 
 
 
@@ -374,10 +374,11 @@ class Vehicle {
 
       centerBoid.update();
 
-
-      if (location.getState() == location.vInMovingState) {
-        wrap();
-      }
+      
+      wrap();
+      /*if (location.getState() == location.vInMovingState) {
+        
+      }*/
 
       inOtherVehicleDistanceZone = false;
       inOtherVehicleBreathingZone = false;
@@ -532,19 +533,19 @@ class Vehicle {
     switch(currentSwitch) {
 
     case 0:
-      baseSwitchPlayer = 300;
+      baseSwitchPlayer = 315;
       break;
     case 1:
-      baseSwitchPlayer = 250;
+      baseSwitchPlayer = 240;
       break;
     case 2:
-      baseSwitchPlayer = 200;
+      baseSwitchPlayer = 165;
       break;
     case 3:
-      baseSwitchPlayer = 150;
+      baseSwitchPlayer = 90;
       break;
     case 4:
-      baseSwitchPlayer = 100;
+      baseSwitchPlayer = 15;
       break;
     default:
       break;
@@ -559,19 +560,19 @@ class Vehicle {
     switch(currentSwitch) {
 
     case 0:
-      baseSwitchVehicle = 300;
+      baseSwitchVehicle = 315;
       break;
     case 1:
-      baseSwitchVehicle = 250;
+      baseSwitchVehicle = 240;
       break;
     case 2:
-      baseSwitchVehicle = 200;
+      baseSwitchVehicle = 165;
       break;
     case 3:
-      baseSwitchVehicle = 150;
+      baseSwitchVehicle = 90;
       break;
     case 4:
-      baseSwitchVehicle = 100;
+      baseSwitchVehicle = 15;
       break;
     default:
       break;
@@ -590,6 +591,7 @@ class Vehicle {
       colorAngleSwitchVehicle = 1;
       
       agentV.thisAgent.startLeaving(thisEnvironment);
+      
      
     } else {
       colorAngleSwitchVehicle = baseSwitchVehicle;
@@ -655,12 +657,12 @@ class Vehicle {
     }
 
     if (angleDiff > angleSwitch) {
-      println("go away");
+      //println("go away");
       outcomingForceDirection = -1;
       gravityVal *= 5;
       gravity = map(angleDiff, angleSwitch, 180, 0, gravityVal);
     } else {
-      println("come closer");
+      //println("come closer");
       outcomingForceDirection = 1;
 
       gravity = map(angleDiff, 0, angleSwitch, gravityVal, 0);
@@ -943,7 +945,6 @@ class Vehicle {
 
     repellOther = true;
 
-    println("collision!");
   }
 
   // ********************************************************

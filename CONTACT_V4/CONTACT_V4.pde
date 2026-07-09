@@ -184,13 +184,13 @@ void setup() {
 
   //*********************************************************************
   //gamePadIsOn = false;
-  inputControls = InputControls.KEYBOARD; //KEYBOARD; //JOYSTICKS;
+  inputControls = InputControls.JOYSTICKS; //KEYBOARD; //JOYSTICKS;
   //protoSticks = false;
   debugMode = false;
   screengrab = false;
   //showDistance = false;
-  playSoundContactV4 = true;
-  playWorldSounds = true;
+  playSoundContactV4 = false;
+  playWorldSounds = false;
   fullScale = false;
   displaySensingRadii = true;
   joysticksArePortable = false;
@@ -369,15 +369,14 @@ void resetContact() {
   if (playSoundContactV4) {
 
     for (Environment e : environments) {
-      
+
       for (int i=0; i < environments.size(); i++) {
-        
+
         e.baseSounds[i].pause();
         e.baseSounds[i].cue(0);
-        
+
         e.muffledSounds[i].pause();
         e.muffledSounds[i].cue(0);
-        
       }
     }
   }
@@ -1067,8 +1066,11 @@ void setupDeviceMode() {
 
   // Serial port setup.
   printArray(Serial.list());
-
-  port = new Serial(this, Serial.list()[2], 9600);
+  if (joysticksArePortable) {
+    port = new Serial(this, Serial.list()[3], 9600);
+  } else {
+    port = new Serial(this, Serial.list()[2], 9600);
+  }
 
   port.bufferUntil('\n');
 }
