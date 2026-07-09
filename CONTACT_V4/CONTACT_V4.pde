@@ -189,7 +189,7 @@ void setup() {
   debugMode = false;
   screengrab = false;
   //showDistance = false;
-  playSoundContactV4 = false;
+  playSoundContactV4 = true;
   playWorldSounds = true;
   fullScale = false;
   displaySensingRadii = true;
@@ -366,6 +366,22 @@ void setBackgroundTimer() {
 //--------------------------------------------------------------
 void resetContact() {
 
+  if (playSoundContactV4) {
+
+    for (Environment e : environments) {
+      
+      for (int i=0; i < environments.size(); i++) {
+        
+        e.baseSounds[i].pause();
+        e.baseSounds[i].cue(0);
+        
+        e.muffledSounds[i].pause();
+        e.muffledSounds[i].cue(0);
+        
+      }
+    }
+  }
+
 
   player = null;
 
@@ -374,6 +390,8 @@ void resetContact() {
   environments.clear();
   //vehicles.clear();
   collision = null;
+
+  //
 
   for (int i=0; i < bg.units.length; i++) {
     bg.units[i] = null;
@@ -384,6 +402,14 @@ void resetContact() {
   //playerWorldLimits = null;
 
   fadeAnimationCounter = 0;
+
+  if (playSoundContactV4) {
+    for (int i=0; i < worldSounds.length; i++) {
+      worldSounds[i].pause();
+      worldSounds[i].cue(0);
+    }
+  }
+
 
   //**********************
 
@@ -403,6 +429,14 @@ void resetContact() {
   collision = new Collision(this);
 
   bgTrailBox = new BgTrailBox(unitTotal, unit_w, unit_h);
+
+  if (playSoundContactV4) {
+
+    worldStagePlaying = 0;
+    worldSounds[worldStagePlaying].play();
+    worldSounds[worldStagePlaying].amp(0.2);
+    worldSounds[worldStagePlaying].loop();
+  }
 
   //setBackgroundTimer();
 }
@@ -424,7 +458,7 @@ void draw() {
 
   if (recordSVG) {
     // Note that #### will be replaced with the frame number. Fancy!
-    beginRecord(SVG, "../SVG/frame-####.svg");
+    //beginRecord(SVG, "../SVG/frame-####.svg");
   }
 
   // TRAIL RECORDING ENDS
@@ -607,7 +641,7 @@ void draw() {
   // TRAIL RECORDING STARTS
 
   if (recordSVG) {
-    endRecord();
+    //endRecord();
     recordSVG = false;
 
     resetContact();

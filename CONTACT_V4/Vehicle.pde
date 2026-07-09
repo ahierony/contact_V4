@@ -559,19 +559,19 @@ class Vehicle {
     switch(currentSwitch) {
 
     case 0:
-      baseSwitchVehicle = 360;
+      baseSwitchVehicle = 300;
       break;
     case 1:
-      baseSwitchVehicle = 320;
+      baseSwitchVehicle = 250;
       break;
     case 2:
-      baseSwitchVehicle = 280;
+      baseSwitchVehicle = 200;
       break;
     case 3:
-      baseSwitchVehicle = 240;
+      baseSwitchVehicle = 150;
       break;
     case 4:
-      baseSwitchVehicle = 200;
+      baseSwitchVehicle = 100;
       break;
     default:
       break;
