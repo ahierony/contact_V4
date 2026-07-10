@@ -84,10 +84,11 @@ class Eye {
 
   float currentForce;
   // to be implemented
-  
+
   float forceVal_movement;
-  //float forceVal_rotation;
-  
+  float forceVal_rotation;
+  String forceType;
+
   //float forceVal;
 
   PVector s;
@@ -106,7 +107,7 @@ class Eye {
   Pupil_keyboard pupil_keyboard;
 
   boolean inImpulse;
-  
+
   //
 
   Eye(float _x, float _y, String _coltxt) {
@@ -177,7 +178,7 @@ class Eye {
 
     currentForce = 0; //0;
     forceVal_movement = 10000000;
-    //forceVal_rotation = 500000;
+    forceVal_rotation = 5000000;
 
     s = new PVector(0, 0);
     e = new PVector(0, 0);
@@ -191,7 +192,8 @@ class Eye {
     sensorY = 0;
 
     recordOriginalSensorAngle = true;
-    
+
+    forceType = "rotation";
   }
 
   //--------------------------------------------------------------
@@ -210,11 +212,11 @@ class Eye {
 
   //--------------------------------------------------------------
 
-  void updateJoystickInput(int _x, int _y, int minRangeX, int maxRangeX, int minRangeY, int maxRangeY) {    
-      
+  void updateJoystickInput(int _x, int _y, int minRangeX, int maxRangeX, int minRangeY, int maxRangeY) {
+
     sensorX = map(_x, minRangeX, maxRangeX, -eyeOuterRadius + eyeInnerRadius, eyeOuterRadius - eyeInnerRadius);
     sensorY = map(_y, minRangeY, maxRangeY, -eyeOuterRadius + eyeInnerRadius, eyeOuterRadius - eyeInnerRadius);
-    
+
     sensorX = constrain(sensorX, -eyeOuterRadius + eyeInnerRadius, eyeOuterRadius - eyeInnerRadius);
     sensorY = constrain(sensorY, -eyeOuterRadius + eyeInnerRadius, eyeOuterRadius - eyeInnerRadius);
   }
@@ -230,9 +232,8 @@ class Eye {
     if (inputControls == InputControls.KEYBOARD) {
 
       if (player.location.getState() == player.location.pLocVehicleZoneState) {
-        
+
         applyPush_k();
-        
       } else {
 
         setPupilState_k(); // if player is not in vehicle zone or has a vehicle in area
@@ -245,9 +246,8 @@ class Eye {
       head.pos.y = sensorY;
 
       if (player.location.getState() == player.location.pLocVehicleZoneState) {
-        
+
         applyPush();
-        
       } else {
 
         setPupilState(); // if player is not in vehicle zone or has a vehicle in area
@@ -255,17 +255,15 @@ class Eye {
     }
 
     //
-    
-    //println("fillColor ", fillColor);
 
-    
+    //println("fillColor ", fillColor);
   } // update
 
   //--------------------------------------------------------------
-  
-  
-  
-  
+
+
+
+
   //--------------------------------------------------------------
 
   void setPupilState() {
@@ -294,8 +292,14 @@ class Eye {
       float h3 = sqrt(pupil.pos.x * pupil.pos.x + pupil.pos.y * pupil.pos.y);
 
       if (h3 > 0) {
+        
+        //println("forceType ", forceType);
 
-        currentForce = map(h3, eyeCenter.radius, eyeOuterRadius*2 - eyeInnerRadius, 0, forceVal_movement);
+        if (forceType == "linear") {
+          currentForce = map(h3, eyeCenter.radius, eyeOuterRadius*2 - eyeInnerRadius, 0, forceVal_movement);
+        } else if (forceType == "rotation") {
+          currentForce = map(h3, eyeCenter.radius, eyeOuterRadius*2 - eyeInnerRadius, 0, forceVal_rotation);
+        }
 
         float t = atan2(pupil.pos.y, pupil.pos.x);
         outerTheta = t;
@@ -376,11 +380,9 @@ class Eye {
       }
     } else {
 
-      if (pushTimer.isFinished()){// && !inImpulse) {
+      if (pushTimer.isFinished()) {// && !inImpulse) {
         pupilState = "unlocked";
         //inImpulse = false;
-        
-        
       }
     }
   }
@@ -409,8 +411,6 @@ class Eye {
       if (pushTimer.isFinished() && !inImpulse) {
         pupilState = "unlocked";
         //inImpulse = false;
-        
-        
       }
     }
   }
@@ -454,31 +454,30 @@ class Eye {
 
     calibrateSensor = true;
   }
-  
+
   //--------------------------------------------------------------
-  
+
   void updateColor(float t, color _strokeColor, color _fillColor) {
-    
+
     strokeColor = _strokeColor;
     fillColor = _fillColor;
 
     blobTheta = t;
-    
+
     pupil.updateColor(strokeColor);
     eyeLid.updateColor(fillColor, strokeColor);
-    
   }
 
   //--------------------------------------------------------------
 
   void display() {
-    
+
     /*
     strokeColor = _strokeColor;
-    fillColor = _fillColor;
-
-    blobTheta = t;
-    */
+     fillColor = _fillColor;
+     
+     blobTheta = t;
+     */
 
     pushMatrix();
 
@@ -517,7 +516,7 @@ class Eye {
 
     popMatrix();
   }
-  
+
 
   //--------------------------------------------------------------
 

@@ -420,7 +420,11 @@ class Vehicle {
 
       //thisEnvironment.update(agents, data.regenRateSlider.getPos());
       //}
-
+      
+      if (!otherVehicleInBreathingZone && !playerInBreathingZone) {
+           
+          thisEnvironment.regenerateEnergy(config.regenRate);
+      }
 
 
       posVecPixels.set(centerBoid.posVecPixels.x, centerBoid.posVecPixels.y);
@@ -428,7 +432,9 @@ class Vehicle {
       // after collision with either vehicle or player, zone repells until nobody is in the zone
       if (repellOther) {
 
-        if (!otherVehicleInBreathingZone && player.location.getState() != player.location.pLocVehicleZoneState) {
+        //if (!otherVehicleInBreathingZone && player.location.getState() != player.location.pLocVehicleZoneState) {
+        if (!otherVehicleInBreathingZone && !playerInBreathingZone) {
+             
           //if (!otherVehicleInBreathingZone && !playerInBreathingZone) {
           repellOther = false;
           isColliding = false;
@@ -711,6 +717,7 @@ class Vehicle {
       if (isPlayerInZone(player, zone.radius)) { // player is in breathing zone
 
         playerInBreathingZone = true;
+        if (!repellOther) thisEnvironment.alterEnergy();
       } else {
 
         playerInBreathingZone = false;

@@ -155,7 +155,7 @@ class PlayerLocation {
 
         if (pLocMovingState.getReadyToSetState()) {
 
-          currentVehicle.thisEnvironment.alterEnergyAfterTouchingPlayer(currentVehicle.repellOther);
+          //currentVehicle.thisEnvironment.alterEnergyAfterTouchingPlayer(currentVehicle.repellOther);
 
           //println("currentVehicle repell ", currentVehicle.repellOther);
 

@@ -32,7 +32,7 @@ class Environment {
   Environment(float x, float y, int _colorAngle, boolean _inMotion, String type_, int unitNum_, Player p, int vIndex, PApplet app) {
 
     parentApp = app;
-    
+
     environmentHue = _colorAngle;
 
     position = new PVector(x, y);
@@ -72,6 +72,8 @@ class Environment {
 
       updateSounds();
     }
+
+    //println("healthRatio ", energy / maxEnergy);
   }
 
   //--------------------------------------------------------------
@@ -199,6 +201,13 @@ class Environment {
     return PVector.dist(position, agentPos) < sensingRadius;
   }
 
+  //--------------------------------------------------------------
+
+  // adds regen energy each frame up to the max
+  void regenerateEnergy(float regenRate) {
+    energy = min(energy + regenRate, maxEnergy);
+  }
+
 
   //--------------------------------------------------------------
   /*
@@ -211,12 +220,7 @@ class Environment {
    }
    }
    
-   //--------------------------------------------------------------
    
-   // adds regen energy each frame up to the max
-   void regenerateEnergy(float regenRate) {
-   energy = min(energy + regenRate, maxEnergy);
-   }
    
    //--------------------------------------------------------------
    
@@ -349,17 +353,6 @@ class Environment {
   }
 
   //--------------------------------------------------------------
-  /*
-  // Environemnt is teal when healthy and purple when depleted
-   void draw(float sensingRadius) {
-   drawSensingRing(sensingRadius);
-   float healthRatio = energy / maxEnergy;
-   drawMembrane(healthRatio);
-   drawCore(healthRatio);
-   }
-   */
-
-  //--------------------------------------------------------------
 
   // ANDREW
 
@@ -375,6 +368,10 @@ class Environment {
     if (displaySensingRadii) drawSensingRing(sensingRadius);
 
     float healthRatio = energy / maxEnergy;
+    healthRatio = min(healthRatio, 1);
+    //println("updatedEnergy ", updatedEnergy);
+    //float healthRatio = min(1, updatedEnergy);
+    //println("healthRatio ", healthRatio);
     drawMembrane(healthRatio);
     //drawCore(healthRatio);
   }
@@ -416,6 +413,7 @@ class Environment {
 
     energy -= 5; //0.5;
     energy = max(energy, 0);
+    //energy = min(energy, 1);
   }
 
 
@@ -425,6 +423,7 @@ class Environment {
       //coreOccupied = true;
       energy -= 50;
       energy = max(energy, 0);
+      //energy = min(energy, 1);
       //a.hasGivenBirth = true;
       //a.birthEnvironment = e;
       //Agent child = a.reproduce(e);
@@ -434,35 +433,19 @@ class Environment {
     }
   }
 
-  void alterEnergyAfterTouchingPlayer(boolean playerContact) {
+  void alterEnergyAfterTouchingPlayer() {
 
-    float energyAmount = 5000;
+    float energyAmount = 500;
 
-    //println("energy before ", energy);
+    //if (random(1) < (energy / maxEnergy)) {
 
-    if (playerContact) {
-      //println("increase energy ");
-      energyAmount *= 1;
-
-      if (random(1) < (energy / maxEnergy)) {
-
-        energy += energyAmount;
-        energy = max(energy, 1);
-      }
-    } else {
-      //println("decrease energy ");
-      energyAmount *= -1;
-
-      if (random(1) < (energy / maxEnergy)) {
-
-        energy += energyAmount;
-        energy = max(energy, 0);
-      }
-    }
+    energy += energyAmount;
+    energy = max(energy, 5000);
 
 
+    //}
 
-    //println("energy after ", energy);
+    //println("energy ", energy);
   }
 
   /*

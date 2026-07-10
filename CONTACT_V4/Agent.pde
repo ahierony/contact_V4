@@ -276,7 +276,7 @@ class Agent {
     //bounceEdges();
     //enforceAvoidBarrier(config.sensingRadius);
     air -= config.drainRate * drainMultiplier;
-    if (air <= 0) println("agent dead");
+    //if (air <= 0) println("agent dead");
     //updateReproductionFlags(environments); // LOOK INTO
     noiseT += 0.012;
 

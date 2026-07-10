@@ -169,7 +169,7 @@ class Bg {
       }
     }
     
-    println(arr);
+    //println(arr);
   }
 
 

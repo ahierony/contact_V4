@@ -401,6 +401,10 @@ class Player {
   //--------------------------------------------------------------
 
   void updateAccelBoth() {
+    
+    rightEye.forceType = "linear";
+    leftEye.forceType = "linear";
+    
 
     rightEye.eyeOuterb2d.applyForce(rightEye.outerTheta, playerTheta, rightEye.getCurrentForce(), true, eyesAreInverted);
     leftEye.eyeOuterb2d.applyForce(leftEye.outerTheta, playerTheta, leftEye.getCurrentForce(), true, eyesAreInverted);
@@ -409,6 +413,8 @@ class Player {
   //--------------------------------------------------------------
 
   void updateAccel(Eye lockedEye) {
+    
+    lockedEye.forceType = "rotation";
 
     lockedEye.eyeOuterb2d.applyForce(lockedEye.outerTheta, playerTheta, lockedEye.getCurrentForce(), false, eyesAreInverted);
   }

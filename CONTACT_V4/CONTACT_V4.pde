@@ -195,9 +195,9 @@ void setup() {
   debugMode = false;
   screengrab = false;
   //showDistance = false;
-  playSoundContactV4 = true;
-  playWorldSounds = true;
-  fullScale = true  ;
+  playSoundContactV4 = false;
+  playWorldSounds = false;
+  fullScale = true;
   displaySensingRadii = true;
   joysticksArePortable = false;
   macMini = false;

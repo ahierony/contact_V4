@@ -193,7 +193,7 @@ class Collision {
 
             e.v.isReadyForCollision = false;
 
-            //e.alterEnergyAfterTouchingPlayer(true);
+            e.alterEnergyAfterTouchingPlayer();
 
             //vehicleRemaining--;
 
