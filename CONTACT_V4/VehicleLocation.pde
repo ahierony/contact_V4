@@ -115,7 +115,7 @@ class VehicleLocation {
 
           setState(vInMovingState); // changing state to moving
 
-          //agent.startLeaving(environment);
+          agent.startLeaving(environment);
         }
       }
     }

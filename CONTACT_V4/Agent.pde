@@ -1,30 +1,4 @@
 class Agent {
-  /*
-  float air; // determines lung capacity
-   float health = 100; // reduces on reproduction
-   float maxHealth = 100;
-   PVector position;
-   PVector velocity;
-   float maxAir = 100;
-   float xoff, yoff;
-   float maxSpeed = 5;
-   // int reproductionCooldown = 0; // frames before agent can reproduce again
-   boolean hasGivenBirth = false;
-   Environment birthEnvironment = null;
-   boolean triedReproduction = false;
-   boolean bursted = false;
-   //int burstSeekSuppression = 0; // frames where agent ignore seeking force urge post-birth
-   boolean driftingOut = false; // true when healthy agent leaves dying env
-   Environment driftingFrom = null;
-   int kickTimer = 0;
-   PVector kickDir = new PVector(0, 0); // normalized direction of current jump
-   float kickDecay = 0;
-   int tadpoleSuppression = 0; // frames when kicking for jump is off
-   Environment trackedEnv = null; // locked in env to seek
-   
-   float noiseT = 0; //added for lung noise
-   */
-
   float air; // determines lung capacity
   float health = 100; // reduces on reproduction
   float maxHealth = 100;
@@ -33,7 +7,7 @@ class Agent {
   float maxAir = 100;
   float xoff, yoff;
   float maxSpeed = 5;
-  int reproductionCooldown = 0; // frames before agent can reproduce again
+  //int reproductionCooldown = 0; // frames before agent can reproduce again
   boolean hasGivenBirth = false;
   Environment birthEnvironment = null;
   boolean triedReproduction = false;
@@ -42,28 +16,23 @@ class Agent {
   int kickTimer = 0;
   PVector kickDir = new PVector(0, 0); // normalized direction of current jump
   float kickDecay = 0;
-  int tadpoleSuppression = 0; // frames when kicking for jump is off
+  //int tadpoleSuppression = 0; // frames when kicking for jump is off
   Environment trackedEnv = null; // locked in env to seek
   Environment avoidedEnv = null; // env the agent avoids until it refills elsewhere
   float noiseT = 0; //added for lung noise
-  float noiseOffset;
+  //float noiseOffset;
 
-  // ANDREW START
-  Vehicle v;
-  float lungSize;
 
-  float drainMultiplier = 1.0; // grows with each birth, parent burns air faster // LOOK INTO
-  // ANDREW ENDS
-
-  // ANDREW START
-
-  // ANDREW ENDS
-
+  Vehicle v; //ANDREW
+  float lungSize; // ANDREW
 
   //static final int WANDER = 0, APPROACH = 1, LEAVE = 2;
   //int state = WANDER;
   int deathFade = 60; // fade-out countdown once agent is dead
   int agentHue;
+
+  float lungH = 0, lungS = 0, lungB = 92; // starts as wander color
+  float drainMultiplier = 1.0; // grows with each birth, parent burns air faster
 
 
   //--------------------------------------------------------------
@@ -74,21 +43,21 @@ class Agent {
     agentHue = _colorAngle;
 
     ellipseMode(RADIUS);
-
+    //noiseOffset = random(1000);
     position = new PVector(x, y);
-    xoff = random(1000);
-    yoff = random(1000);
+    //xoff = random(1000);
+    //yoff = random(1000);
     velocity = PVector.random2D();
     air = maxAir;
-
-    v = new Vehicle(x, y, _colorAngle, _inMotion, type_, unitNum_, p, vIndex, this, vehicleStartState);
 
     if (vehicleStartState) {
       agentState = AgentState.WANDER;
     } else {
       agentState = AgentState.LEAVE;
     }
-    
+
+    v = new Vehicle(x, y, _colorAngle, _inMotion, type_, unitNum_, p, vIndex, this, vehicleStartState);
+
     //ellipseMode(RADIUS);
   }
 
@@ -112,13 +81,13 @@ class Agent {
   }
 
   //--------------------------------------------------------------
-
+/*
   // count down all timer flags each frame
   void tickCooldowns() {
-    //if (reproductionCooldown > 0) reproductionCooldown--;
-    //if (burstSeekSuppression > 0) burstSeekSuppression--;
-    if (tadpoleSuppression > 0) tadpoleSuppression--;
+    if (reproductionCooldown > 0) reproductionCooldown--;
+    //if (tadpoleSuppression > 0) tadpoleSuppression--;
   }
+  */
 
   //--------------------------------------------------------------
 
@@ -136,113 +105,153 @@ class Agent {
 
   // handles agent movement: frog-like kicks when normal, temporary wandering post-birth
   void applyMovement() {
-    if (tadpoleSuppression == 0) {
-      kickTimer--;
+    //if (tadpoleSuppression == 0) {
+    kickTimer--;
 
-      // schedule new jump every 50 to 100 frames
-      if (kickTimer <= 0) {
-        kickTimer = (int)random(50, 100);
-        PVector forward = velocity.copy();
-        if (forward.mag() < 0.1) forward = PVector.random2D();
-        forward.normalize();
-        forward.rotate(random(-0.5, 0.5));
-        kickDir = PVector.mult(forward, 1.0);
-        kickDecay = random(20, 60);
+    // schedule new jump every 50 to 100 frames
+    if (kickTimer <= 0) {
+      kickTimer = (int)random(50, 100);
+      PVector forward = velocity.copy();
+      if (forward.mag() < 0.1) forward = PVector.random2D();
+      forward.normalize();
+      forward.rotate(random(-0.5, 0.5));
+      kickDir = PVector.mult(forward, 1.0);
+      kickDecay = random(20, 60);
 
-        //SOUND
-        if (playSoundContactV4 && v.checkIfInPlayerArea(player.sensingMaxRadius)) {
-          int randNum = int(random(5));
+      //SOUND
+      if (playSoundContactV4 && v.checkIfInPlayerArea(player.sensingMaxRadius)) {
+        int randNum = int(random(5));
 
-          SoundFile agentSound = agentSounds[randNum];
-          agentSound.play();
-          agentSound.amp(0.5);
-        }
+        SoundFile agentSound = agentSounds[randNum];
+        agentSound.play();
+        agentSound.amp(0.5);
       }
+    }
 
 
-      // gradual thrust for jump with exponentual decay
-      // frame 1 big push, frame 2 smaller, frame 3 smaller, trails to zero
-      if (kickDecay > 0) {
-        float thisFrame = min(kickDecay, kickDecay * 0.18); // 18% of remaining thrust each turn
-        velocity.add(PVector.mult(kickDir, thisFrame));
-        kickDecay -= thisFrame;
-        if (kickDecay < 0.5) kickDecay = 0;
-        v.centerBoid.applyImpulseAnu(velocity);
-      }
-    } else {
+    // gradual thrust for jump with exponentual decay
+    // frame 1 big push, frame 2 smaller, frame 3 smaller, trails to zero
+    if (kickDecay > 0) {
+      float thisFrame = min(kickDecay, kickDecay * 0.18); // 18% of remaining thrust each turn
+      velocity.add(PVector.mult(kickDir, thisFrame));
+      kickDecay -= thisFrame;
+      if (kickDecay < 0.5) kickDecay = 0;
+      //ANDREW
+      v.centerBoid.applyImpulseAnu(velocity);
+    }
+    //} else {
+    /*
       // kick is ignored post-birth during the env burst
-      // Perlin noise for smooth wandering
-      float wx = map(noise(xoff), 0, 1, -0.4, 0.4);
-      float wy = map(noise(yoff), 0, 1, -0.4, 0.4);
-      xoff += 0.01;
-      yoff += 0.01;
-      velocity.add(new PVector(wx, wy));
-    }
+     // Perlin noise for smooth wandering
+     float wx = map(noise(xoff), 0, 1, -0.4, 0.4);
+     float wy = map(noise(yoff), 0, 1, -0.4, 0.4);
+     xoff += 0.01;
+     yoff += 0.01;
+     velocity.add(new PVector(wx, wy));
+     */
+    //}
   }
 
   //--------------------------------------------------------------
 
-  Environment nearestInRange(ArrayList<Environment> environments, float sensingRadius) {
 
-    if (trackedEnv != null) {
-      float d = PVector.dist(position, trackedEnv.position);
-      if (d > sensingRadius * 1.12) trackedEnv = null; // agent must travel further out before switching from seeking force
-    }
-    if (trackedEnv == null) {
-      for (Environment e : environments) {
-        float d = PVector.dist(position, e.position);
-        if (d < sensingRadius * 0.95) {
-          if (trackedEnv == null || e.energy > trackedEnv.energy) { // prefer healthier env
-            trackedEnv = e;
-          }
+  // scan for the best non-avoided env within sensing range, null if none
+  Environment findBestEnv(ArrayList<Environment> environments, float sensingRadius) {
+    float bestScore = -1;
+    Environment best = null;
+    for (Environment e : environments) {
+      if (e == avoidedEnv) continue;
+      float d = PVector.dist(position, e.position);
+      //println("d ", d);
+      //println("sensingRadius * 0.95 ", sensingRadius * 0.95);
+      if (d < sensingRadius * 0.95) {
+        println("inside sensing radius");
+        float score = (e.energy / e.maxEnergy) * (0.3 + 0.7 * colorMatch(agentHue, e.environmentHue));
+        if (score > bestScore) {
+          bestScore = score;
+          best = e;
         }
       }
     }
-    return trackedEnv;
+    return best;
   }
 
   //--------------------------------------------------------------
 
-
-  //--------------------------------------------------------------
-
-  // when birth happens all agents get pushed outside the env with a burst
-  void applyBirthBurst(ArrayList<Environment> environments) {
-    for (Environment e : environments) {
-      float distFromCenter = PVector.dist(position, e.position);
-      if (e.birthBurst && !bursted && distFromCenter < e.radius) {
-        // push agent away from the env centre, stronger the closer it is
-        PVector repel = PVector.sub(position, e.position);
-        repel.normalize();
-        float kickStrength = map(distFromCenter, 0, e.radius, 200, 150);
-        repel.setMag(kickStrength);
-        velocity.add(repel);
-        bursted = true;
-        //burstSeekSuppression = 480; // stop seeking for a while after being blasted // ASK ANUSHCKA
-        //tadpoleSuppression = 60; // brief wander after birth to avoid sudden conflicts of pull and push
-        kickDecay = 0;
+  // three-agentState behavior: wander until env sensed in sensing radius, seek core and leave after visit
+  void applyStateBehavior(ArrayList<Environment> environments, float sensingRadius, boolean insideAnyEnv) {
+    if (agentState == AgentState.WANDER) {
+      Environment best = findBestEnv(environments, sensingRadius);
+      //println("best ", best);
+      if (best != null) {
+        trackedEnv = best;
+        agentState = AgentState.APPROACH;
       }
-      if (!e.birthBurst) bursted = false;
+    } else if (agentState == AgentState.APPROACH) {
+      //println("trackedEnv ", trackedEnv);
+      if (trackedEnv == null) {
+        agentState = AgentState.WANDER;
+        return;
+      }
+      // straight at the core
+      PVector seekForce = PVector.sub(trackedEnv.position, position);
+      float seekMag = insideAnyEnv ? 2.5 : 7.0;
+      seekForce.setMag(seekMag);
+      seekForce.mult(0.2 + 0.8 * colorMatch(agentHue, trackedEnv.environmentHue));
+      velocity.add(seekForce);
+    } else if (agentState == AgentState.LEAVE) {
+
+      if (avoidedEnv == null) {
+        agentState = AgentState.WANDER;
+        return;
+      }
+
+      // landed in another env's range while exiting, jump straight to approaching it
+      Environment best = findBestEnv(environments, sensingRadius);
+      if (best != null) {
+        trackedEnv = best;
+        agentState = AgentState.APPROACH;
+        return;
+      }
+
+      float d = PVector.dist(position, avoidedEnv.position);
+      if (d > sensingRadius * 1.5) {
+        agentState = AgentState.WANDER;
+        return;
+      }
+      PVector away = PVector.sub(position, avoidedEnv.position);
+      if (away.mag() < 10) away = PVector.random2D();
+      away.normalize();
+      away.setMag(map(d, 0, sensingRadius * 1.5, 3.0, 0.3));
+      velocity.add(away);
     }
   }
 
   //--------------------------------------------------------------
 
-  // resets reproduction flag once agent leaves the core
-  // clears birth tracking once agent has left the environment
-
-  void updateReproductionFlags(ArrayList<Environment> environments) {
-    boolean inAnyCore = false;
-    for (Environment e : environments) {
-      if (e.containsCore(position)) inAnyCore = true;
+  // hard barrier: a wandering agent can never end a frame inside the avoided env's sensing ring
+  void enforceAvoidBarrier(float sensingRadius) {
+    if (agentState != AgentState.WANDER || avoidedEnv == null) return;
+    float barrier = sensingRadius * 1.5; // keep-out zone extends past the sensing ring
+    float d = PVector.dist(position, avoidedEnv.position);
+    if (d < barrier) {
+      PVector out = PVector.sub(position, avoidedEnv.position);
+      if (out.mag() < 1) out = PVector.random2D();
+      out.setMag(barrier); // place exactly on the barrier
+      position = PVector.add(avoidedEnv.position, out);
+      PVector toEnv = PVector.sub(avoidedEnv.position, position).normalize();
+      float inward = velocity.dot(toEnv);
+      if (inward > 0) velocity.sub(PVector.mult(toEnv, inward));
     }
-    if (!inAnyCore) triedReproduction = false;
+  }
 
-    // clear birth tracking once agent has left the environment
-    if (hasGivenBirth && birthEnvironment != null && !birthEnvironment.contains(position)) {
-      hasGivenBirth = false;
-      birthEnvironment = null;
-    }
+  //--------------------------------------------------------------
+
+  // visit is over (birth attempted or turned away), we remember this env and exit the area
+  void startLeaving(Environment e) {
+    avoidedEnv = e;
+    trackedEnv = null;
+    agentState = AgentState.LEAVE;
   }
 
   //--------------------------------------------------------------
@@ -260,13 +269,103 @@ class Agent {
   // pushes agent away from nearby agents to avoid flocking
   void applyPhysics(ArrayList<Agent> agents, float sepDist, float sepForce, boolean insideAnyEnv) {
     applyDamping(insideAnyEnv);
-    PVector sep = seperate(agents, sepDist, sepForce);
-    velocity.add(sep);
-
-
-    //position.add(velocity);
+    //PVector sep = seperate(agents, sepDist, sepForce);
+    //velocity.add(sep);
+    position.add(velocity);
     //v.centerBoid.applyImpulseAnu(velocity);
   }
+
+  //--------------------------------------------------------------
+
+  void update(SimConfig config, ArrayList<Agent> agents, ArrayList<Environment> environments) {
+    //Vec2 pos;
+    //pos = box2d.getBodyPixelCoord(v.centerBoid.body);
+    //position.set(pos.x, pos.y);
+
+
+    //tickCooldowns();
+    boolean insideAnyEnv = checkInsideEnv(environments);
+    applyMovement();
+    applyStateBehavior(environments, config.sensingRadius, insideAnyEnv);
+    //applyBirthBurst(environments); // LOOK INTO
+    applyPhysics(agents, config.sepDist, config.sepForce, insideAnyEnv);
+    //bounceEdges();
+    enforceAvoidBarrier(config.sensingRadius);
+    air -= config.drainRate * drainMultiplier;
+    if (air <= 0) println("agent dead");
+    //updateReproductionFlags(environments); // LOOK INTO
+    noiseT += 0.012;
+
+    //println("state ", agentState);
+  }
+
+
+  /*
+  Environment nearestInRange(ArrayList<Environment> environments, float sensingRadius) {
+   
+   if (trackedEnv != null) {
+   float d = PVector.dist(position, trackedEnv.position);
+   if (d > sensingRadius * 1.12) trackedEnv = null; // agent must travel further out before switching from seeking force
+   }
+   if (trackedEnv == null) {
+   for (Environment e : environments) {
+   float d = PVector.dist(position, e.position);
+   if (d < sensingRadius * 0.95) {
+   if (trackedEnv == null || e.energy > trackedEnv.energy) { // prefer healthier env
+   trackedEnv = e;
+   }
+   }
+   }
+   }
+   return trackedEnv;
+   }
+   */
+  //--------------------------------------------------------------
+
+
+  //--------------------------------------------------------------
+  /*
+  // when birth happens all agents get pushed outside the env with a burst
+   void applyBirthBurst(ArrayList<Environment> environments) {
+   for (Environment e : environments) {
+   float distFromCenter = PVector.dist(position, e.position);
+   if (e.birthBurst && !bursted && distFromCenter < e.radius) {
+   // push agent away from the env centre, stronger the closer it is
+   PVector repel = PVector.sub(position, e.position);
+   repel.normalize();
+   float kickStrength = map(distFromCenter, 0, e.radius, 200, 150);
+   repel.setMag(kickStrength);
+   velocity.add(repel);
+   bursted = true;
+   //burstSeekSuppression = 480; // stop seeking for a while after being blasted // ASK ANUSHCKA
+   //tadpoleSuppression = 60; // brief wander after birth to avoid sudden conflicts of pull and push
+   kickDecay = 0;
+   }
+   if (!e.birthBurst) bursted = false;
+   }
+   }
+   */
+
+  //--------------------------------------------------------------
+
+  // resets reproduction flag once agent leaves the core
+  // clears birth tracking once agent has left the environment
+  /*
+  void updateReproductionFlags(ArrayList<Environment> environments) {
+   boolean inAnyCore = false;
+   for (Environment e : environments) {
+   if (e.containsCore(position)) inAnyCore = true;
+   }
+   if (!inAnyCore) triedReproduction = false;
+   
+   // clear birth tracking once agent has left the environment
+   if (hasGivenBirth && birthEnvironment != null && !birthEnvironment.contains(position)) {
+   hasGivenBirth = false;
+   birthEnvironment = null;
+   }
+   }
+   */
+
 
 
   //--------------------------------------------------------------
@@ -315,30 +414,10 @@ class Agent {
    }
    */
 
-  void update(SimConfig config, ArrayList<Agent> agents, ArrayList<Environment> environments) {
-    Vec2 pos;
-    pos = box2d.getBodyPixelCoord(v.centerBoid.body);
-    position.set(pos.x, pos.y);
 
-
-    tickCooldowns();
-    boolean insideAnyEnv = checkInsideEnv(environments);
-    applyMovement();
-    applyStateBehavior(environments, config.sensingRadius, insideAnyEnv);
-    //applyBirthBurst(environments); // LOOK INTO
-    applyPhysics(agents, config.sepDist, config.sepForce, insideAnyEnv);
-    //bounceEdges();
-    enforceAvoidBarrier(config.sensingRadius);
-    air -= config.drainRate * drainMultiplier;
-    if (air <= 0) println("agent dead");
-    //updateReproductionFlags(environments); // LOOK INTO
-    noiseT += 0.012;
-
-    //println("state ", agentState);
-  }
 
   //--------------------------------------------------------------
-
+  /*
   // push agents away from neighbors with desiredSeparation distance
   PVector seperate(ArrayList<Agent> agents, float desiredSeparation, float maxSepForce) {
     PVector sum = new PVector(0, 0);
@@ -360,6 +439,7 @@ class Agent {
     }
     return sum;
   }
+  */
 
 
   //--------------------------------------------------------------
@@ -367,21 +447,21 @@ class Agent {
   // Parent pays 20 to reproduce
   // child spawns nearby with health scaled to env it was born in
   // born in poor environment results in starting with bad health
-  //Agent reproduce(Environment e) {
   /*
-    health -= 20;
+  Agent reproduce(Environment e) {
+   health -= 20;
    health = max(health, 0);
    float offsetX = random(-30, 30);
    float offsetY = random(-30, 30);
-   Agent child = new Agent(position.x + offsetX, position.y + offsetY);
+   //Agent child = new Agent(position.x + offsetX, position.y + offsetY);
    float envHealth = e.energy / e.maxEnergy;
    child.air = map(envHealth, 0, 1, 20, 100);
    child.reproductionCooldown = 300;
    child.health = health;
    child.tadpoleSuppression = 360;
    return child;
+   }
    */
-  //}
 
 
   //--------------------------------------------------------------
@@ -553,119 +633,6 @@ class Agent {
   }
 
 
-  //--------------------------------------------------------------
 
-  void refillAir(Environment e) {
-    float healthRatio = e.energy / e.maxEnergy;
-    float effectiveRefill = config.refillRate * healthRatio;
-    air += effectiveRefill;
-    air = min(air, maxAir);
-  }
-
-  //--------------------------------------------------------------
-
-  // three-agentState behavior: wander until env sensed in sensing radius, seek core and leave after visit
-  void applyStateBehavior(ArrayList<Environment> environments, float sensingRadius, boolean insideAnyEnv) {
-    if (agentState == AgentState.WANDER) {
-      Environment best = findBestEnv(environments, sensingRadius);
-      println("best ", best);
-      if (best != null) {
-        trackedEnv = best;
-        agentState = AgentState.APPROACH;
-      }
-    } else if (agentState == AgentState.APPROACH) {
-      if (trackedEnv == null) {
-        agentState = AgentState.WANDER;
-        return;
-      }
-      // straight at the core
-      PVector seekForce = PVector.sub(trackedEnv.position, position);
-      float seekMag = insideAnyEnv ? 2.5 : 7.0;
-      seekForce.setMag(seekMag);
-      seekForce.mult(0.2 + 0.8 * colorMatch(agentHue, trackedEnv.environmentHue));
-      velocity.add(seekForce);
-
-      Environment best = findBestEnv(environments, sensingRadius);
-      if (best != null) {
-        trackedEnv = best;
-        agentState = AgentState.APPROACH;
-        return;
-      }
-    } else if (agentState == AgentState.LEAVE) {
-      if (avoidedEnv == null) {
-        agentState = AgentState.WANDER;
-        return;
-      }
-
-      //println("track env");
-      // landed in another env's range while exiting, jump straight to approaching it
-      Environment best = findBestEnv(environments, sensingRadius);
-      if (best != null) {
-        trackedEnv = best;
-        agentState = AgentState.APPROACH;
-        return;
-      }
-
-      float d = PVector.dist(position, avoidedEnv.position);
-      if (d > sensingRadius * 1.5) {
-        agentState = AgentState.WANDER;
-        return;
-      }
-      PVector away = PVector.sub(position, avoidedEnv.position);
-      if (away.mag() < 10) away = PVector.random2D();
-      away.normalize();
-      away.setMag(map(d, 0, sensingRadius * 1.5, 3.0, 0.3));
-      velocity.add(away);
-    }
-  }
-
-  //--------------------------------------------------------------
-
-
-  // scan for the best non-avoided env within sensing range, null if none
-  Environment findBestEnv(ArrayList<Environment> environments, float sensingRadius) {
-    float bestScore = -1;
-    Environment best = null;
-    for (Environment e : environments) {
-      if (e == avoidedEnv) continue;
-      float d = PVector.dist(position, e.position);
-      //println("d ", d);
-      //println("sensingRadius * 0.95 ", sensingRadius * 0.95);
-      if (d < sensingRadius * 0.95) {
-        float score = (e.energy / e.maxEnergy) * (0.3 + 0.7 * colorMatch(agentHue, e.environmentHue));
-        if (score > bestScore) {
-          bestScore = score;
-          best = e;
-        }
-      }
-    }
-    return best;
-  }
-
-  //--------------------------------------------------------------
-
-  // visit is over (birth attempted or turned away), we remember this env and exit the area
-  void startLeaving(Environment e) {
-    avoidedEnv = e;
-    trackedEnv = null;
-    agentState = AgentState.LEAVE;
-  }
-
-  //--------------------------------------------------------------
-
-  // hard barrier: a wandering agent can never end a frame inside the avoided env's sensing ring
-  void enforceAvoidBarrier(float sensingRadius) {
-    if (agentState != AgentState.WANDER || avoidedEnv == null) return;
-    float barrier = sensingRadius * 1.5; // keep-out zone extends past the sensing ring
-    float d = PVector.dist(position, avoidedEnv.position);
-    if (d < barrier) {
-      PVector out = PVector.sub(position, avoidedEnv.position);
-      if (out.mag() < 1) out = PVector.random2D();
-      out.setMag(barrier); // place exactly on the barrier
-      position = PVector.add(avoidedEnv.position, out);
-      PVector toEnv = PVector.sub(avoidedEnv.position, position).normalize();
-      float inward = velocity.dot(toEnv);
-      if (inward > 0) velocity.sub(PVector.mult(toEnv, inward));
-    }
-  }
+  
 }

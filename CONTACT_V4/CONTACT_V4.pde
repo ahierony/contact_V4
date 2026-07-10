@@ -178,8 +178,8 @@ int fadeAnimationCounter;
 
 void setup() {
 
-  //size(1024, 768, JAVA2D); // 800, 800 // 1440, 900
-  fullScreen(2);
+  size(1024, 768, JAVA2D); // 800, 800 // 1440, 900
+  //fullScreen(2);
   pixelDensity(1);
 
 
@@ -190,11 +190,11 @@ void setup() {
   debugMode = false;
   screengrab = false;
   //showDistance = false;
-  playSoundContactV4 = true;
+  playSoundContactV4 = false;
   playWorldSounds = true;
-  fullScale = true;
-  displaySensingRadii = false;
-  joysticksArePortable = true;
+  fullScale = false;
+  displaySensingRadii = true;
+  joysticksArePortable = false;
   macMini = false;
   //playSound = false; // enables sound // current sound until Woohun updates
   //audioIsPlaying = false; // new sound by woohun not ready yet
@@ -723,21 +723,43 @@ void updateEnvironments() {
 
 void updateAgents() {
 
-  for (Agent a : agents) {
-
+  for (int i = agents.size()-1; i >= 0; i--) {
+    Agent a = agents.get(i);
+    
     a.run(agents, environments);
     if (a.v.location.getState() == a.v.location.vInMovingState) {
       a.maxSpeed = config.maxSpeed;
       a.update(config, agents, environments);
       //a.update(data.drainSlider.getPos(), agents, environments, data.separationDistSlider.getPos(), data.separationForceSlider.getPos(), data.sensingRadiusSlider.getPos());
     }
-  }
 
-  for (int i = 0; i < agents.size(); i++) {
-    Agent a = agents.get(i);
+    for (Environment e : environments) {
+      /*
+    if (e.containsCore(a.position)){
+       // arrived at the core: attempt birth if eligible, then leave regardless of outcome
+       if (a.reproductionCooldown == 0 && !e.coreOccupied && !a.triedReproduction && acceptsAgent(a, e)){
+       tryReproduce(a, e);
+       }
+       a.startLeaving(e);
+       break;
+       } else */
+      if (e.contains(a.position)) {
+        //if (!acceptsAgent(a, e)) {
+        //a.startLeaving(e); // turned away at the membrane
+        //} else {
+        refillAir(a, e); // refuel during the visit
+        if (a.avoidedEnv != null && a.avoidedEnv != e) {
+          a.avoidedEnv = null; // visited a different env, previous one is fair game again
+        }
+      }
+    }
+
     if (a.dead()) {
-      a.v.killBlob();
-      agents.remove(i);
+      a.deathFade--;
+      if (a.deathFade <= 0) {
+        a.v.killBlob();
+        agents.remove(i);
+      }
     }
   }
 
@@ -764,11 +786,21 @@ void updateAgents() {
    */
 }
 
+
 //--------------------------------------------------------------
 
 // refills agent air when inside the environemnt, costs the env some energy
 
+//--------------------------------------------------------------
 
+void refillAir(Agent a, Environment e) {
+  float healthRatio = e.energy / e.maxEnergy;
+  float effectiveRefill = config.refillRate * healthRatio;
+  a.air += effectiveRefill;
+  a.air = min(a.air, a.maxAir);
+  e.energy -= config.visitCost;
+  e.energy = max(e.energy, 0);
+}
 
 
 //--------------------------------------------------------------

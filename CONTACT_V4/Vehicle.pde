@@ -912,7 +912,7 @@ class Vehicle {
           // membrane
 
           if (!repellOther) thisEnvironment.alterEnergy();
-          a.refillAir(thisEnvironment);
+          //a.refillAir(thisEnvironment);
         }
       }
     }
