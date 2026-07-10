@@ -81,20 +81,12 @@ class Agent {
   }
 
   //--------------------------------------------------------------
-/*
-  // count down all timer flags each frame
-  void tickCooldowns() {
-    if (reproductionCooldown > 0) reproductionCooldown--;
-    //if (tadpoleSuppression > 0) tadpoleSuppression--;
-  }
-  */
-
-  //--------------------------------------------------------------
 
   // checks if the agent is currently inside an environment zone
   boolean checkInsideEnv(ArrayList<Environment> environments) {
     for (Environment e : environments) {
       if (e.contains(position)) {
+      //if (e.containsSensing(position, config.sensingRadius)) {
         return true;
       }
     }
@@ -139,17 +131,6 @@ class Agent {
       //ANDREW
       v.centerBoid.applyImpulseAnu(velocity);
     }
-    //} else {
-    /*
-      // kick is ignored post-birth during the env burst
-     // Perlin noise for smooth wandering
-     float wx = map(noise(xoff), 0, 1, -0.4, 0.4);
-     float wy = map(noise(yoff), 0, 1, -0.4, 0.4);
-     xoff += 0.01;
-     yoff += 0.01;
-     velocity.add(new PVector(wx, wy));
-     */
-    //}
   }
 
   //--------------------------------------------------------------
@@ -165,7 +146,7 @@ class Agent {
       //println("d ", d);
       //println("sensingRadius * 0.95 ", sensingRadius * 0.95);
       if (d < sensingRadius * 0.95) {
-        println("inside sensing radius");
+       // println("inside sensing radius");
         float score = (e.energy / e.maxEnergy) * (0.3 + 0.7 * colorMatch(agentHue, e.environmentHue));
         if (score > bestScore) {
           bestScore = score;
@@ -199,6 +180,8 @@ class Agent {
       seekForce.setMag(seekMag);
       seekForce.mult(0.2 + 0.8 * colorMatch(agentHue, trackedEnv.environmentHue));
       velocity.add(seekForce);
+      //Vec2 dir = new Vec2(trackedEnv.position.x, trackedEnv.position.y);
+      //v.centerBoid.arrive(dir);
     } else if (agentState == AgentState.LEAVE) {
 
       if (avoidedEnv == null) {
@@ -271,7 +254,7 @@ class Agent {
     applyDamping(insideAnyEnv);
     //PVector sep = seperate(agents, sepDist, sepForce);
     //velocity.add(sep);
-    position.add(velocity);
+    //position.add(velocity);
     //v.centerBoid.applyImpulseAnu(velocity);
   }
 
@@ -282,7 +265,8 @@ class Agent {
     //pos = box2d.getBodyPixelCoord(v.centerBoid.body);
     //position.set(pos.x, pos.y);
 
-
+    Vec2 vehiclePos = box2d.getBodyPixelCoord(v.centerBoid.body);
+    position.set(vehiclePos.x, vehiclePos.y);
     //tickCooldowns();
     boolean insideAnyEnv = checkInsideEnv(environments);
     applyMovement();
@@ -290,7 +274,7 @@ class Agent {
     //applyBirthBurst(environments); // LOOK INTO
     applyPhysics(agents, config.sepDist, config.sepForce, insideAnyEnv);
     //bounceEdges();
-    enforceAvoidBarrier(config.sensingRadius);
+    //enforceAvoidBarrier(config.sensingRadius);
     air -= config.drainRate * drainMultiplier;
     if (air <= 0) println("agent dead");
     //updateReproductionFlags(environments); // LOOK INTO
@@ -298,189 +282,6 @@ class Agent {
 
     //println("state ", agentState);
   }
-
-
-  /*
-  Environment nearestInRange(ArrayList<Environment> environments, float sensingRadius) {
-   
-   if (trackedEnv != null) {
-   float d = PVector.dist(position, trackedEnv.position);
-   if (d > sensingRadius * 1.12) trackedEnv = null; // agent must travel further out before switching from seeking force
-   }
-   if (trackedEnv == null) {
-   for (Environment e : environments) {
-   float d = PVector.dist(position, e.position);
-   if (d < sensingRadius * 0.95) {
-   if (trackedEnv == null || e.energy > trackedEnv.energy) { // prefer healthier env
-   trackedEnv = e;
-   }
-   }
-   }
-   }
-   return trackedEnv;
-   }
-   */
-  //--------------------------------------------------------------
-
-
-  //--------------------------------------------------------------
-  /*
-  // when birth happens all agents get pushed outside the env with a burst
-   void applyBirthBurst(ArrayList<Environment> environments) {
-   for (Environment e : environments) {
-   float distFromCenter = PVector.dist(position, e.position);
-   if (e.birthBurst && !bursted && distFromCenter < e.radius) {
-   // push agent away from the env centre, stronger the closer it is
-   PVector repel = PVector.sub(position, e.position);
-   repel.normalize();
-   float kickStrength = map(distFromCenter, 0, e.radius, 200, 150);
-   repel.setMag(kickStrength);
-   velocity.add(repel);
-   bursted = true;
-   //burstSeekSuppression = 480; // stop seeking for a while after being blasted // ASK ANUSHCKA
-   //tadpoleSuppression = 60; // brief wander after birth to avoid sudden conflicts of pull and push
-   kickDecay = 0;
-   }
-   if (!e.birthBurst) bursted = false;
-   }
-   }
-   */
-
-  //--------------------------------------------------------------
-
-  // resets reproduction flag once agent leaves the core
-  // clears birth tracking once agent has left the environment
-  /*
-  void updateReproductionFlags(ArrayList<Environment> environments) {
-   boolean inAnyCore = false;
-   for (Environment e : environments) {
-   if (e.containsCore(position)) inAnyCore = true;
-   }
-   if (!inAnyCore) triedReproduction = false;
-   
-   // clear birth tracking once agent has left the environment
-   if (hasGivenBirth && birthEnvironment != null && !birthEnvironment.contains(position)) {
-   hasGivenBirth = false;
-   birthEnvironment = null;
-   }
-   }
-   */
-
-
-
-  //--------------------------------------------------------------
-  /*
-  // wraps agent to opposite side when it goes off the canvas edge
-   void wrapEdges() {
-   if (position.x > width/2)  position.x = -width/2;
-   if (position.x < -width/2) position.x = width/2;
-   if (position.y > height/2)  position.y = -height/2;
-   if (position.y < -height/2) position.y = height/2;
-   }
-   */
-  //--------------------------------------------------------------
-  /*
-  void update(SimConfig config, ArrayList<Agent> agents, ArrayList<Environment> environments) {
-   tickCooldowns();
-   boolean insideAnyEnv = checkInsideEnv(environments);
-   applyMovement();
-   //applySeekForce(environments, config.sensingRadius, insideAnyEnv);
-   //applyDriftForce(config.sensingRadius);
-   //applyBirthBurst(environments);
-   applyPhysics(agents, config.sepDist, config.sepForce, insideAnyEnv);
-   //wrapEdges();
-   air -= config.drainRate;
-   //if (air <= 0) println("agent dead");
-   //updateReproductionFlags(environments);
-   }
-   */
-
-  /*
-  void update(SimConfig config, ArrayList<Agent> agents, ArrayList<Environment> environments) {
-   tickCooldowns();
-   boolean insideAnyEnv = checkInsideEnv(environments);
-   applyMovement();
-   applyStateBehavior(environments, config.sensingRadius, insideAnyEnv);
-   //applyBirthBurst(environments); // LOOK INTO
-   applyPhysics(agents, config.sepDist, config.sepForce, insideAnyEnv);
-   //bounceEdges();
-   air -= config.drainRate;
-   if (air <= 0) println("agent dead");
-   //updateReproductionFlags(environments); // LOOK INTO
-   noiseT += 0.012;
-   
-   
-   //applyMovement();
-   }
-   */
-
-
-
-  //--------------------------------------------------------------
-  /*
-  // push agents away from neighbors with desiredSeparation distance
-  PVector seperate(ArrayList<Agent> agents, float desiredSeparation, float maxSepForce) {
-    PVector sum = new PVector(0, 0);
-    int count = 0;
-    for (Agent other : agents) {
-      float d = PVector.dist(position, other.position);
-      if (other != this && d < desiredSeparation) {
-        PVector diff = PVector.sub(position, other.position);
-        float overlap = desiredSeparation - d;
-        diff.normalize();
-        diff.mult(overlap / desiredSeparation);
-        sum.add(diff);
-        count++;
-      }
-    }
-    if (count > 0) {
-      sum.div(count);
-      sum.limit(0.8);
-    }
-    return sum;
-  }
-  */
-
-
-  //--------------------------------------------------------------
-
-  // Parent pays 20 to reproduce
-  // child spawns nearby with health scaled to env it was born in
-  // born in poor environment results in starting with bad health
-  /*
-  Agent reproduce(Environment e) {
-   health -= 20;
-   health = max(health, 0);
-   float offsetX = random(-30, 30);
-   float offsetY = random(-30, 30);
-   //Agent child = new Agent(position.x + offsetX, position.y + offsetY);
-   float envHealth = e.energy / e.maxEnergy;
-   child.air = map(envHealth, 0, 1, 20, 100);
-   child.reproductionCooldown = 300;
-   child.health = health;
-   child.tadpoleSuppression = 360;
-   return child;
-   }
-   */
-
-
-  //--------------------------------------------------------------
-
-  // agents wrap at canvas edges, so we draw a ghost copy on the opposite side
-  /*
-  void draw() {
-   drawAt(position.x, position.y);
-   float ghostX = position.x;
-   float ghostY = position.y;
-   if (position.x > width/2 - 60)  ghostX = position.x - width;
-   if (position.x < -width/2 + 60) ghostX = position.x + width;
-   if (position.y > height/2 - 60)  ghostY = position.y - height;
-   if (position.y < -height/2 + 60) ghostY = position.y + height;
-   if (ghostX != position.x || ghostY != position.y) {
-   drawAt(ghostX, ghostY);
-   }
-   }
-   */
 
   //--------------------------------------------------------------
 
@@ -631,8 +432,4 @@ class Agent {
 
     colorMode(RGB, 255);
   }
-
-
-
-  
 }

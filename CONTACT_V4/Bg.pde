@@ -87,7 +87,7 @@ class Bg {
           } else if (arr[index] == 3) { // add more agents
             units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), true, false, index, app, randomCols[index]);
           } else { // player slot
-            units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), true, false, index, app, randomCols[index]);
+            units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, false, index, app, randomCols[index]);
           }
           
         } else {

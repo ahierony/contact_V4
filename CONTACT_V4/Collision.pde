@@ -48,7 +48,7 @@ class Collision {
             e.v.isColliding = true;
 
             e.v.zone.setState(e.v.zone.collisionState);
-            
+
             e.alterEnergyAfterGivingBirth();
 
             a.v.colorWheelAngle = selectRandomCol(e.v.colorWheelAngle);
@@ -77,7 +77,7 @@ class Collision {
   }
 
   int selectRandomCol(int oppositeCol) {
-    
+
     int currentCol = oppositeCol;
     int vehicleColorNum = currentCol;
     int[] possibleColors = {0, 45, 90, 135, 180, 225, 270, 315};
@@ -87,12 +87,17 @@ class Collision {
       randomCol = int(random(possibleColors.length));
       vehicleColorNum = possibleColors[randomCol];
     }
-    
+
     return vehicleColorNum;
   }
 
 
   void manageBirth(Environment envo, Agent agent) {
+
+    if (playSoundContactV4) {
+      eventSound_birth.amp(0.2);
+      eventSound_birth.play();
+    }
 
     giveVehicleBirth(envo, agent);
 
@@ -134,7 +139,7 @@ class Collision {
     velocity.mulLocal(len);
 
     Vec2 newVelocity = envoPos.add(velocity);
-  
+
     int vehicleColorNum = selectRandomCol(envo.v.colorWheelAngle);
 
     /*
@@ -178,16 +183,16 @@ class Collision {
             vehicleWasTouched = true;
 
             if (playSoundContactV4) {
-              //p_touch_v_audio.play();
+              eventSound_contact.amp(0.2);
+              eventSound_contact.play();
             }
-
             //killVehicle(vNum);
             e.v.collided();
-            
-            
-            
+
+
+
             e.v.isReadyForCollision = false;
-            
+
             //e.alterEnergyAfterTouchingPlayer(true);
 
             //vehicleRemaining--;

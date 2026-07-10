@@ -46,7 +46,7 @@ class Environment {
     }
 
     index = vIndex; //vIndex + 1;
-    println("index ", index);
+    //println("index ", index);
 
     v = new Vehicle(x, y, _colorAngle, _inMotion, type_, unitNum_, p, this);
 

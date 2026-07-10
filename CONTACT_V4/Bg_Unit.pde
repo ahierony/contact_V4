@@ -212,7 +212,7 @@ class Bg_Unit {
     } else {
       environmentIndex = environments.size();
     }
-    println("environment index ", index);
+    //println("environment index ", index);
     //int environmentIndex = environments.size() + 1;
     //println("environmentIndex ", environmentIndex);
     environment = new Environment(randomPos.x, randomPos.y, vehicleColorNum, false, "STATIC", index, player, environmentIndex, app);

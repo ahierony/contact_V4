@@ -130,8 +130,13 @@ import processing.sound.*;
 boolean playSoundContactV4;
 
 SoundFile[] agentSounds;
+SoundFile agentDeathSound;
 SoundFile[] worldSounds;
 SoundFile[] eventSounds;
+
+SoundFile eventSound_birth;
+SoundFile eventSound_contact;
+SoundFile eventSound_gameOver;
 
 SoundFile currentWorldSound;
 
@@ -174,7 +179,7 @@ AgentState agentState;
 import processing.svg.*;
 boolean recordSVG = false;
 
-int fadeAnimationCounter;
+float fadeAnimationCounter;
 
 void setup() {
 
@@ -190,9 +195,9 @@ void setup() {
   debugMode = false;
   screengrab = false;
   //showDistance = false;
-  playSoundContactV4 = false;
+  playSoundContactV4 = true;
   playWorldSounds = true;
-  fullScale = false;
+  fullScale = true  ;
   displaySensingRadii = true;
   joysticksArePortable = false;
   macMini = false;
@@ -216,6 +221,7 @@ void setup() {
   // contact v4 sounds
 
   if (playSoundContactV4) {
+    setupEventsSounds();
     setupAgentSounds();
     if (playWorldSounds) setupWorldSounds();
   }
@@ -281,6 +287,13 @@ void setup() {
 
 // contact v4 sounds
 
+void setupEventsSounds() {
+
+  eventSound_birth = new SoundFile(this, "../../MUSIC/Event_Sounds/event_birth.mp3");
+  eventSound_contact = new SoundFile(this, "../../MUSIC/Event_Sounds/event_contact.mp3");
+  eventSound_gameOver = new SoundFile(this, "../../MUSIC/Event_Sounds/event_game-over.mp3");
+}
+
 void setupAgentSounds() {
 
   agentSounds = new SoundFile[5];
@@ -290,6 +303,8 @@ void setupAgentSounds() {
   agentSounds[2] = new SoundFile(this, "../../MUSIC/Agent_Sounds/agent_C.mp3");
   agentSounds[3] = new SoundFile(this, "../../MUSIC/Agent_Sounds/agent_D.mp3");
   agentSounds[4] = new SoundFile(this, "../../MUSIC/Agent_Sounds/agent_E.mp3");
+
+  agentDeathSound = new SoundFile(this, "../../MUSIC/Agent_Sounds/agent_death.mp3");
 }
 
 void setupWorldSounds() {
@@ -322,6 +337,30 @@ void updateWorldSounds() {
     worldSounds[worldStagePlaying].play();
     worldSounds[worldStagePlaying].amp(0.5);
     worldSounds[worldStagePlaying].loop();
+  }
+}
+
+//--------------------------------------------------------------
+
+void pauseSounds() {
+
+  for (Environment e : environments) {
+
+    for (int i=0; i < 5; i++) {
+
+      e.baseSounds[i].pause();
+      e.baseSounds[i].cue(0);
+
+      e.muffledSounds[i].pause();
+      e.muffledSounds[i].cue(0);
+    }
+  }
+
+  if (playWorldSounds) {
+    for (int i=0; i < worldSounds.length; i++) {
+      worldSounds[i].pause();
+      worldSounds[i].cue(0);
+    }
   }
 }
 
@@ -368,21 +407,6 @@ void setBackgroundTimer() {
 //--------------------------------------------------------------
 void resetContact() {
 
-  if (playSoundContactV4) {
-
-    for (Environment e : environments) {
-
-      for (int i=0; i < environments.size(); i++) {
-
-        e.baseSounds[i].pause();
-        e.baseSounds[i].cue(0);
-
-        e.muffledSounds[i].pause();
-        e.muffledSounds[i].cue(0);
-      }
-    }
-  }
-
 
   player = null;
 
@@ -404,12 +428,7 @@ void resetContact() {
 
   fadeAnimationCounter = 0;
 
-  if (playSoundContactV4) {
-    for (int i=0; i < worldSounds.length; i++) {
-      worldSounds[i].pause();
-      worldSounds[i].cue(0);
-    }
-  }
+
 
 
   //**********************
@@ -431,7 +450,7 @@ void resetContact() {
 
   bgTrailBox = new BgTrailBox(unitTotal, unit_w, unit_h);
 
-  if (playSoundContactV4) {
+  if (playWorldSounds) {
 
     worldStagePlaying = 0;
     worldSounds[worldStagePlaying].play();
@@ -689,6 +708,16 @@ void draw() {
 
   if (player.lung.breath.movement == "empty" || agents.size() == 0) {
 
+    if (fadeAnimationCounter == 0) {
+      if (playSoundContactV4) {
+
+        pauseSounds();
+
+        eventSound_gameOver.amp(0.2);
+        eventSound_gameOver.play();
+      }
+    }
+
     if (fadeAnimationIsOver()) {
 
       recordSVG = true;
@@ -702,6 +731,9 @@ void draw() {
 
   if (scrollbar) data.display();
 } // draw
+
+
+
 
 //--------------------------------------------------------------
 void updateEnvironments() {
@@ -725,7 +757,7 @@ void updateAgents() {
 
   for (int i = agents.size()-1; i >= 0; i--) {
     Agent a = agents.get(i);
-    
+
     a.run(agents, environments);
     if (a.v.location.getState() == a.v.location.vInMovingState) {
       a.maxSpeed = config.maxSpeed;
@@ -757,6 +789,12 @@ void updateAgents() {
     if (a.dead()) {
       a.deathFade--;
       if (a.deathFade <= 0) {
+
+        if (playSoundContactV4) {
+          agentDeathSound.amp(0.2);
+          agentDeathSound.play();
+        }
+
         a.v.killBlob();
         agents.remove(i);
       }
@@ -828,13 +866,13 @@ boolean fadeAnimationIsOver() {
 
   //colorMode(RGB);
 
-  fadeAnimationCounter += 5;
+  fadeAnimationCounter += 0.6;
 
   fill(0, 99, 0, fadeAnimationCounter);
   rectMode(CORNER);
   rect(0, 0, width, height);
 
-  if (fadeAnimationCounter == 255 ) {
+  if (fadeAnimationCounter >= 255 ) {
 
     return true;
   } else {
