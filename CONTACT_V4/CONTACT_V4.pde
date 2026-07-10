@@ -112,6 +112,7 @@ boolean isSwitchingSides = false;
 
 Collision collision;
 
+boolean macMini;
 
 int currentWorldStage;
 int worldStagePlaying;
@@ -177,8 +178,8 @@ int fadeAnimationCounter;
 
 void setup() {
 
-  size(1024, 768, JAVA2D); // 800, 800 // 1440, 900
-  //fullScreen(2);
+  //size(1024, 768, JAVA2D); // 800, 800 // 1440, 900
+  fullScreen(2);
   pixelDensity(1);
 
 
@@ -189,11 +190,12 @@ void setup() {
   debugMode = false;
   screengrab = false;
   //showDistance = false;
-  playSoundContactV4 = false;
-  playWorldSounds = false;
-  fullScale = false;
-  displaySensingRadii = true;
-  joysticksArePortable = false;
+  playSoundContactV4 = true;
+  playWorldSounds = true;
+  fullScale = true;
+  displaySensingRadii = false;
+  joysticksArePortable = true;
+  macMini = false;
   //playSound = false; // enables sound // current sound until Woohun updates
   //audioIsPlaying = false; // new sound by woohun not ready yet
   //*********************************************************************
@@ -1047,18 +1049,6 @@ void serialEvent(Serial port)
 }
 
 //--------------------------------------------------------------
-// GAMEPAD
-/*
-public void getUserInput() {
- 
- leftStickXpos = gpad.getSlider("LeftStickX").getValue();
- leftStickYpos = gpad.getSlider("LeftStickY").getValue();
- 
- rightStickXpos = gpad.getSlider("RightStickX").getValue();
- rightStickYpos = gpad.getSlider("RightStickY").getValue();
- }
- */
-//--------------------------------------------------------------
 
 void setupDeviceMode() {
 
@@ -1066,7 +1056,7 @@ void setupDeviceMode() {
 
   // Serial port setup.
   printArray(Serial.list());
-  if (joysticksArePortable) {
+  if (macMini) {
     port = new Serial(this, Serial.list()[3], 9600);
   } else {
     port = new Serial(this, Serial.list()[2], 9600);

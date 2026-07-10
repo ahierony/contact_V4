@@ -206,15 +206,16 @@ class Bg_Unit {
     basicPos = PVector.sub(randomPos, unitPos);
     
     
-    int agentIndex;
-    if (agents.size() == 0) {
-      agentIndex = 1;
+    int environmentIndex;
+    if (environments.size() == 0) {
+      environmentIndex = 1;
     } else {
-      agentIndex = agents.size();
+      environmentIndex = environments.size();
     }
+    println("environment index ", index);
     //int environmentIndex = environments.size() + 1;
     //println("environmentIndex ", environmentIndex);
-    environment = new Environment(randomPos.x, randomPos.y, vehicleColorNum, false, "STATIC", index, player, agentIndex, app);
+    environment = new Environment(randomPos.x, randomPos.y, vehicleColorNum, false, "STATIC", index, player, environmentIndex, app);
     environments.add(environment);
   }
 

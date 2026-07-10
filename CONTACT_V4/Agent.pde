@@ -51,7 +51,7 @@ class Agent {
   // ANDREW START
   Vehicle v;
   float lungSize;
-  
+
   float drainMultiplier = 1.0; // grows with each birth, parent burns air faster // LOOK INTO
   // ANDREW ENDS
 
@@ -82,12 +82,14 @@ class Agent {
     air = maxAir;
 
     v = new Vehicle(x, y, _colorAngle, _inMotion, type_, unitNum_, p, vIndex, this, vehicleStartState);
-    
-    if(vehicleStartState){
+
+    if (vehicleStartState) {
       agentState = AgentState.WANDER;
     } else {
       agentState = AgentState.LEAVE;
     }
+    
+    //ellipseMode(RADIUS);
   }
 
   //--------------------------------------------------------------
@@ -293,32 +295,32 @@ class Agent {
    //updateReproductionFlags(environments);
    }
    */
-  
+
   /*
   void update(SimConfig config, ArrayList<Agent> agents, ArrayList<Environment> environments) {
-    tickCooldowns();
-    boolean insideAnyEnv = checkInsideEnv(environments);
-    applyMovement();
-    applyStateBehavior(environments, config.sensingRadius, insideAnyEnv);
-    //applyBirthBurst(environments); // LOOK INTO
-    applyPhysics(agents, config.sepDist, config.sepForce, insideAnyEnv);
-    //bounceEdges();
-    air -= config.drainRate;
-    if (air <= 0) println("agent dead");
-    //updateReproductionFlags(environments); // LOOK INTO
-    noiseT += 0.012;
-
-
-    //applyMovement();
-  }
-  */
+   tickCooldowns();
+   boolean insideAnyEnv = checkInsideEnv(environments);
+   applyMovement();
+   applyStateBehavior(environments, config.sensingRadius, insideAnyEnv);
+   //applyBirthBurst(environments); // LOOK INTO
+   applyPhysics(agents, config.sepDist, config.sepForce, insideAnyEnv);
+   //bounceEdges();
+   air -= config.drainRate;
+   if (air <= 0) println("agent dead");
+   //updateReproductionFlags(environments); // LOOK INTO
+   noiseT += 0.012;
+   
+   
+   //applyMovement();
+   }
+   */
 
   void update(SimConfig config, ArrayList<Agent> agents, ArrayList<Environment> environments) {
     Vec2 pos;
     pos = box2d.getBodyPixelCoord(v.centerBoid.body);
     position.set(pos.x, pos.y);
-    
-    
+
+
     tickCooldowns();
     boolean insideAnyEnv = checkInsideEnv(environments);
     applyMovement();
@@ -331,8 +333,8 @@ class Agent {
     if (air <= 0) println("agent dead");
     //updateReproductionFlags(environments); // LOOK INTO
     noiseT += 0.012;
-    
-    println("state ", agentState);
+
+    //println("state ", agentState);
   }
 
   //--------------------------------------------------------------
@@ -566,6 +568,7 @@ class Agent {
   void applyStateBehavior(ArrayList<Environment> environments, float sensingRadius, boolean insideAnyEnv) {
     if (agentState == AgentState.WANDER) {
       Environment best = findBestEnv(environments, sensingRadius);
+      println("best ", best);
       if (best != null) {
         trackedEnv = best;
         agentState = AgentState.APPROACH;
@@ -581,12 +584,20 @@ class Agent {
       seekForce.setMag(seekMag);
       seekForce.mult(0.2 + 0.8 * colorMatch(agentHue, trackedEnv.environmentHue));
       velocity.add(seekForce);
+
+      Environment best = findBestEnv(environments, sensingRadius);
+      if (best != null) {
+        trackedEnv = best;
+        agentState = AgentState.APPROACH;
+        return;
+      }
     } else if (agentState == AgentState.LEAVE) {
       if (avoidedEnv == null) {
         agentState = AgentState.WANDER;
         return;
       }
 
+      //println("track env");
       // landed in another env's range while exiting, jump straight to approaching it
       Environment best = findBestEnv(environments, sensingRadius);
       if (best != null) {
@@ -618,6 +629,8 @@ class Agent {
     for (Environment e : environments) {
       if (e == avoidedEnv) continue;
       float d = PVector.dist(position, e.position);
+      //println("d ", d);
+      //println("sensingRadius * 0.95 ", sensingRadius * 0.95);
       if (d < sensingRadius * 0.95) {
         float score = (e.energy / e.maxEnergy) * (0.3 + 0.7 * colorMatch(agentHue, e.environmentHue));
         if (score > bestScore) {

@@ -61,13 +61,27 @@ class Bg {
     }
 
     int index = 0;
+    //int count = 0;
     for (int j=0; j<unitLength; j++) {
       for (int i=0; i<unitLength; i++) {
 
         // CUSTOM NODES FULL LAYOUT
         if (fullScale) {
+          /*
+          if (arr[index] == 0) {
+            units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, true, index, app, randomCols[index]);
+          } else if (arr[index] == 1) {
+            units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), true, false, index, app, randomCols[index]);
+          } else {
+            units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, false, index, app, randomCols[index]);
+          }
+          */
+          
+          
           if (arr[index] == 0) { // add environment
             units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, true, index, app, randomCols[index]);
+            //print("count ", count, " ");
+            //count++;
           } else if (arr[index] == 1) { // add agent
             units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), true, false, index, app, randomCols[index]);
           } else if (arr[index] == 3) { // add more agents
@@ -75,6 +89,7 @@ class Bg {
           } else { // player slot
             units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), true, false, index, app, randomCols[index]);
           }
+          
         } else {
 
           // 2 NODES

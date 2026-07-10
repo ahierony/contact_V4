@@ -533,19 +533,19 @@ class Vehicle {
     switch(currentSwitch) {
 
     case 0:
-      baseSwitchPlayer = 315;
+      baseSwitchPlayer = 300;
       break;
     case 1:
-      baseSwitchPlayer = 240;
+      baseSwitchPlayer = 200;
       break;
     case 2:
-      baseSwitchPlayer = 165;
+      baseSwitchPlayer = 150;
       break;
     case 3:
-      baseSwitchPlayer = 90;
+      baseSwitchPlayer = 100;
       break;
     case 4:
-      baseSwitchPlayer = 15;
+      baseSwitchPlayer = 50;
       break;
     default:
       break;
@@ -560,19 +560,19 @@ class Vehicle {
     switch(currentSwitch) {
 
     case 0:
-      baseSwitchVehicle = 315;
+      baseSwitchVehicle = 300;
       break;
     case 1:
-      baseSwitchVehicle = 240;
+      baseSwitchVehicle = 200;
       break;
     case 2:
-      baseSwitchVehicle = 165;
+      baseSwitchVehicle = 150;
       break;
     case 3:
-      baseSwitchVehicle = 90;
+      baseSwitchVehicle = 100;
       break;
     case 4:
-      baseSwitchVehicle = 15;
+      baseSwitchVehicle = 50;
       break;
     default:
       break;
