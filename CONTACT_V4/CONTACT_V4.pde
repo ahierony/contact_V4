@@ -130,15 +130,14 @@ import processing.sound.*;
 boolean playSoundContactV4;
 
 SoundFile[] agentSounds;
-SoundFile agentDeathSound;
 SoundFile[] worldSounds;
-SoundFile[] eventSounds;
 
 SoundFile eventSound_birth;
 SoundFile eventSound_contact;
 SoundFile eventSound_gameOver;
+SoundFile eventSound_agentDeath;
 
-SoundFile currentWorldSound;
+//SoundFile currentWorldSound;
 
 boolean soundTransition;
 
@@ -190,12 +189,12 @@ void setup() {
 
   //*********************************************************************
   //gamePadIsOn = false;
-  inputControls = InputControls.JOYSTICKS; //KEYBOARD; //JOYSTICKS;
+  inputControls = InputControls.KEYBOARD; //KEYBOARD; //JOYSTICKS;
   //protoSticks = false;
   debugMode = false;
   screengrab = false;
   //showDistance = false;
-  playSoundContactV4 = false;
+  playSoundContactV4 = true;
   playWorldSounds = false;
   fullScale = true;
   displaySensingRadii = true;
@@ -292,6 +291,7 @@ void setupEventsSounds() {
   eventSound_birth = new SoundFile(this, "../../MUSIC/Event_Sounds/event_birth.mp3");
   eventSound_contact = new SoundFile(this, "../../MUSIC/Event_Sounds/event_contact.mp3");
   eventSound_gameOver = new SoundFile(this, "../../MUSIC/Event_Sounds/event_game-over.mp3");
+  eventSound_agentDeath = new SoundFile(this, "../../MUSIC/Event_Sounds/event_agent-death.mp3");
 }
 
 void setupAgentSounds() {
@@ -304,7 +304,6 @@ void setupAgentSounds() {
   agentSounds[3] = new SoundFile(this, "../../MUSIC/Agent_Sounds/agent_D.mp3");
   agentSounds[4] = new SoundFile(this, "../../MUSIC/Agent_Sounds/agent_E.mp3");
 
-  agentDeathSound = new SoundFile(this, "../../MUSIC/Agent_Sounds/agent_death.mp3");
 }
 
 void setupWorldSounds() {
@@ -791,8 +790,8 @@ void updateAgents() {
       if (a.deathFade <= 0) {
 
         if (playSoundContactV4) {
-          agentDeathSound.amp(0.2);
-          agentDeathSound.play();
+          eventSound_agentDeath.amp(0.2);
+          eventSound_agentDeath.play();
         }
 
         a.v.killBlob();
