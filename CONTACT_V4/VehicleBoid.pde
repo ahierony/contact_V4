@@ -88,9 +88,9 @@ class VehicleBoid {
 
   // called from vehicleLocation > VInMovingState
   void isMoving() {
-    
+
     // CALCULATE PLAYER POSITION
-    
+
     Vec2 playerPosVecPixels = box2d.getBodyPixelCoord(player.centerSphere.body);
 
     playerPosVecPixels.subLocal(offset);
@@ -107,21 +107,21 @@ class VehicleBoid {
     boidPositionVecPixelsRelativeToTarget = new Vec2(boidPosPixels.x, boidPosPixels.y);
 
     boidPosition = box2d.coordPixelsToWorld(boidPosPixels);
-    
+
     ///
-    
+
     float playerVehicleDistance = dist(boidPosPixels.x, boidPosPixels.y, playerPosVecPixels.x, playerPosVecPixels.y);
-    
-    if(playerVehicleDistance < player.sensingMinRadius){
-      
+
+    if (playerVehicleDistance < player.sensingMinRadius) {
+
       flee(playerPosition);
     }
-    
+
     //
-    
-    
-    
-    
+
+
+
+
     //
 
     separate(agents);
@@ -180,40 +180,40 @@ class VehicleBoid {
         steer.mulLocal(maxforce);
       }
 
-      PVector steerPix = new PVector(steer.x, steer.y);
+      Vec2 steerPix = new Vec2(steer.x, steer.y);
       applyImpulseAnu(steerPix);
     }
   }
 
 
-  /*
+
   void wander() {
-   float wanderR = box2d.scalarPixelsToWorld(50);         // Radius for our "wander circle"
-   float wanderD = box2d.scalarPixelsToWorld(200);         // Distance for our "wander circle"
-   float change = 0.3;
-   
-   
-   wandertheta += random(-change, change);     // Randomly change wander theta
-   
-   Vec2 velocity = body.getLinearVelocity();
-   Vec2 circlepos = new Vec2(velocity.x, velocity.y);
-   
-   circlepos.normalize();            // Normalize to get heading
-   circlepos.mulLocal(wanderD);          // Multiply by distance
-   circlepos.addLocal(boidPosition);               // Make it relative to boid's position
-   
-   float h = atan2(velocity.y, velocity.x);
-   
-   Vec2 circleOffSet = new Vec2(wanderR*cos(wandertheta+h), wanderR*sin(wandertheta+h));
-   
-   Vec2 target = circlepos.add(circleOffSet);
-   
-   Vec2 desiredVelocity = target.sub(boidPosition);
-   
-   
-   seek(desiredVelocity);
-   }
-   */
+    float wanderR = box2d.scalarPixelsToWorld(50);         // Radius for our "wander circle"
+    float wanderD = box2d.scalarPixelsToWorld(100);         // Distance for our "wander circle"
+    float change = 0.3;
+
+
+    wandertheta += random(-change, change);     // Randomly change wander theta
+
+    Vec2 velocity = body.getLinearVelocity();
+    Vec2 circlepos = new Vec2(velocity.x, velocity.y);
+
+    circlepos.normalize();            // Normalize to get heading
+    circlepos.mulLocal(wanderD);          // Multiply by distance
+    circlepos.addLocal(boidPosition);               // Make it relative to boid's position
+
+    float h = atan2(velocity.y, velocity.x);
+
+    Vec2 circleOffSet = new Vec2(wanderR*cos(wandertheta+h), wanderR*sin(wandertheta+h));
+
+    Vec2 target = circlepos.add(circleOffSet);
+
+    Vec2 desiredVelocity = target.sub(boidPosition);
+
+
+    seek(desiredVelocity);
+  }
+
 
 
   void applyForce(Vec2 v) {
@@ -236,7 +236,7 @@ class VehicleBoid {
    }
    */
 
-  void applyImpulseAnu(PVector velocityAnu) {
+  void applyImpulseAnu(Vec2 velocityAnu) {
 
     applyingImpulse = true;
 
@@ -287,7 +287,7 @@ class VehicleBoid {
     steer.normalize();
     steer.mulLocal(maxforce);
 
-    PVector steerPix = new PVector(steer.x, steer.y);
+    Vec2 steerPix = new Vec2(steer.x, steer.y);
     applyImpulseAnu(steerPix);
 
     //Vec2 velocity = body.getLinearVelocity();

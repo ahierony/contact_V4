@@ -107,7 +107,7 @@ class Data {
     text("Visit Cost: " + nf(visitCostSlider.getPos(), 1, 2), 230, 270);
     text("Birth Cost: " + int(birthCostSlider.getPos()), 230, 310);
     text("Birth Cooldown: " + int(birthCooldownSlider.getPos()), 230, 350);
-    text("Agents alive: " + agents.size(), 20, 390);
+    //text("Agents alive: " + agents.size(), 20, 390);
   }
 
   // draws the environment stats text in the top right corner
@@ -121,9 +121,9 @@ class Data {
       fill(255);
       noStroke();
       textAlign(RIGHT);
-      text("Env " + (i+1) + " Energy: " + int(e.energy) + " / " + int(e.maxEnergy), width/2 - 20, -height/2 + 30 + (i * 60));
-      text("Env " + (i+1) + " Reproduction: " + nf(healthRatio * 100, 1, 1) + "%", width/2 - 20, -height/2 + 50 + (i * 60));
-      text("Env " + (i+1) + " Stage: " + e.getStageName(), width/2 - 20, -height/2 + 70 + (i * 60));
+      text("Env " + (i+1) + " Energy: " + int(e.energy) + " / " + int(e.maxEnergy), width/2 - 20, -height/2 + 50 + (i * 60));
+      text("Env " + (i+1) + " Reproduction: " + nf(healthRatio * 100, 1, 1) + "%", width/2 - 20, -height/2 + 70 + (i * 60));
+      text("Env " + (i+1) + " Stage: " + e.getStageName(), width/2 - 20, -height/2 + 90 + (i * 60));
     }
   }
 

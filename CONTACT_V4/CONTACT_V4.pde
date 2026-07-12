@@ -194,10 +194,10 @@ void setup() {
   debugMode = false;
   screengrab = false;
   //showDistance = false;
-  playSoundContactV4 = true;
+  playSoundContactV4 = false;
   playWorldSounds = false;
   fullScale = true;
-  displaySensingRadii = true;
+  displaySensingRadii = false;
   joysticksArePortable = false;
   macMini = false;
   //playSound = false; // enables sound // current sound until Woohun updates
@@ -244,7 +244,7 @@ void setup() {
     } else {
       rowLength = 3;
     }
-    setUnitSize(rowLength * unitSize, rowLength * unitSize, rowLength, 0.2); // float _unitSize, int _unitRow, float _worldScale (0.5)
+    setUnitSize(rowLength * unitSize, rowLength * unitSize, rowLength, 0.3); // float _unitSize, int _unitRow, float _worldScale (0.5)
   }
 
   if (inputControls == InputControls.JOYSTICKS) setupDeviceMode();
@@ -303,7 +303,6 @@ void setupAgentSounds() {
   agentSounds[2] = new SoundFile(this, "../../MUSIC/Agent_Sounds/agent_C.mp3");
   agentSounds[3] = new SoundFile(this, "../../MUSIC/Agent_Sounds/agent_D.mp3");
   agentSounds[4] = new SoundFile(this, "../../MUSIC/Agent_Sounds/agent_E.mp3");
-
 }
 
 void setupWorldSounds() {
@@ -597,16 +596,13 @@ void draw() {
 
       popMatrix();
 
-      if (!recordSVG) {
-        if (debugMode) {
-          drawFrameRate();
-        } else {
-          drawFrame();
-          drawFrameRate();
-          showRemainingAgentsNum();
-          //noCursor();
-        }
+
+      drawFrame();
+      if (displaySensingRadii) {
+        drawFrameRate();
+        showRemainingAgentsNum();
       }
+
 
       pushMatrix();
 
@@ -729,6 +725,8 @@ void draw() {
   }
 
   if (scrollbar) data.display();
+
+  noCursor();
 } // draw
 
 
@@ -758,11 +756,11 @@ void updateAgents() {
     Agent a = agents.get(i);
 
     a.run(agents, environments);
-    if (a.v.location.getState() == a.v.location.vInMovingState) {
-      a.maxSpeed = config.maxSpeed;
-      a.update(config, agents, environments);
-      //a.update(data.drainSlider.getPos(), agents, environments, data.separationDistSlider.getPos(), data.separationForceSlider.getPos(), data.sensingRadiusSlider.getPos());
-    }
+
+    a.maxSpeed = config.maxSpeed;
+    a.update(config, agents, environments);
+    //a.update(data.drainSlider.getPos(), agents, environments, data.separationDistSlider.getPos(), data.separationForceSlider.getPos(), data.sensingRadiusSlider.getPos());
+
 
     for (Environment e : environments) {
       /*
@@ -988,11 +986,15 @@ void keyPressed() {
     data.saveData();
     break;
   case '-':
-    println("dataSaved");
     scrollbar = !scrollbar;
     break;
+  case '=':
+    displaySensingRadii = !displaySensingRadii;
+    break;
+  default:
+    break;
   }
-}
+} // keypressed
 
 void keyReleased() {
 
@@ -1305,11 +1307,13 @@ int drawBackground(float avgHealth) {
   background(hue, 65, 70);
   colorMode(RGB, 255);
 
-  fill(0, 150);
-  noStroke();
-  textAlign(LEFT);
-  textSize(13);
-  text("BG Stage: " + stage + "  AvgHealth: " + nf(avgHealth, 1, 2), 20, 380);
+  if (displaySensingRadii) {
+    fill(0, 150);
+    noStroke();
+    textAlign(LEFT);
+    textSize(13);
+    text("BG Stage: " + stage + "  AvgHealth: " + nf(avgHealth, 1, 2), 20, 380);
+  }
 
   return stage;
 }

@@ -3,7 +3,9 @@ class Agent {
   float health = 100; // reduces on reproduction
   float maxHealth = 100;
   PVector position;
+  Vec2 agentPosition;
   PVector velocity;
+  Vec2 agentVelocity;
   float maxAir = 100;
   float xoff, yoff;
   float maxSpeed = 5;
@@ -48,6 +50,8 @@ class Agent {
     //xoff = random(1000);
     //yoff = random(1000);
     velocity = PVector.random2D();
+    agentVelocity = new Vec2(0, 0);
+    //agentVeclocity = Vec2.random2D();
     air = maxAir;
 
     if (vehicleStartState) {
@@ -69,6 +73,7 @@ class Agent {
 
     Vec2 vehiclePos = box2d.getBodyPixelCoord(v.centerBoid.body);
     position.set(vehiclePos.x, vehiclePos.y);
+    agentPosition = new Vec2(vehiclePos.x, vehiclePos.y);
 
     lungSize = map(air, 0, maxAir, 15, 100); // shrinks as air disappears
   }
@@ -86,7 +91,7 @@ class Agent {
   boolean checkInsideEnv(ArrayList<Environment> environments) {
     for (Environment e : environments) {
       if (e.contains(position)) {
-      //if (e.containsSensing(position, config.sensingRadius)) {
+        //if (e.containsSensing(position, config.sensingRadius)) {
         return true;
       }
     }
@@ -100,7 +105,7 @@ class Agent {
     //if (tadpoleSuppression == 0) {
     kickTimer--;
 
-    // schedule new jump every 50 to 100 frames
+   // schedule new jump every 50 to 100 frames
     if (kickTimer <= 0) {
       kickTimer = (int)random(50, 100);
       PVector forward = velocity.copy();
@@ -129,7 +134,19 @@ class Agent {
       kickDecay -= thisFrame;
       if (kickDecay < 0.5) kickDecay = 0;
       //ANDREW
-      v.centerBoid.applyImpulseAnu(velocity);
+      
+      
+      //PVector newVel = new PVector(velocity.x, velocity.y);
+      
+      //Vec2 newVel = new Vec2(velocity.x, velocity.y); // BOX2D CODE
+      //v.centerBoid.applyImpulseAnu(agentVelocity);
+      
+      
+      //agentVelocity.addLocal(newVel);
+      
+      Vec2 newVel = new Vec2(velocity.x, velocity.y);
+      v.centerBoid.applyImpulseAnu(newVel);
+      
     }
   }
 
@@ -146,7 +163,7 @@ class Agent {
       //println("d ", d);
       //println("sensingRadius * 0.95 ", sensingRadius * 0.95);
       if (d < sensingRadius * 0.95) {
-       // println("inside sensing radius");
+        // println("inside sensing radius");
         float score = (e.energy / e.maxEnergy) * (0.3 + 0.7 * colorMatch(agentHue, e.environmentHue));
         if (score > bestScore) {
           bestScore = score;
@@ -175,11 +192,30 @@ class Agent {
         return;
       }
       // straight at the core
+      
       PVector seekForce = PVector.sub(trackedEnv.position, position);
-      float seekMag = insideAnyEnv ? 2.5 : 7.0;
-      seekForce.setMag(seekMag);
-      seekForce.mult(0.2 + 0.8 * colorMatch(agentHue, trackedEnv.environmentHue));
-      velocity.add(seekForce);
+       float seekMag = insideAnyEnv ? 2.5 : 7.0;
+       seekForce.setMag(seekMag);
+       seekForce.mult(0.2 + 0.8 * colorMatch(agentHue, trackedEnv.environmentHue));
+       velocity.add(seekForce);
+       
+      /*
+      //BOX2D CODE
+      Vec2 worldTarget = box2d.coordPixelsToWorld(trackedEnv.position.x, trackedEnv.position.y);
+      Vec2 bodyVec = box2d.coordPixelsToWorld(position.x, position.y);
+      // First find the vector going from this body to the specified point
+      Vec2 seekForce = worldTarget.sub(bodyVec);
+      //worldTarget.subLocal(bodyVec);
+      // Then, scale the vector to the specified force
+      seekForce.normalize();
+      seekForce.mulLocal((float) 50);
+      // Now apply it to the body's center of mass.
+      //body.applyForce(worldTarget, bodyVec);
+      // v.centerBoid.applyImpulseAnu(agentVelocity);
+      agentVelocity.addLocal(seekForce);
+      */
+
+
       //Vec2 dir = new Vec2(trackedEnv.position.x, trackedEnv.position.y);
       //v.centerBoid.arrive(dir);
     } else if (agentState == AgentState.LEAVE) {
@@ -202,11 +238,29 @@ class Agent {
         agentState = AgentState.WANDER;
         return;
       }
+      
       PVector away = PVector.sub(position, avoidedEnv.position);
-      if (away.mag() < 10) away = PVector.random2D();
-      away.normalize();
-      away.setMag(map(d, 0, sensingRadius * 1.5, 3.0, 0.3));
-      velocity.add(away);
+       if (away.mag() < 10) away = PVector.random2D();
+       away.normalize();
+       away.setMag(map(d, 0, sensingRadius * 1.5, 3.0, 0.3));
+       velocity.add(away);
+       
+      /*
+      //BOX2D CODE
+      Vec2 worldTarget = box2d.coordPixelsToWorld(avoidedEnv.position.x, avoidedEnv.position.y);
+      Vec2 bodyVec = box2d.coordPixelsToWorld(position.x, position.y);
+      // First find the vector going from this body to the specified point
+      //Vec2 agentAway = worldTarget.sub(bodyVec);
+      Vec2 agentAway = bodyVec.sub(worldTarget);
+      //worldTarget.subLocal(bodyVec);
+      // Then, scale the vector to the specified force
+      agentAway.normalize();
+      agentAway.mulLocal(map(d, 0, sensingRadius * 1.5, 3.0, 0.3));
+      // Now apply it to the body's center of mass.
+      //body.applyForce(worldTarget, bodyVec);
+      // v.centerBoid.applyImpulseAnu(agentVelocity);
+      agentVelocity.addLocal(agentAway);
+      */
     }
   }
 
@@ -269,7 +323,11 @@ class Agent {
     position.set(vehiclePos.x, vehiclePos.y);
     //tickCooldowns();
     boolean insideAnyEnv = checkInsideEnv(environments);
-    applyMovement();
+
+    if (v.location.getState() == v.location.vInMovingState) {
+
+      applyMovement();
+    }
     applyStateBehavior(environments, config.sensingRadius, insideAnyEnv);
     //applyBirthBurst(environments); // LOOK INTO
     applyPhysics(agents, config.sepDist, config.sepForce, insideAnyEnv);
@@ -383,13 +441,14 @@ class Agent {
     // LUNG
 
     float fade = dead() ? deathFade / 60.0 : 1;
-
+    
     float lungHue, lungSat, lungBri;
-    if (agentState == AgentState.APPROACH) {
+    //if (agentState == AgentState.APPROACH) {
       lungHue = 220;
       lungSat = 80;
       lungBri = 80; // blue: seeking a core
       //println("blue");
+      /*
     } else if (agentState == AgentState.LEAVE) {
       lungHue = 6;
       lungSat = 65;
@@ -400,7 +459,7 @@ class Agent {
       lungSat = 60;
       lungBri = 70; // green: wandering
       //println("green");
-    }
+    }*/
 
     //// target lung color for current state
     //float targetH, targetS, targetB;
@@ -430,6 +489,6 @@ class Agent {
      endShape(CLOSE);
      */
 
-    colorMode(RGB, 255);
+    //colorMode(RGB, 255);
   }
 }

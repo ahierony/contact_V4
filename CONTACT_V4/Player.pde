@@ -494,8 +494,7 @@ class Player {
   // ********************************************************
 
   void display() {
-
-    worldLimits.display();
+    if(displaySensingRadii) worldLimits.display();
 
     //updateColor();
 

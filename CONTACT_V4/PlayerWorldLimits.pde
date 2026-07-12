@@ -47,7 +47,7 @@ class PlayerWorldLimits {
 
     Vec2 playerPos = box2d.getBodyPixelCoord(player.centerSphere.body);
     //println("playerPos.x ", playerPos.x);
-
+    
     colorMode(RGB);
     stroke(255);
     fill(0);

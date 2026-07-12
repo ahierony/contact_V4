@@ -69,15 +69,15 @@ class Bg {
         if (fullScale) {
           /*
           if (arr[index] == 0) {
-            units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, true, index, app, randomCols[index]);
-          } else if (arr[index] == 1) {
-            units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), true, false, index, app, randomCols[index]);
-          } else {
-            units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, false, index, app, randomCols[index]);
-          }
-          */
-          
-          
+           units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, true, index, app, randomCols[index]);
+           } else if (arr[index] == 1) {
+           units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), true, false, index, app, randomCols[index]);
+           } else {
+           units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, false, index, app, randomCols[index]);
+           }
+           */
+
+
           if (arr[index] == 0) { // add environment
             units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, true, index, app, randomCols[index]);
             //print("count ", count, " ");
@@ -89,7 +89,6 @@ class Bg {
           } else { // player slot
             units[index] = new Bg_Unit((unitOrigin.x - unitRow)+(i*unit_w), (unitOrigin.y - unitCol)+(j*unit_h), false, false, index, app, randomCols[index]);
           }
-          
         } else {
 
           // 2 NODES
@@ -168,7 +167,7 @@ class Bg {
         pool.remove(randIndex);
       }
     }
-    
+
     //println(arr);
   }
 
@@ -191,22 +190,21 @@ class Bg {
         pool.remove(randIndex);
       }
     }
-    
-    //println(randomCols);
 
+    //println(randomCols);
   }
-  
-    void assignUniqueColorsToAgents() {
+
+  void assignUniqueColorsToAgents() {
 
     int[] possibleColors = {0, 45, 90, 135, 180, 225, 270, 315};
     IntList pool = new IntList();
     for (int i = 0; i < 8; i++) pool.append(possibleColors[i]);
-    
+
     /*
     for (int i = 0; i < randomCols.length; i++) {
-      randomCols[i] = -1;
-    }
-    */
+     randomCols[i] = -1;
+     }
+     */
 
     for (int i = 0; i < arr.length; i++) {
       if (arr[i] == 1) {
@@ -216,9 +214,8 @@ class Bg {
         pool.remove(randIndex);
       }
     }
-    
-    //println(randomCols);
 
+    //println(randomCols);
   }
 
 
@@ -277,8 +274,10 @@ class Bg {
     strokeWeight(2);
     stroke(0, 0, 99);
 
-    for (int i=0; i<units.length; i++) {
-      units[i].display();
+    if (displaySensingRadii) {
+      for (int i=0; i<units.length; i++) {
+        units[i].display();
+      }
     }
 
     popMatrix();

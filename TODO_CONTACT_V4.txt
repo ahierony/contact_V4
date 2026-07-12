@@ -3,10 +3,22 @@ TODO LIST
 
 ************** IN PROGRESS ********************
 
+- agent turns blue (approach) but leaves??
+
+CALIBRATION:
+- ROTATION NOT PRECISE, TOO FAST > separate linear and rotational force // done
+- WORLD TOO BIG, TOO MUCH EMPTY SPACE. ENVIRONMENTS SHOULD BE BIGGER
+- ENTERING ENVIRONMENTS FOR PLAYER SHOULD BE EASIER // done
+
+- FIX BUG OF AGENT STAYING ATTACHED
+
+
+- agents stay attached to environment core (bug)
 
 - make sure LEAVE is happening BUG
 - color of agents based on state (check)
 
+- FIX SLOW DOWN
 
 - implement new agent state sounds
 - test full installation with mac mini
