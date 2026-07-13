@@ -33,8 +33,8 @@ class Data {
     drainSlider = new DataScrollbar(20, 60, 200, 0.02, 1.0, 0.2);
     refillSlider = new DataScrollbar(20, 100, 200, 0.2, 5.0, 1.0);
     populationSlider = new DataScrollbar(20, 140, 200, 5, 100, 20);
-    sensingRadiusSlider = new DataScrollbar(20, 180, 200, 1000, 3000, 1500);
-    regenRateSlider = new DataScrollbar(20, 220, 200, 0.0, 5.0, 0.5);
+    sensingRadiusSlider = new DataScrollbar(20, 180, 200, 1000, 5000, 1500);
+    regenRateSlider = new DataScrollbar(20, 220, 200, 0.0, 5.0, 2.0);
     visitCostSlider = new DataScrollbar(20, 260, 200, 0.0, 3.0, 0.5);
     birthCostSlider = new DataScrollbar(20, 300, 200, 0, 1000, 100);
     birthCooldownSlider = new DataScrollbar(20, 340, 200, 60, 900, 300);

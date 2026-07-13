@@ -255,9 +255,11 @@ class PLocVehicleZoneState implements PlayerLocationState {
   boolean readyToSetState;
   Player player;
   boolean playerInLungRefillZone;
+  Vehicle vehicle;
 
-  PLocVehicleZoneState(Player p) {
-
+  PLocVehicleZoneState(Player p, Vehicle v) {
+    
+    vehicle = v;
     readyToSetState = true;
     playerInLungRefillZone = false;
 
@@ -287,6 +289,9 @@ class PLocVehicleZoneState implements PlayerLocationState {
     }
 
     checkImpulseState();
+    
+    vehicle.thisEnvironment.alterEnergy();
+    
   }
 
   void checkImpulseState() {

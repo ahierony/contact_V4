@@ -112,6 +112,8 @@ class Vehicle {
   int index;
 
   Vec2 deadPosition;
+  
+  boolean playerInDistanceZoneEnvironmentToggle;
 
   //AUDIO
   //boolean vehicleBreathingAudioIsPlaying;
@@ -214,6 +216,8 @@ class Vehicle {
     isColliding = false;
 
     initialize();
+    
+    playerInDistanceZoneEnvironmentToggle = false;
   }
 
   //--------------------------------------------------------------
@@ -411,6 +415,8 @@ class Vehicle {
 
         checkIfPlayerInZone();
       }
+      
+      checkIfPlayerInZoneForEnvironmentToggle();
 
       checkIfOtherVehicleInZone();
 
@@ -542,16 +548,16 @@ class Vehicle {
       baseSwitchPlayer = 300;
       break;
     case 1:
-      baseSwitchPlayer = 200;
+      baseSwitchPlayer = 250;
       break;
     case 2:
-      baseSwitchPlayer = 150;
+      baseSwitchPlayer = 200;
       break;
     case 3:
-      baseSwitchPlayer = 100;
+      baseSwitchPlayer = 150;
       break;
     case 4:
-      baseSwitchPlayer = 50;
+      baseSwitchPlayer = 100;
       break;
     default:
       break;
@@ -569,23 +575,23 @@ class Vehicle {
       baseSwitchVehicle = 300;
       break;
     case 1:
-      baseSwitchVehicle = 200;
+      baseSwitchVehicle = 250;
       break;
     case 2:
-      baseSwitchVehicle = 150;
+      baseSwitchVehicle = 200;
       break;
     case 3:
-      baseSwitchVehicle = 100;
+      baseSwitchVehicle = 150;
       break;
     case 4:
-      baseSwitchVehicle = 50;
+      baseSwitchVehicle = 100;
       break;
     default:
       break;
     }
 
 
-     //baseSwitchVehicle = 30;
+     baseSwitchVehicle = 360;
   }
 
 
@@ -759,6 +765,21 @@ class Vehicle {
       return false;
     }
   }
+  
+  void checkIfPlayerInZoneForEnvironmentToggle() {
+
+    playerInDistanceZoneEnvironmentToggle = false;
+     if (isPlayerInZone(player, zone.distanceRadius)) { // player is in distance zone
+
+      playerInDistanceZoneEnvironmentToggle = true;
+
+    } else { // player not in distance zone
+
+      playerInDistanceZoneEnvironmentToggle = false;
+    }
+    
+  }
+
 
   // ********************************************************
   // VEHICLE IS IN OTHER VEHICLE ZONE

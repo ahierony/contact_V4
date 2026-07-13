@@ -110,7 +110,7 @@ class Environment {
   
   void toggleNoiseAnimation(){
     
-    if (v.playerInDistanceZone) {
+    if (v.playerInDistanceZoneEnvironmentToggle) {
       
       noiseValueFrozenToggle = true;
       
@@ -438,7 +438,8 @@ class Environment {
   void alterEnergy() {
 
     energy -= 5; //0.5;
-    energy = max(energy, 0);
+    energy = constrain(energy, 0, energy);
+    //energy = max(energy, 0);
     //energy = min(energy, 1);
   }
 
@@ -448,7 +449,8 @@ class Environment {
     if (random(1) < (energy / maxEnergy)) {
       //coreOccupied = true;
       energy -= 50;
-      energy = max(energy, 0);
+      energy = constrain(energy, 0, energy);
+      //energy = max(energy, 0);
       //energy = min(energy, 1);
       //a.hasGivenBirth = true;
       //a.birthEnvironment = e;
@@ -461,12 +463,13 @@ class Environment {
 
   void alterEnergyAfterTouchingPlayer() {
 
-    float energyAmount = 500;
+    float energyAmount = 250;
 
     //if (random(1) < (energy / maxEnergy)) {
 
     energy += energyAmount;
-    energy = max(energy, 5000);
+    energy = constrain(energy, energy, 5000);
+    //energy = max(energy, 5000);
 
 
     //}

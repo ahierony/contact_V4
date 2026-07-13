@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <settings>
   <speed>5.0000005</speed>
-  <drain>0.044500005</drain>
-  <refill>1.2559999</refill>
+  <drain>0.083700016</drain>
+  <refill>4.0399995</refill>
   <spawnRate>1900.0001</spawnRate>
   <sepDist>150.0</sepDist>
   <sepForce>7.529996</sepForce>
   <population>8</population>
-  <regenRate>0.32499996</regenRate>
-  <sensingRadius>1829.9999</sensingRadius>
-  <visitCost>0.50000006</visitCost>
-  <birthCost>65.000015</birthCost>
+  <regenRate>1.1750002</regenRate>
+  <sensingRadius>3439.9995</sensingRadius>
+  <visitCost>0.16499998</visitCost>
+  <birthCost>15.000003</birthCost>
   <birthCooldown>300.0</birthCooldown>
 </settings>

@@ -182,14 +182,14 @@ float fadeAnimationCounter;
 
 void setup() {
 
-  size(1024, 768, JAVA2D); // 800, 800 // 1440, 900
-  //fullScreen(2);
+  //size(1024, 768, JAVA2D); // 800, 800 // 1440, 900
+  fullScreen(2);
   pixelDensity(1);
 
 
   //*********************************************************************
   //gamePadIsOn = false;
-  inputControls = InputControls.KEYBOARD; //KEYBOARD; //JOYSTICKS;
+  inputControls = InputControls.JOYSTICKS; //KEYBOARD; //JOYSTICKS;
   //protoSticks = false;
   debugMode = false;
   screengrab = false;
@@ -198,8 +198,8 @@ void setup() {
   playWorldSounds = false;
   fullScale = true;
   displaySensingRadii = false;
-  joysticksArePortable = false;
-  macMini = false;
+  joysticksArePortable = true;
+  macMini = true;
   //playSound = false; // enables sound // current sound until Woohun updates
   //audioIsPlaying = false; // new sound by woohun not ready yet
   //*********************************************************************
@@ -244,7 +244,7 @@ void setup() {
     } else {
       rowLength = 3;
     }
-    setUnitSize(rowLength * unitSize, rowLength * unitSize, rowLength, 0.3); // float _unitSize, int _unitRow, float _worldScale (0.5)
+    setUnitSize(rowLength * unitSize, rowLength * unitSize, rowLength, 0.4); // float _unitSize, int _unitRow, float _worldScale (0.5)
   }
 
   if (inputControls == InputControls.JOYSTICKS) setupDeviceMode();
