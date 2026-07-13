@@ -724,9 +724,11 @@ void draw() {
     if (playWorldSounds) updateWorldSounds();
   }
 
-  if (scrollbar) data.display();
-
-  noCursor();
+  if (scrollbar) {
+    data.display();
+  } else {
+    //noCursor();
+  }
 } // draw
 
 
@@ -1130,7 +1132,7 @@ void setupDeviceMode() {
   if (macMini) {
     port = new Serial(this, Serial.list()[3], 9600);
   } else {
-    port = new Serial(this, Serial.list()[2], 9600);
+    port = new Serial(this, Serial.list()[6], 9600);
   }
 
   port.bufferUntil('\n');

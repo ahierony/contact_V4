@@ -448,17 +448,17 @@ class Player {
 
     if (joysticksArePortable) {
 
-      left_minRangeX = 210;
-      left_maxRangeX = 820;
+      left_minRangeX = 260;
+      left_maxRangeX = 780;
       
-      left_minRangeY = 190;
-      left_maxRangeY = 840;
+      left_minRangeY = 260;
+      left_maxRangeY = 770;
       
-      right_minRangeX = 220;
-      right_maxRangeX = 780;
+      right_minRangeX = 290;
+      right_maxRangeX = 730;
       
-      right_minRangeY = 210;
-      right_maxRangeY = 780;
+      right_minRangeY = 250;
+      right_maxRangeY = 750;
       
     } else {
 

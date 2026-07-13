@@ -26,6 +26,8 @@ class Environment {
   //SoundFile currentSound;
 
   int environmentHue;
+  
+  boolean noiseValueFrozenToggle;
 
   //--------------------------------------------------------------
 
@@ -57,6 +59,8 @@ class Environment {
 
       setupSounds(app);
     }
+    
+    noiseValueFrozenToggle = true;
   }
 
   //--------------------------------------------------------------
@@ -67,6 +71,8 @@ class Environment {
 
     currentStage = getStageNum();
     //stagePlaying = currentStage;
+    
+    toggleNoiseAnimation();
 
     if (playSoundContactV4) {
 
@@ -101,6 +107,21 @@ class Environment {
   }
 
   //--------------------------------------------------------------
+  
+  void toggleNoiseAnimation(){
+    
+    if (v.playerInDistanceZone) {
+      
+      noiseValueFrozenToggle = true;
+      
+    } else {
+      
+      noiseValueFrozenToggle = false;
+      
+    }
+  }
+  
+  //--------------------------------------------------------------
 
   void updateSounds() {
 
@@ -111,6 +132,7 @@ class Environment {
         baseSounds[stagePlaying].pause();
         stagePlaying = currentStage;
       }
+      
       //currentSound = baseSounds[stagePlaying];
 
       if (v.playerInBreathingZone) {  // update stage sound
@@ -397,10 +419,14 @@ class Environment {
     stroke(hue, sat + 8, bri - 12);
     fill(hue, sat, bri, 150);
     beginShape();
+    float nVal = 0;
     for (float a = 0; a <= TWO_PI; a += TWO_PI / resolution) {
-      float nVal = 1.0 + map(noise(cos(a) * nInt + noiseOffset, sin(a) * nInt + noiseOffset + 500, noiseT), 0.0, 1.0, -nAmp, nAmp);
-      float x = position.x + cos(a) * displayRadius * nVal;
-      float y = position.y + sin(a) * displayRadius * nVal;
+      if(noiseValueFrozenToggle){
+      nVal = 1.0 + map(noise(cos(a) * nInt + noiseOffset, sin(a) * nInt + noiseOffset + 500, noiseT), 0.0, 1.0, -nAmp, nAmp);
+      }
+      float noiseValue = nVal;
+      float x = position.x + cos(a) * displayRadius * noiseValue;
+      float y = position.y + sin(a) * displayRadius * noiseValue;
       vertex(x, y);
     }
     endShape(CLOSE);
