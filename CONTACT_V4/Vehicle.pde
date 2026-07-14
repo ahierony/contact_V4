@@ -112,7 +112,7 @@ class Vehicle {
   int index;
 
   Vec2 deadPosition;
-  
+
   boolean playerInDistanceZoneEnvironmentToggle;
 
   //AUDIO
@@ -216,7 +216,7 @@ class Vehicle {
     isColliding = false;
 
     initialize();
-    
+
     playerInDistanceZoneEnvironmentToggle = false;
   }
 
@@ -378,11 +378,11 @@ class Vehicle {
 
       centerBoid.update();
 
-      
+
       wrap();
       /*if (location.getState() == location.vInMovingState) {
-        
-      }*/
+       
+       }*/
 
       inOtherVehicleDistanceZone = false;
       inOtherVehicleBreathingZone = false;
@@ -415,7 +415,7 @@ class Vehicle {
 
         checkIfPlayerInZone();
       }
-      
+
       checkIfPlayerInZoneForEnvironmentToggle();
 
       checkIfOtherVehicleInZone();
@@ -426,10 +426,13 @@ class Vehicle {
 
       //thisEnvironment.update(agents, data.regenRateSlider.getPos());
       //}
-      
+
       if (!otherVehicleInBreathingZone && !playerInBreathingZone) {
-           
-          thisEnvironment.regenerateEnergy(config.regenRate);
+
+        thisEnvironment.regenerateEnergy(config.regenRate);
+      } else {
+      
+        if (!repellOther) thisEnvironment.alterEnergy();
       }
 
 
@@ -440,7 +443,7 @@ class Vehicle {
 
         //if (!otherVehicleInBreathingZone && player.location.getState() != player.location.pLocVehicleZoneState) {
         if (!otherVehicleInBreathingZone && !playerInBreathingZone) {
-             
+
           //if (!otherVehicleInBreathingZone && !playerInBreathingZone) {
           repellOther = false;
           isColliding = false;
@@ -572,26 +575,26 @@ class Vehicle {
     switch(currentSwitch) {
 
     case 0:
-      baseSwitchVehicle = 300;
+      baseSwitchVehicle = 350;
       break;
     case 1:
-      baseSwitchVehicle = 250;
+      baseSwitchVehicle = 300;
       break;
     case 2:
-      baseSwitchVehicle = 200;
+      baseSwitchVehicle = 250;
       break;
     case 3:
-      baseSwitchVehicle = 150;
+      baseSwitchVehicle = 200;
       break;
     case 4:
-      baseSwitchVehicle = 100;
+      baseSwitchVehicle = 150;
       break;
     default:
       break;
     }
 
 
-     baseSwitchVehicle = 360;
+    //baseSwitchVehicle = 360;
   }
 
 
@@ -601,10 +604,8 @@ class Vehicle {
 
     if (repellOther) {
       colorAngleSwitchVehicle = 1;
-      
+
       agentV.thisAgent.startLeaving(thisEnvironment);
-      
-     
     } else {
       colorAngleSwitchVehicle = baseSwitchVehicle;
     }
@@ -723,7 +724,7 @@ class Vehicle {
       if (isPlayerInZone(player, zone.radius)) { // player is in breathing zone
 
         playerInBreathingZone = true;
-        if (!repellOther) thisEnvironment.alterEnergy();
+        //if (!repellOther) thisEnvironment.alterEnergy();
       } else {
 
         playerInBreathingZone = false;
@@ -765,19 +766,17 @@ class Vehicle {
       return false;
     }
   }
-  
+
   void checkIfPlayerInZoneForEnvironmentToggle() {
 
     playerInDistanceZoneEnvironmentToggle = false;
-     if (isPlayerInZone(player, zone.distanceRadius)) { // player is in distance zone
+    if (isPlayerInZone(player, zone.distanceRadius)) { // player is in distance zone
 
       playerInDistanceZoneEnvironmentToggle = true;
-
     } else { // player not in distance zone
 
       playerInDistanceZoneEnvironmentToggle = false;
     }
-    
   }
 
 
@@ -972,7 +971,6 @@ class Vehicle {
   void collided() {
 
     repellOther = true;
-
   }
 
   // ********************************************************

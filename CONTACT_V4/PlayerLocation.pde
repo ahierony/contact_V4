@@ -28,6 +28,7 @@ class PlayerLocation {
   PlayerLocation(Player p) {
 
     player = p;
+    
 
     pLocMovingState = new PLocMovingState(player);
     //pLocBreathingState = new PLocBreathingState(player);
@@ -257,9 +258,8 @@ class PLocVehicleZoneState implements PlayerLocationState {
   boolean playerInLungRefillZone;
   Vehicle vehicle;
 
-  PLocVehicleZoneState(Player p, Vehicle v) {
+  PLocVehicleZoneState(Player p) {
     
-    vehicle = v;
     readyToSetState = true;
     playerInLungRefillZone = false;
 
@@ -290,7 +290,7 @@ class PLocVehicleZoneState implements PlayerLocationState {
 
     checkImpulseState();
     
-    vehicle.thisEnvironment.alterEnergy();
+    
     
   }
 

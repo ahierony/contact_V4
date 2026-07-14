@@ -438,7 +438,7 @@ class Environment {
   void alterEnergy() {
 
     energy -= 5; //0.5;
-    energy = constrain(energy, 0, energy);
+    energy = constrain(energy, 0, maxEnergy);
     //energy = max(energy, 0);
     //energy = min(energy, 1);
   }
@@ -449,7 +449,7 @@ class Environment {
     if (random(1) < (energy / maxEnergy)) {
       //coreOccupied = true;
       energy -= 50;
-      energy = constrain(energy, 0, energy);
+      energy = constrain(energy, 0, maxEnergy);
       //energy = max(energy, 0);
       //energy = min(energy, 1);
       //a.hasGivenBirth = true;
@@ -463,12 +463,12 @@ class Environment {
 
   void alterEnergyAfterTouchingPlayer() {
 
-    float energyAmount = 250;
+    float energyAmount = 500;
 
     //if (random(1) < (energy / maxEnergy)) {
 
     energy += energyAmount;
-    energy = constrain(energy, energy, 5000);
+    energy = constrain(energy, 0, maxEnergy);
     //energy = max(energy, 5000);
 
 

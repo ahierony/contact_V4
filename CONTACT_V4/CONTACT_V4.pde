@@ -194,12 +194,13 @@ void setup() {
   debugMode = false;
   screengrab = false;
   //showDistance = false;
-  playSoundContactV4 = false;
-  playWorldSounds = false;
+  playSoundContactV4 = true;
+  playWorldSounds = true;
   fullScale = true;
   displaySensingRadii = false;
   joysticksArePortable = true;
   macMini = true;
+  noCursor();
   //playSound = false; // enables sound // current sound until Woohun updates
   //audioIsPlaying = false; // new sound by woohun not ready yet
   //*********************************************************************
@@ -775,6 +776,7 @@ void updateAgents() {
        break;
        } else */
       if (e.contains(a.position)) {
+        println("refilling air!");
         //if (!acceptsAgent(a, e)) {
         //a.startLeaving(e); // turned away at the membrane
         //} else {
@@ -832,7 +834,9 @@ void updateAgents() {
 
 void refillAir(Agent a, Environment e) {
   float healthRatio = e.energy / e.maxEnergy;
-  float effectiveRefill = config.refillRate * healthRatio;
+  //float effectiveRefill = config.refillRate * healthRatio;
+  float effectiveRefill = config.refillRate;
+  println("effectiveRefill ", effectiveRefill);
   a.air += effectiveRefill;
   a.air = min(a.air, a.maxAir);
   e.energy -= config.visitCost;
