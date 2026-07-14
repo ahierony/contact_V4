@@ -121,7 +121,7 @@ class Agent {
 
         SoundFile agentSound = agentSounds[randNum];
         agentSound.play();
-        agentSound.amp(0.5);
+        agentSound.amp(agentSoundAmp);
       }
     }
 

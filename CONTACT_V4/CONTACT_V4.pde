@@ -117,6 +117,12 @@ boolean macMini;
 int currentWorldStage;
 int worldStagePlaying;
 boolean playWorldSounds;
+boolean playEnvironmentSounds;
+
+float eventSoundAmp = 0.5;
+float worldSoundAmp = 0.4;
+float environmentSoundAmp = 0.6;
+float agentSoundAmp = 1.0;
 
 boolean displaySensingRadii;
 
@@ -142,7 +148,7 @@ SoundFile eventSound_agentDeath;
 boolean soundTransition;
 
 float fadeRate = 0.01;
-float soundAmp = 0.2;
+//float soundAmp = 0.2;
 
 boolean debugMode;
 //boolean protoSticks;
@@ -196,6 +202,7 @@ void setup() {
   //showDistance = false;
   playSoundContactV4 = true;
   playWorldSounds = true;
+  playEnvironmentSounds = true;
   fullScale = true;
   displaySensingRadii = false;
   joysticksArePortable = true;
@@ -288,6 +295,7 @@ void setup() {
 // contact v4 sounds
 
 void setupEventsSounds() {
+  // event_sounds: 1.0
 
   eventSound_birth = new SoundFile(this, "../../MUSIC/Event_Sounds/event_birth.mp3");
   eventSound_contact = new SoundFile(this, "../../MUSIC/Event_Sounds/event_contact.mp3");
@@ -296,6 +304,8 @@ void setupEventsSounds() {
 }
 
 void setupAgentSounds() {
+  
+  // agent_sounds: 1.0
 
   agentSounds = new SoundFile[5];
 
@@ -307,6 +317,8 @@ void setupAgentSounds() {
 }
 
 void setupWorldSounds() {
+  
+  // world sounds: 0.3
 
   worldSounds = new SoundFile[5];
 
@@ -319,7 +331,7 @@ void setupWorldSounds() {
   worldStagePlaying = 0;
   //currentWorldSound = worldSounds[worldStagePlaying];
   worldSounds[worldStagePlaying].play();
-  worldSounds[worldStagePlaying].amp(0.2);
+  worldSounds[worldStagePlaying].amp(worldSoundAmp);
   worldSounds[worldStagePlaying].loop();
 }
 
@@ -334,7 +346,7 @@ void updateWorldSounds() {
     worldStagePlaying = currentWorldStage;
     //currentWorldSound = worldSounds[worldStagePlaying];
     worldSounds[worldStagePlaying].play();
-    worldSounds[worldStagePlaying].amp(0.5);
+    worldSounds[worldStagePlaying].amp(worldSoundAmp);
     worldSounds[worldStagePlaying].loop();
   }
 }
@@ -453,7 +465,7 @@ void resetContact() {
 
     worldStagePlaying = 0;
     worldSounds[worldStagePlaying].play();
-    worldSounds[worldStagePlaying].amp(0.2);
+    worldSounds[worldStagePlaying].amp(worldSoundAmp);
     worldSounds[worldStagePlaying].loop();
   }
 
@@ -709,7 +721,7 @@ void draw() {
 
         pauseSounds();
 
-        eventSound_gameOver.amp(0.2);
+        eventSound_gameOver.amp(eventSoundAmp);
         eventSound_gameOver.play();
       }
     }
@@ -776,7 +788,7 @@ void updateAgents() {
        break;
        } else */
       if (e.contains(a.position)) {
-        println("refilling air!");
+        //println("refilling air!");
         //if (!acceptsAgent(a, e)) {
         //a.startLeaving(e); // turned away at the membrane
         //} else {
@@ -792,7 +804,7 @@ void updateAgents() {
       if (a.deathFade <= 0) {
 
         if (playSoundContactV4) {
-          eventSound_agentDeath.amp(0.2);
+          eventSound_agentDeath.amp(eventSoundAmp);
           eventSound_agentDeath.play();
         }
 
@@ -836,7 +848,7 @@ void refillAir(Agent a, Environment e) {
   float healthRatio = e.energy / e.maxEnergy;
   //float effectiveRefill = config.refillRate * healthRatio;
   float effectiveRefill = config.refillRate;
-  println("effectiveRefill ", effectiveRefill);
+  //println("effectiveRefill ", effectiveRefill);
   a.air += effectiveRefill;
   a.air = min(a.air, a.maxAir);
   e.energy -= config.visitCost;

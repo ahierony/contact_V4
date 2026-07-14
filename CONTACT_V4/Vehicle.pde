@@ -428,13 +428,13 @@ class Vehicle {
       //}
 
       if (!otherVehicleInBreathingZone && !playerInBreathingZone) {
-
         thisEnvironment.regenerateEnergy(config.regenRate);
-      } else {
-      
-        if (!repellOther) thisEnvironment.alterEnergy();
+      } else if (playerInBreathingZone) {
+        if (!repellOther) thisEnvironment.alterEnergyFromPlayer();
+      } else if(otherVehicleInBreathingZone){
+        if (!repellOther) thisEnvironment.alterEnergyFromAgent();
       }
-
+ 
 
       posVecPixels.set(centerBoid.posVecPixels.x, centerBoid.posVecPixels.y);
 
@@ -448,7 +448,10 @@ class Vehicle {
           repellOther = false;
           isColliding = false;
           isReadyForCollision = true;
-          zone.setState(zone.fullState);
+          //zone.setState(zone.fullState);
+          
+        } else {
+          //println("stuck in repell Other");
         }
       }
     } // VEHICLE IS NOT IN MOTION
@@ -603,7 +606,7 @@ class Vehicle {
   void applyZoneForceOnVehicle(Vehicle agentV) {
 
     if (repellOther) {
-      colorAngleSwitchVehicle = 1;
+      colorAngleSwitchVehicle = 0;
 
       agentV.thisAgent.startLeaving(thisEnvironment);
     } else {
@@ -669,7 +672,7 @@ class Vehicle {
       angleDiff = 360 - angleDiff;
     }
 
-    if (angleDiff > angleSwitch) {
+    if (angleDiff >= angleSwitch || repellOther) {
       //println("go away");
       outcomingForceDirection = -1;
       gravityVal *= 5;
@@ -938,7 +941,7 @@ class Vehicle {
           applyZoneForceOnVehicle(a.v); // apply succion/repel gravity between vehicle breathing and vehicle moving
           // membrane
 
-          if (!repellOther) thisEnvironment.alterEnergy();
+          //if (!repellOther) thisEnvironment.alterEnergy();
           //a.refillAir(thisEnvironment);
         }
       }

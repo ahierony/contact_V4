@@ -26,7 +26,7 @@ class Environment {
   //SoundFile currentSound;
 
   int environmentHue;
-  
+
   boolean noiseValueFrozenToggle;
 
   //--------------------------------------------------------------
@@ -56,10 +56,13 @@ class Environment {
     stages = 5;
 
     if (playSoundContactV4) {
+      
+      if (playEnvironmentSounds) {
 
-      setupSounds(app);
+        setupSounds(app);
+      }
     }
-    
+
     noiseValueFrozenToggle = true;
   }
 
@@ -71,12 +74,15 @@ class Environment {
 
     currentStage = getStageNum();
     //stagePlaying = currentStage;
-    
+
     toggleNoiseAnimation();
 
     if (playSoundContactV4) {
 
-      updateSounds();
+      if (playEnvironmentSounds) {
+
+        updateSounds();
+      }
     }
 
     //println("healthRatio ", energy / maxEnergy);
@@ -85,6 +91,8 @@ class Environment {
   //--------------------------------------------------------------
 
   void setupSounds(PApplet app) {
+
+    // environment sounds: 0.6
 
     baseSounds = new SoundFile[stages];
 
@@ -107,20 +115,18 @@ class Environment {
   }
 
   //--------------------------------------------------------------
-  
-  void toggleNoiseAnimation(){
-    
+
+  void toggleNoiseAnimation() {
+
     if (v.playerInDistanceZoneEnvironmentToggle) {
-      
+
       noiseValueFrozenToggle = true;
-      
     } else {
-      
+
       noiseValueFrozenToggle = false;
-      
     }
   }
-  
+
   //--------------------------------------------------------------
 
   void updateSounds() {
@@ -132,7 +138,7 @@ class Environment {
         baseSounds[stagePlaying].pause();
         stagePlaying = currentStage;
       }
-      
+
       //currentSound = baseSounds[stagePlaying];
 
       if (v.playerInBreathingZone) {  // update stage sound
@@ -157,7 +163,7 @@ class Environment {
 
           //println("play environment sound");
 
-          muffledSounds[stagePlaying].amp(0.5);
+          muffledSounds[stagePlaying].amp(environmentSoundAmp);
           muffledSounds[stagePlaying].cue(d);
           muffledSounds[stagePlaying].play();
           muffledSounds[stagePlaying].loop();
@@ -188,7 +194,7 @@ class Environment {
 
           //println("play environment sound");
 
-          baseSounds[stagePlaying].amp(0.5);
+          baseSounds[stagePlaying].amp(environmentSoundAmp);
           baseSounds[stagePlaying].cue(dm);
           baseSounds[stagePlaying].play();
           baseSounds[stagePlaying].loop();
@@ -421,8 +427,8 @@ class Environment {
     beginShape();
     float nVal = 0;
     for (float a = 0; a <= TWO_PI; a += TWO_PI / resolution) {
-      if(noiseValueFrozenToggle){
-      nVal = 1.0 + map(noise(cos(a) * nInt + noiseOffset, sin(a) * nInt + noiseOffset + 500, noiseT), 0.0, 1.0, -nAmp, nAmp);
+      if (noiseValueFrozenToggle) {
+        nVal = 1.0 + map(noise(cos(a) * nInt + noiseOffset, sin(a) * nInt + noiseOffset + 500, noiseT), 0.0, 1.0, -nAmp, nAmp);
       }
       float noiseValue = nVal;
       float x = position.x + cos(a) * displayRadius * noiseValue;
@@ -435,7 +441,15 @@ class Environment {
 
   //--------------------------------------------------------------
 
-  void alterEnergy() {
+  void alterEnergyFromPlayer() {
+
+    energy -= 10; //0.5;
+    energy = constrain(energy, 0, maxEnergy);
+    //energy = max(energy, 0);
+    //energy = min(energy, 1);
+  }
+  
+  void alterEnergyFromAgent() {
 
     energy -= 5; //0.5;
     energy = constrain(energy, 0, maxEnergy);

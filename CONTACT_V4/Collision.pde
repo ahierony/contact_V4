@@ -47,11 +47,13 @@ class Collision {
 
             e.v.isColliding = true;
 
-            e.v.zone.setState(e.v.zone.collisionState);
+            //e.v.zone.setState(e.v.zone.collisionState);
 
             e.alterEnergyAfterGivingBirth();
 
             a.v.colorWheelAngle = selectRandomCol(e.v.colorWheelAngle);
+            
+            //println("colliding");
           }
 
 
@@ -95,7 +97,7 @@ class Collision {
   void manageBirth(Environment envo, Agent agent) {
 
     if (playSoundContactV4) {
-      eventSound_birth.amp(0.2);
+      eventSound_birth.amp(eventSoundAmp);
       eventSound_birth.play();
     }
 
@@ -183,7 +185,7 @@ class Collision {
             vehicleWasTouched = true;
 
             if (playSoundContactV4) {
-              eventSound_contact.amp(0.2);
+              eventSound_contact.amp(eventSoundAmp);
               eventSound_contact.play();
             }
             //killVehicle(vNum);
