@@ -120,8 +120,8 @@ boolean playWorldSounds;
 boolean playEnvironmentSounds;
 
 float eventSoundAmp = 0.5;
-float worldSoundAmp = 0.4;
-float environmentSoundAmp = 0.6;
+float worldSoundAmp = 1.0;
+float environmentSoundAmp = 1.0;
 float agentSoundAmp = 1.0;
 
 boolean displaySensingRadii;
@@ -188,19 +188,19 @@ float fadeAnimationCounter;
 
 void setup() {
 
-  //size(1024, 768, JAVA2D); // 800, 800 // 1440, 900
-  fullScreen(2);
+  size(1024, 768, JAVA2D); // 800, 800 // 1440, 900
+  //fullScreen(2);
   pixelDensity(1);
 
 
   //*********************************************************************
   //gamePadIsOn = false;
-  inputControls = InputControls.JOYSTICKS; //KEYBOARD; //JOYSTICKS;
+  inputControls = InputControls.KEYBOARD; //KEYBOARD; //JOYSTICKS;
   //protoSticks = false;
   debugMode = false;
   screengrab = false;
   //showDistance = false;
-  playSoundContactV4 = true;
+  playSoundContactV4 = false;
   playWorldSounds = true;
   playEnvironmentSounds = true;
   fullScale = true;
@@ -297,7 +297,7 @@ void setup() {
 void setupEventsSounds() {
   // event_sounds: 1.0
 
-  eventSound_birth = new SoundFile(this, "../../MUSIC/Event_Sounds/event_birth.mp3");
+ // eventSound_birth = new SoundFile(this, "../../MUSIC/Event_Sounds/event_birth.mp3");
   eventSound_contact = new SoundFile(this, "../../MUSIC/Event_Sounds/event_contact.mp3");
   eventSound_gameOver = new SoundFile(this, "../../MUSIC/Event_Sounds/event_game-over.mp3");
   eventSound_agentDeath = new SoundFile(this, "../../MUSIC/Event_Sounds/event_agent-death.mp3");
@@ -668,7 +668,7 @@ void draw() {
 
   // TRAIL RECORDING STARTS
 
-  if (recordSVG) {
+  if (recordSVG || frameRate < 15) {
     //endRecord();
     recordSVG = false;
 

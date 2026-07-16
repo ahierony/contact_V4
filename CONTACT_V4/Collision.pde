@@ -95,12 +95,12 @@ class Collision {
 
 
   void manageBirth(Environment envo, Agent agent) {
-
+/*
     if (playSoundContactV4) {
       eventSound_birth.amp(eventSoundAmp);
       eventSound_birth.play();
     }
-
+*/
     giveVehicleBirth(envo, agent);
 
     Vec2 vehiclePosVecPixels = box2d.getBodyPixelCoord(envo.v.centerBoid.body);
